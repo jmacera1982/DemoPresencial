@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Test API - Generación de Turnos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0033A0;
+      --success: #28A745;
+      --danger: #DC3545;
+      --warning: #FFC107;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      min-height: 100vh;
+      padding: 2rem 0;
+    }
+    
+    .container {
+      max-width: 1200px;
+    }
+    
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-header {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .result-item {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      transition: background 0.2s;
+    }
+    
+    .result-item:hover {
+      background: #f8f9fa;
+    }
+    
+    .result-item:last-child {
+      border-bottom: none;
+    }
+    
+    .status-success {
+      color: var(--success);
+      font-weight: 600;
+    }
+    
+    .status-error {
+      color: var(--danger);
+      font-weight: 600;
+    }
+    
+    .badge {
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+    }
+    
+    .btn-primary:hover {
+      background: #00267A;
+    }
+    
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+      border-width: 0.15em;
+    }
+    
+    .summary {
+      background: #E3F2FD;
+      border-left: 4px solid var(--primary);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    
+    /* Tabla Clientes y Scores */
+    .table-score {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .table-score thead {
+      background: var(--primary);
+      color: white;
+    }
+    .table-score th {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    .table-score td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e8ecf1;
+    }
+    .table-score tbody tr:hover {
+      background: #f8f9fa;
+    }
+    .table-score tbody tr:last-child td {
+      border-bottom: none;
+    }
+    /* Badge PRIORITARIO: color visible (verde) */
+    .badge.score-priority {
+      background: #0d6e2e;
+      color: white !important;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    /* Celda con score prioritario */
+    .table-score td.score-priority {
+      color: #0d6e2e;
+      font-weight: 700;
+    }
+    .table-score td.score-normal {
+      color: #495057;
+    }
+    .table-score .badge.bg-secondary {
+      background: #6c757d !important;
+      color: white !important;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-gear me-2"></i>Generador de Turnos - Test API
+      </div>
+      <div class="card-body p-4">
+        <div class="summary">
+          <strong>Instrucciones:</strong> Ingresa el número de turnos que deseas generar. Selecciona la(s) branch(es) donde generar los turnos. El sistema usará los datos predefinidos de forma cíclica.
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-12">
+            <label class="form-label fw-bold">Seleccionar Branch(es):</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="branch10750" value="10750" checked>
+              <label class="form-check-label" for="branch10750">
+                Branch 10750
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="branch10790" value="10790">
+              <label class="form-check-label" for="branch10790">
+                Branch 10790
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Número de turnos a generar:</label>
+            <input type="number" class="form-control" id="numTurnos" min="1" max="100" value="1" required>
+            <small class="text-muted">Máximo 100 turnos por ejecución</small>
+          </div>
+          <div class="col-md-6 d-flex align-items-end gap-2">
+            <button id="btnGenerar" class="btn btn-primary flex-grow-1">
+              <i class="bi bi-play-circle me-2"></i>Generar Turnos
+            </button>
+            <button id="btnRestaurarTotem" class="btn btn-warning">
+              <i class="bi bi-arrow-clockwise me-2"></i>Restaurar Totem
+            </button>
+            <button id="btnRestaurarCarteleria" class="btn btn-info text-white">
+              <i class="bi bi-display me-2"></i>Restaurar Cartelería
+            </button>
+          </div>
+        </div>
+        
+        <div id="summaryResults" class="alert alert-info d-none">
+          <strong>Resumen:</strong>
+          <div id="summaryContent"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-list-ul me-2"></i>Resultados</span>
+        <button id="btnLimpiar" class="btn btn-sm btn-outline-light">
+          <i class="bi bi-trash me-1"></i>Limpiar
+        </button>
+      </div>
+      <div class="card-body p-0">
+        <div id="resultsContainer">
+          <div class="result-item text-center text-muted p-4">
+            No hay resultados aún. Presiona "Generar Turnos" para comenzar.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-people me-2"></i>Clientes y Scores</span>
+        <button id="btnCargarScores" class="btn btn-sm btn-outline-light">
+          <i class="bi bi-arrow-clockwise me-1"></i>Cargar Datos
+        </button>
+      </div>
+      <div class="card-body p-4">
+        <div class="alert alert-info mb-3">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Nota:</strong> Los clientes con score mayor a 700 son considerados <span class="badge score-priority">PRIORITARIOS</span>
+        </div>
+        <div id="scoresContainer">
+          <div class="text-center text-muted p-4">
+            <i class="bi bi-arrow-clockwise me-2"></i>Presiona "Cargar Datos" para ver la información
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const FV_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+    const FV_QUEUES = [16222, 16221]; // Alternar entre estos dos queueId
+    const FV_BASE = 'https://filavirtual2.debmedia.com/api/v1';
+    
+    // NocoDB - Clientes y Scores
+    const NocoDB_API_URL = 'https://app.nocodb.com/api/v2/tables/mpgwc03ukvww2hg/records';
+    const NocoDB_TOKEN = 'esMWeT85CmXjEnt5kvF1J97zD-d4_BX9rq228I9z';
+    
+    // Debsign API
+    const DEBSIGN_API_URL = 'https://debq2.debmedia.com/debsign/v2/api/stasks';
+    const DEBSIGN_API_KEY = 'd212e4a639ef4db4acbda25db51e12ba';
+    
+    // Datos predefinidos
+    const datosPersonas = [
+      { dni: '29328703', firstName: 'Jorge', lastName: 'Macera', email: 'jorge.macera@mail.com', phone: '12345678' },
+      { dni: '29205608', firstName: 'Jacqueline', lastName: 'Gomez', email: 'jacqueline.gomez@mail.com', phone: '23456789' },
+      { dni: '29328704', firstName: 'Ignacio', lastName: 'Martinez', email: 'ignacio.martinez@mail.com', phone: '34567890' },
+      { dni: '29205609', firstName: 'juan', lastName: 'gomez', email: 'juan.gomez@mail.com', phone: '45678901' },
+      { dni: '29205611', firstName: 'Mateo', lastName: 'Suarez', email: 'msuarez@mail.com', phone: '45678901' },
+      { dni: '12345678', firstName: 'Juan', lastName: 'Perez', email: 'jperez@mail.com', phone: '23456789' },
+        { dni: '29205610', firstName: 'Perez', lastName: 'Ivan', email: 'iperez@mail.com', phone: '45678901' }
+    ];
+    
+    const btnGenerar = document.getElementById('btnGenerar');
+    const btnLimpiar = document.getElementById('btnLimpiar');
+    const btnRestaurarTotem = document.getElementById('btnRestaurarTotem');
+    const btnRestaurarCarteleria = document.getElementById('btnRestaurarCarteleria');
+    const numTurnosInput = document.getElementById('numTurnos');
+    const branch10750Check = document.getElementById('branch10750');
+    const branch10790Check = document.getElementById('branch10790');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const summaryResults = document.getElementById('summaryResults');
+    const summaryContent = document.getElementById('summaryContent');
+    
+    let resultados = [];
+    
+    btnGenerar.addEventListener('click', async () => {
+      const numTurnos = parseInt(numTurnosInput.value);
+      
+      if (!numTurnos || numTurnos < 1 || numTurnos > 100) {
+        alert('Por favor, ingresa un número válido entre 1 y 100');
+        return;
+      }
+      
+      // Obtener branches seleccionadas
+      const selectedBranches = [];
+      if (branch10750Check.checked) selectedBranches.push(10750);
+      if (branch10790Check.checked) selectedBranches.push(10790);
+      
+      if (selectedBranches.length === 0) {
+        alert('Por favor, selecciona al menos una branch');
+        return;
+      }
+      
+      btnGenerar.disabled = true;
+      btnGenerar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generando...';
+      
+      resultados = [];
+      resultsContainer.innerHTML = '';
+      summaryResults.classList.add('d-none');
+      
+      // Generar turnos
+      let turnoCounter = 0;
+      for (let i = 0; i < numTurnos; i++) {
+        const personaIndex = i % datosPersonas.length;
+        const persona = datosPersonas[personaIndex];
+        const queueIndex = i % FV_QUEUES.length; // Alternar entre los queueId
+        const queueId = FV_QUEUES[queueIndex];
+        
+        // Si hay múltiples branches, alternar entre ellas
+        const branchIndex = selectedBranches.length > 1 ? (i % selectedBranches.length) : 0;
+        const branchId = selectedBranches[branchIndex];
+        
+        try {
+          const url = `${FV_BASE}/queue/${queueId}/branch/${branchId}/enqueue`;
+          
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'x-api-token': FV_TOKEN,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              firstName: persona.firstName,
+              lastName: persona.lastName,
+              dni: persona.dni,
+              email: persona.email,
+              phone: persona.phone
+            })
+          });
+          
+          const data = await response.json().catch(() => ({}));
+          
+          const resultado = {
+            numero: turnoCounter + 1,
+            persona: persona,
+            queueId: queueId,
+            branchId: branchId,
+            success: response.ok,
+            status: response.status,
+            data: data,
+            turnCode: data.code || 'N/A',
+            error: response.ok ? null : (data.message || `Error ${response.status}`)
+          };
+          
+          turnoCounter++;
+          
+          resultados.push(resultado);
+          agregarResultado(resultado);
+          
+          // Pequeña pausa para no sobrecargar el servidor
+          if (i < numTurnos - 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+        } catch (error) {
+          const queueIndex = i % FV_QUEUES.length;
+          const queueId = FV_QUEUES[queueIndex];
+          const branchIndex = selectedBranches.length > 1 ? (i % selectedBranches.length) : 0;
+          const branchId = selectedBranches[branchIndex];
+          const resultado = {
+            numero: turnoCounter + 1,
+            persona: persona,
+            queueId: queueId,
+            branchId: branchId,
+            success: false,
+            status: 0,
+            data: null,
+            turnCode: 'N/A',
+            error: error.message
+          };
+          
+          turnoCounter++;
+          
+          resultados.push(resultado);
+          agregarResultado(resultado);
+        }
+      }
+      
+      mostrarResumen();
+      
+      btnGenerar.disabled = false;
+      btnGenerar.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generar Turnos';
+    });
+    
+    function agregarResultado(resultado) {
+      const resultItem = document.createElement('div');
+      resultItem.className = 'result-item';
+      
+      const statusClass = resultado.success ? 'status-success' : 'status-error';
+      const statusIcon = resultado.success ? 'bi-check-circle' : 'bi-x-circle';
+      const statusText = resultado.success ? 'Éxito' : 'Error';
+      
+      // Determinar el tipo de operación
+      const esRestaurarTotem = resultado.tipo === 'restaurar_totem';
+      const esRestaurarCarteleria = resultado.tipo === 'restaurar_carteleria';
+      const esOperacionSistema = esRestaurarTotem || esRestaurarCarteleria;
+      
+      let badgesHtml = '';
+      if (esRestaurarTotem) {
+        badgesHtml = `
+          <span class="badge bg-secondary me-2">#${resultado.numero}</span>
+          <span class="badge bg-primary me-2">Restaurar Totem</span>
+        `;
+      } else if (esRestaurarCarteleria) {
+        badgesHtml = `
+          <span class="badge bg-secondary me-2">#${resultado.numero}</span>
+          <span class="badge bg-info me-2">Restaurar Cartelería</span>
+        `;
+      } else {
+        badgesHtml = `
+          <span class="badge bg-secondary me-2">#${resultado.numero}</span>
+          <span class="badge bg-info me-2">Queue: ${resultado.queueId}</span>
+          <span class="badge bg-warning text-dark me-2">Branch: ${resultado.branchId}</span>
+        `;
+      }
+      
+      let detalleHtml = '';
+      if (esRestaurarTotem) {
+        detalleHtml = resultado.success ? 
+          `<div class="small text-success">Totem restaurado correctamente</div>` :
+          `<div class="small text-danger"><strong>Error:</strong> ${resultado.error}</div>`;
+      } else if (esRestaurarCarteleria) {
+        detalleHtml = resultado.success ? 
+          `<div class="small text-success">Cartelería restaurada correctamente</div>` :
+          `<div class="small text-danger"><strong>Error:</strong> ${resultado.error}</div>`;
+      } else {
+        detalleHtml = `
+          <div class="small text-muted mb-1">
+            <strong>Persona:</strong> ${resultado.persona.firstName} ${resultado.persona.lastName} (DNI: ${resultado.persona.dni})
+          </div>
+          ${resultado.success ? 
+            `<div class="small text-success">Turno generado correctamente</div>` :
+            `<div class="small text-danger"><strong>Error:</strong> ${resultado.error}</div>`
+          }
+        `;
+      }
+      
+      resultItem.innerHTML = `
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center mb-2">
+              ${badgesHtml}
+              <span class="${statusClass}">
+                <i class="bi ${statusIcon} me-1"></i>${statusText}
+              </span>
+              ${resultado.success && !esRestaurarTotem ? `<span class="badge bg-success ms-2">Código: ${resultado.turnCode}</span>` : ''}
+            </div>
+            ${detalleHtml}
+          </div>
+          <div class="text-end">
+            <span class="badge ${resultado.success ? 'bg-success' : 'bg-danger'}">HTTP ${resultado.status || 'N/A'}</span>
+          </div>
+        </div>
+      `;
+      
+      resultsContainer.appendChild(resultItem);
+      resultItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    function mostrarResumen() {
+      const exitosos = resultados.filter(r => r.success).length;
+      const fallidos = resultados.filter(r => !r.success).length;
+      const total = resultados.length;
+      
+      summaryContent.innerHTML = `
+        <div class="mt-2">
+          <span class="badge bg-success me-2">Exitosos: ${exitosos}</span>
+          <span class="badge bg-danger me-2">Fallidos: ${fallidos}</span>
+          <span class="badge bg-secondary">Total: ${total}</span>
+        </div>
+      `;
+      
+      summaryResults.classList.remove('d-none');
+    }
+    
+    btnLimpiar.addEventListener('click', () => {
+      resultados = [];
+      resultsContainer.innerHTML = '<div class="result-item text-center text-muted p-4">No hay resultados aún. Presiona "Generar Turnos" para comenzar.</div>';
+      summaryResults.classList.add('d-none');
+    });
+    
+    btnRestaurarTotem.addEventListener('click', async () => {
+      await restaurarTotem();
+    });
+    
+    async function restaurarTotem() {
+      btnRestaurarTotem.disabled = true;
+      const originalText = btnRestaurarTotem.innerHTML;
+      btnRestaurarTotem.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Restaurando...';
+      
+      const requestBody = {
+        "task": {
+          "id": 3930,
+          "name": "Tarea Canal 3672",
+          "initHour": "00:00:00",
+          "endHour": "23:59:59",
+          "initDay": "2000-01-01",
+          "endDay": "2030-12-31",
+          "days": [
+            {"id": 1, "name": "MONDAY"},
+            {"id": 2, "name": "TUESDAY"},
+            {"id": 3, "name": "WEDNESDAY"},
+            {"id": 4, "name": "THURSDAY"},
+            {"id": 5, "name": "FRIDAY"},
+            {"id": 6, "name": "SATURDAY"},
+            {"id": 7, "name": "SUNDAY"}
+          ],
+          "publicities": [
+            {
+              "id": 16808,
+              "showName": "STD-InteractivaSimple",
+              "name": "STD-InteractivaSimple"
+            }
+          ],
+          "jsonPublicities": "[{\"id\":16808}]"
+        },
+        "initDay": "2000-01-01",
+        "endDay": "2030-12-31",
+        "initHour": "00:00:00",
+        "endHour": "23:59:59"
+      };
+      
+      try {
+        const response = await fetch(DEBSIGN_API_URL, {
+          method: 'POST',
+          headers: {
+            'x-api-key': DEBSIGN_API_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+        
+        const data = await response.json().catch(() => ({}));
+        
+        if (response.ok) {
+          // Agregar resultado exitoso a la lista de resultados
+          const resultado = {
+            numero: resultados.length + 1,
+            persona: { dni: 'N/A', firstName: 'Sistema', lastName: 'Totem' },
+            queueId: 'N/A',
+            branchId: 'N/A',
+            success: true,
+            status: response.status,
+            data: data,
+            turnCode: 'N/A',
+            error: null,
+            tipo: 'restaurar_totem'
+          };
+          
+          resultados.push(resultado);
+          agregarResultado(resultado);
+          
+          mostrarResumen();
+          
+          // Mostrar mensaje de éxito
+          alert('Totem restaurado correctamente');
+        } else {
+          throw new Error(data.message || `Error ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error al restaurar totem:', error);
+        
+        // Agregar resultado de error a la lista
+        const resultado = {
+          numero: resultados.length + 1,
+          persona: { dni: 'N/A', firstName: 'Sistema', lastName: 'Totem' },
+          queueId: 'N/A',
+          branchId: 'N/A',
+          success: false,
+          status: 0,
+          data: null,
+          turnCode: 'N/A',
+          error: error.message,
+          tipo: 'restaurar_totem'
+        };
+        
+        resultados.push(resultado);
+        agregarResultado(resultado);
+        
+        mostrarResumen();
+        
+        alert(`Error al restaurar totem: ${error.message}`);
+      } finally {
+        btnRestaurarTotem.disabled = false;
+        btnRestaurarTotem.innerHTML = originalText;
+      }
+    }
+    
+    btnRestaurarCarteleria.addEventListener('click', async () => {
+      await restaurarCarteleria();
+    });
+    
+    async function restaurarCarteleria() {
+      btnRestaurarCarteleria.disabled = true;
+      const originalText = btnRestaurarCarteleria.innerHTML;
+      btnRestaurarCarteleria.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Restaurando...';
+      
+      const requestBody = {
+        "task": {
+          "id": 3929,
+          "name": "Tarea Canal 3671",
+          "initHour": "00:00:00",
+          "endHour": "23:59:59",
+          "initDay": "2000-01-01",
+          "endDay": "2030-12-31",
+          "days": [
+            {"id": 1, "name": "MONDAY"},
+            {"id": 2, "name": "TUESDAY"},
+            {"id": 3, "name": "WEDNESDAY"},
+            {"id": 4, "name": "THURSDAY"},
+            {"id": 5, "name": "FRIDAY"},
+            {"id": 6, "name": "SATURDAY"},
+            {"id": 7, "name": "SUNDAY"}
+          ],
+          "publicities": [
+            {
+              "id": 16660,
+              "showName": "Pantalla Numia(5)",
+              "name": "1445673176"
+            }
+          ],
+          "jsonPublicities": "[{\"id\":16660}]"
+        },
+        "initDay": "2000-01-01",
+        "endDay": "2030-12-31",
+        "initHour": "00:00:00",
+        "endHour": "23:59:59"
+      };
+      
+      try {
+        const response = await fetch(DEBSIGN_API_URL, {
+          method: 'POST',
+          headers: {
+            'x-api-key': DEBSIGN_API_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+        
+        const data = await response.json().catch(() => ({}));
+        
+        if (response.ok) {
+          // Agregar resultado exitoso a la lista de resultados
+          const resultado = {
+            numero: resultados.length + 1,
+            persona: { dni: 'N/A', firstName: 'Sistema', lastName: 'Cartelería' },
+            queueId: 'N/A',
+            branchId: 'N/A',
+            success: true,
+            status: response.status,
+            data: data,
+            turnCode: 'N/A',
+            error: null,
+            tipo: 'restaurar_carteleria'
+          };
+          
+          resultados.push(resultado);
+          agregarResultado(resultado);
+          
+          mostrarResumen();
+          
+          // Mostrar mensaje de éxito
+          alert('Cartelería restaurada correctamente');
+        } else {
+          throw new Error(data.message || `Error ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error al restaurar cartelería:', error);
+        
+        // Agregar resultado de error a la lista
+        const resultado = {
+          numero: resultados.length + 1,
+          persona: { dni: 'N/A', firstName: 'Sistema', lastName: 'Cartelería' },
+          queueId: 'N/A',
+          branchId: 'N/A',
+          success: false,
+          status: 0,
+          data: null,
+          turnCode: 'N/A',
+          error: error.message,
+          tipo: 'restaurar_carteleria'
+        };
+        
+        resultados.push(resultado);
+        agregarResultado(resultado);
+        
+        mostrarResumen();
+        
+        alert(`Error al restaurar cartelería: ${error.message}`);
+      } finally {
+        btnRestaurarCarteleria.disabled = false;
+        btnRestaurarCarteleria.innerHTML = originalText;
+      }
+    }
+    
+    btnCargarScores.addEventListener('click', async () => {
+      await cargarScores();
+    });
+    
+    async function cargarScores() {
+      btnCargarScores.disabled = true;
+      btnCargarScores.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Cargando...';
+      
+      scoresContainer.innerHTML = '<div class="text-center text-muted p-4"><span class="spinner-border spinner-border-sm me-2"></span>Cargando datos...</div>';
+      
+      try {
+        const response = await fetch(NocoDB_API_URL, {
+          method: 'GET',
+          headers: {
+            'xc-token': NocoDB_TOKEN,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Error en servidor (${response.status})`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.list && data.list.length > 0) {
+          mostrarScores(data.list);
+        } else {
+          scoresContainer.innerHTML = '<div class="text-center text-muted p-4">No se encontraron datos</div>';
+        }
+      } catch (error) {
+        console.error('Error al cargar scores:', error);
+        scoresContainer.innerHTML = `
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Error:</strong> ${error.message}
+          </div>
+        `;
+      } finally {
+        btnCargarScores.disabled = false;
+        btnCargarScores.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i>Cargar Datos';
+      }
+    }
+    
+    function mostrarScores(lista) {
+      // Ordenar por score descendente
+      const listaOrdenada = [...lista].sort((a, b) => {
+        const scoreA = parseInt(a.score) || 0;
+        const scoreB = parseInt(b.score) || 0;
+        return scoreB - scoreA;
+      });
+      
+      let html = `
+        <table class="table-score">
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>Score</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      listaOrdenada.forEach(item => {
+        const score = parseInt(item.score) || 0;
+        const esPrioritario = score > 700;
+        const scoreClass = esPrioritario ? 'score-priority' : 'score-normal';
+        const estadoBadge = esPrioritario 
+          ? '<span class="badge score-priority">PRIORITARIO</span>' 
+          : '<span class="badge bg-secondary">Normal</span>';
+        
+        html += `
+          <tr>
+            <td><strong>${item.dni || 'N/A'}</strong></td>
+            <td class="${scoreClass}"><strong>${score}</strong></td>
+            <td>${estadoBadge}</td>
+          </tr>
+        `;
+      });
+      
+      html += `
+          </tbody>
+        </table>
+      `;
+      
+      scoresContainer.innerHTML = html;
+    }
+    
+    // Cargar scores automáticamente al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarScores();
+    });
+  </script>
+</body>
+</html>
+
