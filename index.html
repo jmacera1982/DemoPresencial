@@ -180,6 +180,26 @@
     .datos-importantes-list a:hover {
       text-decoration: underline;
     }
+    .datos-importantes-qr {
+      margin-bottom: 1rem;
+    }
+    .datos-importantes-qr img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+    }
+    .datos-importantes-link {
+      display: block;
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.35rem 0;
+    }
+    .datos-importantes-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -190,6 +210,19 @@
         <i class="bi bi-info-circle me-2"></i>Datos importantes
       </div>
       <div class="card-body p-4">
+        <div class="datos-importantes-qr mb-3">
+          <a href="https://jmacera1982.github.io/DemoPresencial/QR.html" target="_blank" rel="noopener" title="Abrir QR">
+            <img src="images/qr-demo.png" alt="QR Demo Presencial" />
+          </a>
+          <p class="mb-0 mt-1 small text-muted">Escanea para abrir formulario de atención</p>
+        </div>
+        <a href="https://jmacera1982.github.io/DemoPresencial/app-cliente.html" target="_blank" rel="noopener" class="datos-importantes-link">
+          <i class="bi bi-phone me-2"></i>App cliente
+        </a>
+        <a href="https://jmacera1982.github.io/DemoPresencial/totem.html" target="_blank" rel="noopener" class="datos-importantes-link">
+          <i class="bi bi-display me-2"></i>Totem
+        </a>
+        <hr class="my-3" />
         <ul class="datos-importantes-list">
           <li>
             <span class="label">Agentes de demo presencial</span>
