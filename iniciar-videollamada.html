@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Iniciar videollamada - La Araucana</title>
+  <link rel="icon" type="image/png" href="images/img-isotipo-imagen.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --araucana-primary: #00539B;
+      --araucana-orange: #ff9600;
+      --araucana-orange-dark: #e08500;
+      --araucana-secondary: #ffffff;
+      --araucana-muted: #6b7280;
+      --araucana-border: #e5e7eb;
+      --araucana-bg: #f8fafc;
+    }
+    
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      background: var(--araucana-bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    
+    .form-container {
+      background: var(--araucana-secondary);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      max-width: 600px;
+      width: 100%;
+    }
+    
+    .form-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .form-header h1 {
+      color: var(--araucana-primary);
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-header p {
+      color: var(--araucana-muted);
+      font-size: 1rem;
+      margin: 0;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+      border: 2px solid var(--araucana-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: var(--araucana-primary);
+      box-shadow: 0 0 0 3px rgba(0, 83, 155, 0.1);
+      outline: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--araucana-orange);
+      color: var(--araucana-secondary);
+      border-color: var(--araucana-orange);
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--araucana-orange-dark);
+      border-color: var(--araucana-orange-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 150, 0, 0.3);
+    }
+    
+    .btn-primary:disabled {
+      background-color: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .info-text {
+      background: #f0f7ff;
+      border-left: 4px solid var(--araucana-primary);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+    
+    .alert {
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+      border-width: 0.15em;
+    }
+    
+    .success-badge {
+      background: #10b981;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      display: inline-block;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e6f2ff;
+      border-radius: 0.6rem;
+      background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+      margin-bottom: 0.75rem;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: #4b5563;
+    }
+    
+    .info-value {
+      font-weight: 700;
+      color: var(--araucana-primary);
+    }
+    
+    .status-warn {
+      color: #f59e0b !important;
+    }
+    
+    .status-ok {
+      color: #10b981 !important;
+    }
+    
+    .status-done {
+      color: #3b82f6 !important;
+    }
+    
+    .status-err {
+      color: #ef4444 !important;
+    }
+    
+    .turn-info-section {
+      display: none;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--araucana-border);
+    }
+    
+    .turn-info-section.active {
+      display: block;
+    }
+    
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .video-modal.active {
+      display: flex;
+    }
+    
+    .video-container {
+      background: var(--araucana-secondary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 90vw;
+      max-height: 90vh;
+      width: 90vw;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .video-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .video-header h6 {
+      margin: 0;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    
+    .video-iframe {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .btn-close-video {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #1f2937;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    
+    .btn-close-video:hover {
+      background: var(--araucana-bg);
+    }
+    
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 1.5rem;
+        max-width: 100%;
+      }
+      
+      .form-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .video-container {
+        width: 95vw;
+        height: 70vh;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="form-header">
+      <h1><i class="bi bi-camera-video me-2"></i>Iniciar videollamada</h1>
+      <p>Completa tus datos para continuar</p>
+    </div>
+    
+    <div id="formAlert" class="alert d-none"></div>
+    
+    <form id="guardiaForm" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" name="firstName" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Apellido</label>
+        <input type="text" class="form-control" name="lastName" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">DNI</label>
+        <input type="text" class="form-control" name="rut" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Teléfono</label>
+        <input type="tel" class="form-control" name="phone" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+    </form>
+    
+    <div class="info-text">
+      <i class="bi bi-info-circle"></i> Al continuar, te asignaremos una atención y verás una sala de espera. Cuando el agente esté listo, podrás iniciar una videollamada.
+    </div>
+    
+    <div class="mt-4">
+      <button id="btnEnviarTurno" class="btn btn-primary">
+        <i class="bi bi-check2-circle me-2"></i>Generar atención
+      </button>
+    </div>
+    
+    <!-- Sección de información de la atención -->
+    <div id="turnInfoSection" class="turn-info-section">
+      <div class="text-center mb-3">
+        <div class="success-badge">
+          <i class="bi bi-check2-circle me-1"></i>Atención Reservada Exitosamente
+        </div>
+        <div class="text-success fw-semibold">¡Tu atención ha sido generada en el sistema!</div>
+      </div>
+      
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="info-item">
+            <div class="info-label">Código de la Atención:</div>
+            <div class="info-value" id="turnCodeDisplay">—</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Número de Atención:</div>
+            <div class="info-value" id="turnNumber">—</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Estado de la Atención:</div>
+            <div class="info-value status-warn" id="turnStatus">Consultando...</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Tiempo de Espera Actual:</div>
+            <div class="info-value" id="currentWaitingTime">N/A</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Tiempo Promedio de Espera:</div>
+            <div class="info-value" id="avgWaitingTime">N/A</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Cola/Servicio:</div>
+            <div class="info-value" id="queueName">—</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Sala de Espera:</div>
+            <div class="info-value" id="waitingRoomName">—</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4">
+        <button id="btnAbrirVideo" class="btn btn-primary" disabled>
+          <i class="bi bi-camera-video me-2"></i>Conectarme a videollamada
+        </button>
+        <div class="form-text mt-2">El botón se habilitará cuando el agente te llame.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Video -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-container">
+      <div class="video-header">
+        <h6><i class="bi bi-camera-video me-2"></i>Videollamada</h6>
+        <button class="btn-close-video" id="btnCloseVideo">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <iframe id="videoFrame" class="video-iframe" src="about:blank"
+        allow="camera; microphone; autoplay; fullscreen; clipboard-write; display-capture"
+        referrerpolicy="no-referrer" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const FV_TOKEN   = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+    const FV_QUEUE   = 16223;
+    const FV_BRANCH  = 10750;
+    const FV_BASE    = 'https://filavirtual2.debmedia.com/api/v1';
+    const VIDEO_CALL_URL = 'about:blank';
+
+    let pollingInterval = null;
+    let lastTurnCode = null;
+    window.currentVideoCallUrl = 'about:blank';
+
+    const formEl = document.getElementById('guardiaForm');
+    const formAlert = document.getElementById('formAlert');
+    const btnEnviarTurno = document.getElementById('btnEnviarTurno');
+    const $ = (id) => document.getElementById(id);
+
+    function setFormAlert(type, msg) {
+      formAlert.className = `alert alert-${type}`;
+      formAlert.textContent = msg;
+      formAlert.classList.remove('d-none');
+    }
+    
+    function clearFormAlert() {
+      formAlert.className = 'alert d-none';
+      formAlert.textContent = '';
+    }
+
+    btnEnviarTurno.addEventListener('click', async () => {
+      clearFormAlert();
+      const data = Object.fromEntries(new FormData(formEl).entries());
+      
+      if (!data.firstName || !data.lastName || !data.rut || !data.email || !data.phone) {
+        setFormAlert('danger', 'Completa todos los campos.');
+        return;
+      }
+      
+      btnEnviarTurno.disabled = true;
+      btnEnviarTurno.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generando...';
+      
+      try {
+        const url = `${FV_BASE}/queue/${FV_QUEUE}/branch/${FV_BRANCH}/enqueue`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'x-api-token': FV_TOKEN,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            dni: data.rut,
+            email: data.email,
+            phone: data.phone
+          })
+        });
+        
+        const out = await res.json().catch(() => ({}));
+        
+        if (!res.ok) {
+          throw new Error(out?.message || `Error en servidor (${res.status})`);
+        }
+        
+        const turnCode = out.code || '—';
+        lastTurnCode = turnCode;
+        localStorage.setItem('turnCode', turnCode);
+        
+        const turnNumber = out.jsonDetails?.turn || out.jsonDetails?.actualTurn || '—';
+        const avgWait = out.jsonDetails?.averageWaitingTime ?? out.jsonDetails?.serviceTime ?? 'N/A';
+        const queueName = out.jsonDetails?.queue?.name || '—';
+        const wrName = out.jsonDetails?.waitingRoom?.name || '—';
+        const videoCallUrl = out.jsonDetails?.videoCallUrl || 'about:blank';
+        window.currentVideoCallUrl = videoCallUrl;
+        
+        // Configurar el iframe con la URL de videollamada
+        const urlWithParam = videoCallUrl.includes('?') 
+          ? `${videoCallUrl}&videocallUser=mobile` 
+          : `${videoCallUrl}?videocallUser=mobile`;
+        document.getElementById('videoFrame').src = urlWithParam;
+        
+        // Llenar la información de la atención
+        fillWaitModal({
+          code: turnCode,
+          number: turnNumber,
+          avgWait: isFinite(avgWait) ? `${Math.floor(parseFloat(avgWait))} min` : 'N/A',
+          queueName,
+          waitingRoom: wrName
+        });
+        
+        // Mostrar la sección de información de la atención
+        document.getElementById('turnInfoSection').classList.add('active');
+        
+        // Deshabilitar el formulario (solo lectura)
+        formEl.querySelectorAll('input').forEach(input => {
+          input.disabled = true;
+        });
+        btnEnviarTurno.disabled = true;
+        btnEnviarTurno.style.display = 'none';
+        
+        // Iniciar polling
+        startPolling(turnCode);
+        
+      } catch (err) {
+        setFormAlert('danger', err.message);
+      } finally {
+        btnEnviarTurno.disabled = false;
+        btnEnviarTurno.innerHTML = '<i class="bi bi-check2-circle me-2"></i>Generar atención';
+      }
+    });
+    
+    function fillWaitModal({code, number, avgWait, queueName, waitingRoom}) {
+      $('turnCodeDisplay').textContent = code;
+      $('turnNumber').textContent = number;
+      $('avgWaitingTime').textContent = avgWait;
+      $('queueName').textContent = queueName;
+      $('waitingRoomName').textContent = waitingRoom;
+      $('turnStatus').textContent = 'Consultando...';
+      $('turnStatus').className = 'info-value status-warn';
+      $('currentWaitingTime').textContent = 'N/A';
+      $('btnAbrirVideo').disabled = true;
+    }
+    
+    function startPolling(turnCode) {
+      stopPolling();
+      const url = `${FV_BASE}/turn/code/${encodeURIComponent(turnCode)}`;
+      const mapStatus = (s) => {
+        if (s === 'ANNOUNCED') {
+          return { text: 'Lo estamos llamando', cls: 'status-ok' };
+        } else if (s === 'WAITING_TO_BE_CALLED') {
+          return { text: 'En breve lo llamaremos', cls: 'status-warn' };
+        } else if (s === 'FINALIZED') {
+          return { text: 'Atención finalizada', cls: 'status-done' };
+        } else {
+          return { text: s || 'Desconocido', cls: 'status-warn' };
+        }
+      };
+      
+      const tick = async () => {
+        try {
+          const res = await fetch(url, {
+            headers: {
+              'x-api-token': FV_TOKEN,
+              'Content-Type': 'text/plain'
+            }
+          });
+          
+          if (!res.ok) {
+            throw new Error(`Estado no disponible (${res.status})`);
+          }
+          
+          const data = await res.json();
+          const m = mapStatus(data.status);
+          
+          $('turnStatus').textContent = m.text;
+          $('turnStatus').className = `info-value ${m.cls}`;
+          
+          const avg = (data.averageWaitingTime ?? data.serviceTime);
+          if (avg !== undefined && avg !== null && !isNaN(avg)) {
+            $('currentWaitingTime').textContent = `${Math.floor(parseFloat(avg))} min`;
+          }
+          
+          if (data.status === 'ANNOUNCED') {
+            $('btnAbrirVideo').disabled = false;
+          }
+        } catch (e) {
+          $('turnStatus').textContent = 'Error al consultar';
+          $('turnStatus').className = 'info-value status-err';
+        }
+      };
+      
+      tick();
+      pollingInterval = setInterval(tick, 5000);
+    }
+    
+    function stopPolling() {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+      }
+    }
+    
+    // Botón para abrir video
+    document.getElementById('btnAbrirVideo').addEventListener('click', () => {
+      const videoUrl = window.currentVideoCallUrl || 'about:blank';
+      const urlWithParam = videoUrl.includes('?') 
+        ? `${videoUrl}&videocallUser=mobile` 
+        : `${videoUrl}?videocallUser=mobile`;
+      
+      document.getElementById('videoFrame').src = urlWithParam;
+      document.getElementById('videoModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+    
+    // Botón para cerrar video
+    document.getElementById('btnCloseVideo').addEventListener('click', () => {
+      document.getElementById('videoModal').classList.remove('active');
+      document.body.style.overflow = '';
+    });
+    
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('videoModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('videoModal')) {
+        document.getElementById('videoModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // Cerrar con ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('videoModal').classList.contains('active')) {
+        document.getElementById('videoModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>
