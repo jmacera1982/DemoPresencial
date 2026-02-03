@@ -200,47 +200,162 @@
     .datos-importantes-link:hover {
       text-decoration: underline;
     }
+    /* Panel lateral de resultados */
+    .main-content-wrapper {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+    .main-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .results-sidebar {
+      width: 400px;
+      position: sticky;
+      top: 2rem;
+      max-height: calc(100vh - 4rem);
+      transition: all 0.3s ease;
+    }
+    .results-sidebar.collapsed {
+      width: 60px;
+    }
+    .results-sidebar.collapsed .card-body,
+    .results-sidebar.collapsed .card-header span:not(.toggle-icon),
+    .results-sidebar.collapsed #btnLimpiar {
+      display: none;
+    }
+    .results-sidebar.collapsed .card-header {
+      justify-content: center;
+    }
+    .results-sidebar.collapsed .toggle-results-btn {
+      margin: 0 auto;
+    }
+    .results-sidebar .card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .results-sidebar .card-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .toggle-results-btn {
+      background: none;
+      border: none;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    .toggle-results-btn:hover {
+      opacity: 0.8;
+    }
+    @media (max-width: 992px) {
+      .main-content-wrapper {
+        flex-direction: column;
+      }
+      .results-sidebar {
+        width: 100% !important;
+        position: relative;
+        top: 0;
+        max-height: 500px;
+      }
+      .results-sidebar.collapsed {
+        max-height: 60px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="main-content-wrapper">
+      <div class="main-content">
     <!-- Datos importantes -->
     <div class="card">
       <div class="card-header">
         <i class="bi bi-info-circle me-2"></i>Datos importantes
       </div>
       <div class="card-body p-4">
-        <div class="datos-importantes-qr mb-3">
-          <a href="https://jmacera1982.github.io/DemoPresencial/QR.html" target="_blank" rel="noopener" title="Abrir QR">
-            <img src="images/qr-demo.png" alt="QR Demo Presencial" />
-          </a>
-          <p class="mb-0 mt-1 small text-muted">Escanea para abrir formulario de atención</p>
+        <div class="row align-items-center mb-3">
+          
+          <div class="col-md-3 text-center">
+            <a href="https://jmacera1982.github.io/DemoPresencial/iniciar-videollamada.html" target="_blank" rel="noopener" title="Este QR lleva a una atención por videollamada directamente" data-bs-toggle="tooltip" data-bs-placement="top">
+              <img src="images/QRVideollamada.png" alt="QR Videollamada" style="width: 120px; height: 120px; object-fit: contain; border: 2px solid var(--primary); border-radius: 8px;" />
+            </a>
+            <p class="mb-0 mt-1 small text-muted">Atención por videollamada</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <a href="https://jmacera1982.github.io/DemoPresencial/QR.html" target="_blank" rel="noopener" title="Abrir QR">
+              <img src="images/qr-demo.png" alt="QR Demo Presencial" style="width: 120px; height: 120px; object-fit: contain; border: 2px solid var(--primary); border-radius: 8px;"/>
+            </a>
+            <p class="mb-0 mt-1 small text-muted">formulario de atención orquestado por AI</p>
+          </div>
+          <div class="col-md-3 text-center">
+            <a href="https://jmacera1982.github.io/DemoPresencial/app-cliente.html" target="_blank" rel="noopener" class="datos-importantes-link">
+              <i class="bi bi-phone me-2"></i>App cliente orquestada por IA
+            </a>
+          </div>
+          <div class="col-md-3 text-center">
+            <a href="https://jmacera1982.github.io/DemoPresencial/totem.html" target="_blank" rel="noopener" class="datos-importantes-link">
+              <i class="bi bi-display me-2"></i>Totem orquestado por IA
+            </a>
+          </div>
         </div>
-        <a href="https://jmacera1982.github.io/DemoPresencial/app-cliente.html" target="_blank" rel="noopener" class="datos-importantes-link">
-          <i class="bi bi-phone me-2"></i>App cliente
-        </a>
-        <a href="https://jmacera1982.github.io/DemoPresencial/totem.html" target="_blank" rel="noopener" class="datos-importantes-link">
-          <i class="bi bi-display me-2"></i>Totem
-        </a>
         <hr class="my-3" />
-        <ul class="datos-importantes-list">
-          <li>
-            <span class="label">Agentes de demo presencial</span>
-            <span>—</span>
-          </li>
-          <li>
-            <span class="label">Línea de WhatsApp Admin sucursal:</span>
-            <span><a href="https://wa.me/5491152734098" target="_blank" rel="noopener">+54 9 11 5273-4098</a></span>
-          </li>
-          <li>
-            <span class="label">Usuario de JB con flujos:</span>
-            <span>Demopresencial / Demopresencial#1</span>
-          </li>
-          <li>
-            <span class="label">URL de Ingreso:</span>
-            <span><a href="https://journeybuilder.numia.co/" target="_blank" rel="noopener">https://journeybuilder.numia.co/</a></span>
-          </li>
-        </ul>
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="mb-3 fw-bold text-primary">
+              <i class="bi bi-people me-2"></i>Agentes de demo presencial
+            </h5>
+            <ul class="datos-importantes-list">
+              <li>
+                <span class="label">Usuario de JB con flujos:</span>
+                <span>Demopresencial / Demopresencial#1</span>
+              </li>
+              <li>
+                <span class="label">URL de Ingreso:</span>
+                <span><a href="https://journeybuilder.numia.co/" target="_blank" rel="noopener">https://journeybuilder.numia.co/</a></span>
+              </li>
+              <li>
+                <span class="label">Línea de WhatsApp Admin sucursal:</span>
+                <span><a href="https://wa.me/5491152734098" target="_blank" rel="noopener">+54 9 11 5273-4098</a></span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h5 class="mb-3 fw-bold text-primary">
+              <i class="bi bi-person-circle me-2"></i>Usuarios Numia
+            </h5>
+            <div class="alert alert-info mb-3 py-2">
+              <i class="bi bi-key me-2"></i>
+              <strong>Contraseña para todos:</strong> <code>Sucursales$2026</code>
+            </div>
+            <table class="table table-bordered table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Usuario</th>
+                  <th>Contraseña</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="mailto:glauria@sucursales.com">glauria@sucursales.com</a></td>
+                  <td><code>Sucursales$2026</code></td>
+                </tr>
+                <tr>
+                  <td><a href="mailto:jmacera@sucursales.com">jmacera@sucursales.com</a></td>
+                  <td><code>Sucursales$2026</code></td>
+                </tr>
+                <tr>
+                  <td><a href="mailto:jcsoto@sucursales.com">jcsoto@sucursales.com</a></td>
+                  <td><code>Sucursales$2026</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -296,18 +411,28 @@
         </div>
       </div>
     </div>
-    
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-list-ul me-2"></i>Resultados</span>
-        <button id="btnLimpiar" class="btn btn-sm btn-outline-light">
-          <i class="bi bi-trash me-1"></i>Limpiar
-        </button>
       </div>
-      <div class="card-body p-0">
-        <div id="resultsContainer">
-          <div class="result-item text-center text-muted p-4">
-            No hay resultados aún. Presiona "Generar Turnos" para comenzar.
+      
+      <!-- Panel lateral de resultados -->
+      <div class="results-sidebar collapsed" id="resultsSidebar">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-list-ul me-2"></i>Resultados</span>
+            <div class="d-flex align-items-center gap-2">
+              <button id="btnLimpiar" class="btn btn-sm btn-outline-light">
+                <i class="bi bi-trash me-1"></i>Limpiar
+              </button>
+              <button id="btnToggleResults" class="toggle-results-btn" title="Expandir panel">
+                <i class="bi bi-chevron-right toggle-icon"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div id="resultsContainer">
+              <div class="result-item text-center text-muted p-4">
+                No hay resultados aún. Presiona "Generar Turnos" para comenzar.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -392,6 +517,33 @@
     
     let resultados = [];
     
+    // Toggle del panel de resultados
+    const btnToggleResults = document.getElementById('btnToggleResults');
+    const resultsSidebar = document.getElementById('resultsSidebar');
+    const toggleIcon = btnToggleResults.querySelector('.toggle-icon');
+    
+    function expandResultsPanel() {
+      if (resultsSidebar.classList.contains('collapsed')) {
+        resultsSidebar.classList.remove('collapsed');
+        toggleIcon.classList.remove('bi-chevron-right');
+        toggleIcon.classList.add('bi-chevron-left');
+        btnToggleResults.title = 'Contraer panel';
+      }
+    }
+    
+    btnToggleResults.addEventListener('click', () => {
+      resultsSidebar.classList.toggle('collapsed');
+      if (resultsSidebar.classList.contains('collapsed')) {
+        toggleIcon.classList.remove('bi-chevron-left');
+        toggleIcon.classList.add('bi-chevron-right');
+        btnToggleResults.title = 'Expandir panel';
+      } else {
+        toggleIcon.classList.remove('bi-chevron-right');
+        toggleIcon.classList.add('bi-chevron-left');
+        btnToggleResults.title = 'Contraer panel';
+      }
+    });
+    
     btnGenerar.addEventListener('click', async () => {
       const numTurnos = parseInt(numTurnosInput.value);
       
@@ -410,6 +562,7 @@
         return;
       }
       
+      expandResultsPanel();
       btnGenerar.disabled = true;
       btnGenerar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generando...';
       
@@ -602,6 +755,7 @@
     });
     
     async function restaurarTotem() {
+      expandResultsPanel();
       btnRestaurarTotem.disabled = true;
       const originalText = btnRestaurarTotem.innerHTML;
       btnRestaurarTotem.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Restaurando...';
@@ -709,6 +863,7 @@
     });
     
     async function restaurarCarteleria() {
+      expandResultsPanel();
       btnRestaurarCarteleria.disabled = true;
       const originalText = btnRestaurarCarteleria.innerHTML;
       btnRestaurarCarteleria.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Restaurando...';
@@ -1012,6 +1167,11 @@
     document.addEventListener('DOMContentLoaded', () => {
       cargarScores();
       cargarBranchesMonitor();
+      // Inicializar tooltips de Bootstrap
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
     });
   </script>
 </body>
