@@ -337,20 +337,64 @@
                 <tr>
                   <th>Usuario</th>
                   <th>Contraseña</th>
+                  <th>Token</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><a href="mailto:glauria@sucursales.com">glauria@sucursales.com</a></td>
                   <td><code>Sucursales$2026</code></td>
+                  <td>—</td>
                 </tr>
                 <tr>
-                  <td><a href="mailto:jmacera@sucursales.com">jmacera@sucursales.com</a></td>
+                  <td>jmacera@sucursales.com</td>
                   <td><code>Sucursales$2026</code></td>
+                  <td>—</td>
                 </tr>
                 <tr>
                   <td><a href="mailto:jcsoto@sucursales.com">jcsoto@sucursales.com</a></td>
                   <td><code>Sucursales$2026</code></td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>ecorona@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4926-R8TbGe</code></td>
+                </tr>
+                <tr>
+                  <td><a href="mailto:aamaya@sucursales.com">aamaya@sucursales.com</a></td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td>4928-R8TbGe</td>
+                </tr>
+                <tr>
+                  <td>mfcanto@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4932-R8TbGe</code></td>
+                </tr>
+                <tr>
+                  <td>jlissarrague@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4930-R8TbGe</code></td>
+                </tr>
+                <tr>
+                  <td>mormachea@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4929-R8TbGe</code></td>
+                </tr>
+                <tr>
+                  <td>jsuarez@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4931-R8TbGe</code></td>
+                </tr>
+                <tr>
+                  <td>npantoja@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4933-R8TbGe</code></td>
+                </tr>
+                <tr>
+                  <td>aromero@sucursales.com</td>
+                  <td><code>Sucursales$2026</code></td>
+                  <td><code>4934-R8TbGe</code></td>
                 </tr>
               </tbody>
             </table>
@@ -470,6 +514,37 @@
           <div class="text-center text-muted p-4">
             <span class="spinner-border spinner-border-sm me-2"></span>Cargando sucursales...
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para seleccionar nombre de cartelería -->
+  <div class="modal fade" id="modalSeleccionarCarteleria" tabindex="-1" aria-labelledby="modalSeleccionarCarteleriaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalSeleccionarCarteleriaLabel">Seleccionar Cartelería</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">Selecciona el nombre para restaurar la cartelería:</p>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Jorge" data-task-id="3929" data-task-name="Pantallas Jorge">Jorge</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Juanca" data-task-id="4078" data-task-name="Lista Juanca">Juanca</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Edu" data-task-id="4079" data-task-name="Lista Edu">Edu</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Joaco" data-task-id="4080" data-task-name="Lista Joaco">Joaco</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Andre" data-task-id="4081" data-task-name="Lista Andre">Andre</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Manu" data-task-id="4082" data-task-name="Lista Manu">Manu</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="JuanmaL" data-task-id="4083" data-task-name="Lista JuanmaL">JuanmaL</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="JuanmaS" data-task-id="4084" data-task-name="Lista JuanmaS">JuanmaS</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Tincho" data-task-id="4085" data-task-name="Lista Tincho">Tincho</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Naty" data-task-id="4086" data-task-name="Lista Naty">Naty</button>
+            <button type="button" class="btn btn-outline-primary btn-seleccionar-carteleria" data-nombre="Aldo" data-task-id="4087" data-task-name="Lista Aldo">Aldo</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>
     </div>
@@ -858,11 +933,42 @@
       }
     }
     
-    btnRestaurarCarteleria.addEventListener('click', async () => {
-      await restaurarCarteleria();
+    btnRestaurarCarteleria.addEventListener('click', () => {
+      const modalElement = document.getElementById('modalSeleccionarCarteleria');
+      if (!modalElement) {
+        console.error('Modal no encontrado');
+        alert('Error: Modal no encontrado. Por favor recarga la página.');
+        return;
+      }
+      
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
     });
     
-    async function restaurarCarteleria() {
+    // Event listeners para los botones de selección de cartelería usando delegación de eventos
+    document.addEventListener('click', async (e) => {
+      if (e.target && e.target.classList.contains('btn-seleccionar-carteleria')) {
+        const btn = e.target;
+        const nombre = btn.getAttribute('data-nombre');
+        const taskId = parseInt(btn.getAttribute('data-task-id'));
+        const taskName = btn.getAttribute('data-task-name');
+        
+        if (!nombre || !taskId || !taskName) {
+          console.error('Datos faltantes en el botón:', { nombre, taskId, taskName });
+          return;
+        }
+        
+        const modalElement = document.getElementById('modalSeleccionarCarteleria');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+        
+        await restaurarCarteleria(taskId, taskName, nombre);
+      }
+    });
+    
+    async function restaurarCarteleria(taskId, taskName, nombre) {
       expandResultsPanel();
       btnRestaurarCarteleria.disabled = true;
       const originalText = btnRestaurarCarteleria.innerHTML;
@@ -870,8 +976,8 @@
       
       const requestBody = {
         "task": {
-          "id": 3929,
-          "name": "Tarea Canal 3671",
+          "id": taskId,
+          "name": taskName,
           "initHour": "00:00:00",
           "endHour": "23:59:59",
           "initDay": "2000-01-01",
@@ -943,7 +1049,7 @@
         // Agregar resultado de error a la lista
         const resultado = {
           numero: resultados.length + 1,
-          persona: { dni: 'N/A', firstName: 'Sistema', lastName: 'Cartelería' },
+          persona: { dni: 'N/A', firstName: 'Sistema', lastName: `Cartelería ${nombre || ''}` },
           queueId: 'N/A',
           branchId: 'N/A',
           success: false,
