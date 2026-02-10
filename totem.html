@@ -880,13 +880,21 @@
             totemContainer.style.position = 'relative';
           }
           
-          // Asegurar que el avatar cubra todo el contenedor
+          // Asegurar que el avatar cubra toda la pantalla
           if (screenAvatar) {
-            screenAvatar.style.position = 'absolute';
+            screenAvatar.style.position = 'fixed';
             screenAvatar.style.top = '0';
             screenAvatar.style.left = '0';
-            screenAvatar.style.width = '100%';
-            screenAvatar.style.height = '100%';
+            screenAvatar.style.width = '100vw';
+            screenAvatar.style.height = '100vh';
+            screenAvatar.style.zIndex = '9999';
+            
+            // Asegurar que el iframe también ocupe toda la pantalla
+            const avatarIframe = screenAvatar.querySelector('iframe');
+            if (avatarIframe) {
+              avatarIframe.style.width = '100vw';
+              avatarIframe.style.height = '100vh';
+            }
           }
         });
       }
