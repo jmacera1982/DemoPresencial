@@ -1428,9 +1428,18 @@
                     textoLower.includes('**sugerir videollamada:** sí') ||
                     textoLower.includes('**sugerir videollamada:**si') ||
                     textoLower.includes('**sugerir videollamada:**sí') ||
-                    // Detectar "Tipo de atención sugerida: Videollamada" (debe estar juntos)
+                    textoLower.includes('**sugerir videollamada**: si') ||
+                    textoLower.includes('**sugerir videollamada**: sí') ||
+                    textoLower.includes('**sugerir videollamada**:si') ||
+                    textoLower.includes('**sugerir videollamada**:sí') ||
+                    // Detectar "Tipo de atención sugerida: Videollamada" (múltiples variaciones)
                     textoLower.includes('tipo de atención sugerida: videollamada') ||
-                    textoLower.includes('tipo de atención sugerida:videollamada');
+                    textoLower.includes('tipo de atención sugerida:videollamada') ||
+                    textoLower.includes('**tipo de atención sugerida**: videollamada') ||
+                    textoLower.includes('**tipo de atención sugerida**:videollamada') ||
+                    textoLower.includes('**tipo de atención sugerida**: videollamada.') ||
+                    (textoLower.includes('tipo de atención sugerida') && textoLower.includes('videollamada')) ||
+                    (textoLower.includes('**tipo de atención sugerida**') && textoLower.includes('videollamada'));
                 }
                 
                 // Mostrar videollamada si el texto lo sugiere O si el Scoring > 640 (estricto, no >=)
@@ -1467,8 +1476,18 @@
                 textoLower.includes('**sugerir videollamada:** sí') ||
                 textoLower.includes('**sugerir videollamada:**si') ||
                 textoLower.includes('**sugerir videollamada:**sí') ||
-                // Detectar "Tipo de atención sugerida: Videollamada"
+                textoLower.includes('**sugerir videollamada**: si') ||
+                textoLower.includes('**sugerir videollamada**: sí') ||
+                textoLower.includes('**sugerir videollamada**:si') ||
+                textoLower.includes('**sugerir videollamada**:sí') ||
+                // Detectar "Tipo de atención sugerida: Videollamada" (múltiples variaciones)
+                textoLower.includes('tipo de atención sugerida: videollamada') ||
+                textoLower.includes('tipo de atención sugerida:videollamada') ||
+                textoLower.includes('**tipo de atención sugerida**: videollamada') ||
+                textoLower.includes('**tipo de atención sugerida**:videollamada') ||
+                textoLower.includes('**tipo de atención sugerida**: videollamada.') ||
                 (textoLower.includes('tipo de atención sugerida') && textoLower.includes('videollamada')) ||
+                (textoLower.includes('**tipo de atención sugerida**') && textoLower.includes('videollamada')) ||
                 (textoLower.includes('tipo de atención sugerida:') && textoLower.includes('videollamada'));
               // Mostrar videollamada si el texto lo sugiere O si el Scoring > 640
               const tieneVideollamada = tieneVideollamadaTexto || (scoring !== null && scoring > 640);
