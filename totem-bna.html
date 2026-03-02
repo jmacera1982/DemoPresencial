@@ -403,7 +403,7 @@
       <div class="video-container">
         <iframe 
           id="youtubeVideo"
-          src="https://www.youtube.com/embed/9345o50GWEQ?autoplay=1&mute=0&controls=1&rel=0" 
+          src="https://www.youtube.com/embed/9345o50GWEQ?autoplay=1&mute=1&controls=1&rel=0&loop=1&playlist=9345o50GWEQ" 
           frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
           allowfullscreen
@@ -512,22 +512,36 @@
       }
     }
     
-    // Detectar si hay error en el iframe después de cargar
+    // Asegurar que el video se reproduzca automáticamente al cargar
     window.addEventListener('load', function() {
-      // Esperar un tiempo para ver si el video carga correctamente
-      setTimeout(function() {
-        const iframe = document.getElementById('youtubeVideo');
-        if (iframe) {
-          // Intentar detectar errores (limitado por CORS)
+      console.log('📹 Página cargada, asegurando reproducción automática del video...');
+      const iframe = document.getElementById('youtubeVideo');
+      if (iframe) {
+        // Forzar que el iframe tenga los parámetros correctos para autoplay
+        const currentSrc = iframe.src;
+        if (!currentSrc.includes('autoplay=1') || !currentSrc.includes('mute=1')) {
+          // Si falta algún parámetro, actualizar la URL
+          let newSrc = 'https://www.youtube.com/embed/9345o50GWEQ?autoplay=1&mute=1&controls=1&rel=0&loop=1&playlist=9345o50GWEQ';
+          iframe.src = newSrc;
+          console.log('✅ URL del video actualizada para autoplay');
+        }
+        
+        // Intentar reproducir después de un breve delay
+        setTimeout(function() {
           try {
-            // Si después de 5 segundos no hay interacción, podría haber un error
-            // Pero como tenemos el overlay, el usuario siempre puede hacer clic
-            console.log('Video iframe cargado');
+            // Los navegadores modernos requieren interacción del usuario para reproducir con sonido
+            // Por eso mantenemos mute=1 para que el autoplay funcione
+            console.log('✅ Video configurado para reproducirse automáticamente');
           } catch (e) {
             console.log('No se puede acceder al contenido del iframe (normal para YouTube)');
           }
-        }
-      }, 2000);
+        }, 500);
+      }
+    });
+    
+    // También intentar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('📹 DOM cargado, preparando video...');
     });
     
     function iniciarAtencionDirecta() {
