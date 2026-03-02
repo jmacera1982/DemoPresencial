@@ -324,11 +324,101 @@
     .camera-btn.secondary:hover {
       background: #4b5563;
     }
+    
+    /* Pantalla de Video */
+    .screen-video {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      cursor: pointer;
+    }
+    
+    .screen-video.hidden {
+      display: none;
+    }
+    
+    .video-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 5;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    
+    .video-overlay::after {
+      content: 'Haga clic para continuar';
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      pointer-events: none;
+      animation: pulse-overlay 2s infinite;
+    }
+    
+    @keyframes pulse-overlay {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    #videoError {
+      pointer-events: auto;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <!-- Contenedor del tótem -->
   <div class="totem-container">
+    <!-- Pantalla de Video -->
+    <div class="screen-video" id="screenVideo" onclick="ocultarVideoYMostrarBiometria()">
+      <div class="video-container">
+        <iframe 
+          id="youtubeVideo"
+          src="https://www.youtube.com/embed/9345o50GWEQ?autoplay=1&mute=0&controls=1&rel=0" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen
+          style="width: 100%; height: 100%;"
+          onerror="mostrarErrorVideo()">
+        </iframe>
+        <div class="video-overlay"></div>
+        <div id="videoError" onclick="ocultarVideoYMostrarBiometria()" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 2rem; border-radius: 8px; text-align: center; z-index: 100; cursor: pointer;">
+          <p style="font-size: 1.2rem; margin-bottom: 1rem;">⚠️ Error al cargar el video</p>
+          <p style="margin-bottom: 1rem;">Haga clic aquí para continuar</p>
+          <a href="https://www.youtube.com/watch?v=9345o50GWEQ" target="_blank" onclick="event.stopPropagation();" style="color: #4CAF50; text-decoration: underline;">Ver en YouTube</a>
+        </div>
+      </div>
+    </div>
+    
     <!-- Header -->
     <div class="totem-header">
       <img src="images/bna.png" alt="Banco de la Nación Argentina" style="height: 40px; object-fit: contain;">
@@ -338,7 +428,7 @@
     <!-- Contenido del tótem -->
     <div class="totem-content">
       <!-- Pantalla inicial con botón -->
-      <div class="screen-biometria" id="screenBiometria">
+      <div class="screen-biometria hidden" id="screenBiometria">
         <h2>Reconocimiento Facial</h2>
         <p class="subtitle">Por favor, mire hacia la cámara</p>
         
@@ -357,7 +447,7 @@
         </div>
         
         <!-- Botón de inicio -->
-        <button class="btn-iniciar-atencion" id="btnIniciarAtencion" onclick="mostrarPantallaCamara()">
+        <button class="btn-iniciar-atencion" id="btnIniciarAtencion" onclick="iniciarAtencionDirecta()">
           <span class="btn-text">Iniciar Atención</span>
         </button>
         <p style="margin-top: 15px; font-size: 0.9rem; color: var(--bna-text-light); text-align: center;">
@@ -382,11 +472,6 @@
         <div class="biometric-progress">
           <div class="biometric-progress-fill" id="biometricProgress"></div>
         </div>
-        
-        <!-- Controles de la cámara -->
-        <div class="camera-controls" id="cameraControls">
-          <button class="camera-btn" onclick="startCamera()">Activar Cámara</button>
-        </div>
       </div>
     </div>
   </div>
@@ -396,14 +481,66 @@
     let videoElement = null;
     let scanInterval = null;
     
+    const screenVideo = document.getElementById('screenVideo');
     const screenBiometria = document.getElementById('screenBiometria');
     const screenCamara = document.getElementById('screenCamara');
     const btnIniciarAtencion = document.getElementById('btnIniciarAtencion');
 
-    function mostrarPantallaCamara() {
-      console.log('🚀 Mostrando pantalla de cámara...');
-      screenBiometria.classList.add('hidden');
-      screenCamara.classList.remove('hidden');
+    function ocultarVideoYMostrarBiometria() {
+      console.log('🎬 Ocultando video y mostrando biometría...');
+      // Detener el video si está reproduciéndose
+      const iframe = document.getElementById('youtubeVideo');
+      if (iframe) {
+        try {
+          iframe.src = '';
+        } catch (e) {
+          console.log('No se pudo detener el video:', e);
+        }
+      }
+      if (screenVideo) {
+        screenVideo.classList.add('hidden');
+      }
+      if (screenBiometria) {
+        screenBiometria.classList.remove('hidden');
+      }
+    }
+    
+    function mostrarErrorVideo() {
+      const errorDiv = document.getElementById('videoError');
+      if (errorDiv) {
+        errorDiv.style.display = 'block';
+      }
+    }
+    
+    // Detectar si hay error en el iframe después de cargar
+    window.addEventListener('load', function() {
+      // Esperar un tiempo para ver si el video carga correctamente
+      setTimeout(function() {
+        const iframe = document.getElementById('youtubeVideo');
+        if (iframe) {
+          // Intentar detectar errores (limitado por CORS)
+          try {
+            // Si después de 5 segundos no hay interacción, podría haber un error
+            // Pero como tenemos el overlay, el usuario siempre puede hacer clic
+            console.log('Video iframe cargado');
+          } catch (e) {
+            console.log('No se puede acceder al contenido del iframe (normal para YouTube)');
+          }
+        }
+      }, 2000);
+    });
+    
+    function iniciarAtencionDirecta() {
+      console.log('🚀 Iniciando atención directamente...');
+      // Ocultar pantalla de biometría y mostrar pantalla de cámara
+      if (screenBiometria) {
+        screenBiometria.classList.add('hidden');
+      }
+      if (screenCamara) {
+        screenCamara.classList.remove('hidden');
+      }
+      // Activar cámara directamente
+      startCamera();
     }
 
     async function startCamera() {
@@ -533,9 +670,8 @@
       // Detener cámara
       stopCamera();
       
-      // Ocultar controles de cámara
+      // Ocultar contenedor de cámara
       if (cameraContainer) cameraContainer.style.display = 'none';
-      if (cameraControls) cameraControls.style.display = 'none';
       
       // Redirigir al avatar después de 2 segundos
       setTimeout(() => {
