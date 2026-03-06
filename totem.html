@@ -901,54 +901,11 @@
       const opcionMenu = document.getElementById('opcionMenu');
       const btnCerrarAvatar = document.getElementById('btnCerrarAvatar');
       
-      // Event listener para opción Avatar
+      // Event listener para opción Avatar - Redirigir a página separada
       if (opcionAvatar) {
         opcionAvatar.addEventListener('click', () => {
-          screenMenuInicial.classList.add('hidden');
-          screenAvatar.classList.add('active');
-          
-          // Ocultar pantalla DNI
-          const screenDniEl = document.getElementById('screenDni');
-          if (screenDniEl) {
-            screenDniEl.style.display = 'none';
-          }
-          
-          // Ajustar el padding del contenedor para que el iframe ocupe todo el espacio
-          const totemContent = document.querySelector('.totem-content');
-          if (totemContent) {
-            totemContent.style.padding = '0';
-            totemContent.style.position = 'relative';
-          }
-          
-          // Ocultar el header del totem cuando se muestra el avatar
-          const totemHeader = document.querySelector('.totem-header');
-          if (totemHeader) {
-            totemHeader.style.display = 'none';
-          }
-          
-          // Ajustar el contenedor del totem para que el avatar ocupe todo el espacio
-          const totemContainer = document.querySelector('.totem-container');
-          if (totemContainer) {
-            totemContainer.style.position = 'relative';
-          }
-          
-          // Asegurar que el avatar cubra toda la pantalla
-          if (screenAvatar) {
-            screenAvatar.style.position = 'fixed';
-            screenAvatar.style.top = '0';
-            screenAvatar.style.left = '0';
-            screenAvatar.style.width = '100vw';
-            screenAvatar.style.height = '100vh';
-            screenAvatar.style.zIndex = '9999';
-            
-            // Asegurar que el iframe también ocupe toda la pantalla
-            const avatarIframe = screenAvatar.querySelector('iframe');
-            if (avatarIframe) {
-              avatarIframe.style.width = '100vw';
-              avatarIframe.style.height = '100vh';
-            }
-          }
-          
+          console.log('🎭 Redirigiendo a página de Avatar...');
+          window.location.href = 'avatar.html';
         });
       }
       
