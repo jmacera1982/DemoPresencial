@@ -342,6 +342,35 @@
       opacity: 0.9;
     }
     
+    .welcome-section select {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .welcome-section select:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .welcome-section select:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .welcome-section select option {
+      background: var(--numia-azul);
+      color: white;
+    }
+    
     .balance-card {
       background: white;
       border-radius: 16px;
@@ -781,7 +810,23 @@
       <div class="main-container" style="padding: 0; margin: 0;">
     <!-- Welcome Section -->
     <div class="welcome-section">
-      <h1>¡Hola, Juan Pérez!</h1>
+      <div style="margin-bottom: 1rem;">
+        <select id="nombreSelector" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.2); color: white; font-size: 0.95rem; font-weight: 500; cursor: pointer;">
+          <option value="Jorge" selected>Jorge</option>
+          <option value="Joaquin">Joaquin/option>
+          <option value="Gustavo">Gustavo</option>
+          <option value="Martin">Martin</option>
+          <option value="Juanma S">Juanma S</option>
+          <option value="Juanma L">Juanma L</option>
+          <option value="Andrea">Andrea</option>
+          <option value="Natalia">Natalia</option>
+          <option value="Aldo">Aldo</option>
+          <option value="Eduardo">Eduardo</option>
+          <option value="Manuel">Manuel</option>
+          <option value="demo">demo</option>
+        </select>
+      </div>
+      <h1 id="saludoNombre">¡Hola, Jorge!</h1>
       <p>Bienvenido a tu banca en línea</p>
       <button id="btnSolicitarAtencion" class="btn" style="background-color: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); padding: 0.75rem 1.5rem; border-radius: 10px; font-size: 0.95rem; font-weight: 600; margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; width: auto;">
         <i class="bi bi-geo-alt"></i><span>Estoy en la sucursal</span>
@@ -944,6 +989,49 @@
       // Configuración de la API Journey Builder
       const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/38223ec2-6123-4e6e-862a-4945161ed221?stream=false';
       const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
+
+      // Objeto con nombres y DNI
+      const usuarios = {
+        'Jorge': { dni: '29328703', apellido: 'Macera' },
+        'Joaquin': { dni: '33877733', apellido: 'Usuario' },
+        'Gustavo': { dni: '33689449', apellido: 'Usuario' },
+        'Martin': { dni: '33333333', apellido: 'Usuario' },
+        'Juanma S': { dni: '44444444', apellido: 'Usuario' },
+        'Juanma L': { dni: '55555555', apellido: 'Usuario' },
+        'Andrea': { dni: '66666666', apellido: 'Usuario' },
+        'Natalia': { dni: '77777777', apellido: 'Usuario' },
+        'Aldo': { dni: '88888888', apellido: 'Usuario' },
+        'Eduardo': { dni: '99999999', apellido: 'Usuario' },
+        'Manuel': { dni: '10101010', apellido: 'Usuario' },
+        'demo': { dni: '12345678', apellido: 'Demo' }
+      };
+      
+      // Función para obtener el usuario actual
+      function getUsuarioActual() {
+        const selector = document.getElementById('nombreSelector');
+        const nombreSeleccionado = selector ? selector.value : 'Jorge';
+        return usuarios[nombreSeleccionado] || usuarios['Jorge'];
+      }
+      
+      // Función para obtener el nombre actual
+      function getNombreActual() {
+        const selector = document.getElementById('nombreSelector');
+        return selector ? selector.value : 'Jorge';
+      }
+      
+      // Manejar cambio de nombre en el selector
+      const nombreSelector = document.getElementById('nombreSelector');
+      const saludoNombre = document.getElementById('saludoNombre');
+      
+      if (nombreSelector && saludoNombre) {
+        nombreSelector.addEventListener('change', function() {
+          const nombreSeleccionado = this.value;
+          saludoNombre.textContent = `¡Hola, ${nombreSeleccionado}!`;
+        });
+        
+        // Inicializar saludo con el valor por defecto
+        saludoNombre.textContent = `¡Hola, ${nombreSelector.value}!`;
+      }
 
       // Elementos del DOM
       const btnSolicitarAtencion = document.getElementById('btnSolicitarAtencion');
@@ -1861,10 +1949,13 @@
           const apiUrl = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
           const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
           
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          
           const datos = {
-            firstName: 'Jorge',
-            lastName: 'Macera',
-            dni: '12345678',
+            firstName: nombreActual,
+            lastName: usuarioActual.apellido,
+            dni: usuarioActual.dni,
             email: 'mail@mail.com',
             phone: ''
           };
@@ -1890,7 +1981,7 @@
             <div class="alert alert-success mt-3">
               <i class="bi bi-check-circle-fill me-2"></i>
               <strong>Atención presencial solicitada correctamente</strong>
-              <p class="mb-0 mt-2">Lo llamaremos con su DNI: <strong>12345678</strong></p>
+              <p class="mb-0 mt-2">Lo llamaremos con su DNI: <strong>${usuarioActual.dni}</strong></p>
             </div>
           `;
           
@@ -1912,12 +2003,15 @@
           const apiUrl = `https://filavirtual2.debmedia.com/api/v1/queue/${queueId}/branch/10750/enqueue`;
           const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
           
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          
           const datos = {
-            firstName: 'Jorge',
-            lastName: 'Macera',
-            dni: '1234678',
+            firstName: nombreActual,
+            lastName: usuarioActual.apellido,
+            dni: usuarioActual.dni,
             email: 'mail@mail.com',
-            phone: '12345678'
+            phone: usuarioActual.dni
           };
           
           const response = await fetch(apiUrl, {
@@ -1990,12 +2084,15 @@
           const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
           
           // Datos a enviar
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          
           const datos = {
-            firstName: 'Jorge',
-            lastName: 'Macera',
-            dni: '12345678',
+            firstName: nombreActual,
+            lastName: usuarioActual.apellido,
+            dni: usuarioActual.dni,
             email: 'mail@mail.com',
-            phone: '12345678'
+            phone: usuarioActual.dni
           };
           
           // Llamar a la API

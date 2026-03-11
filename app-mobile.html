@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>App Mobile - Inicio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-red: #dc2626;
+      --primary-orange: #f97316;
+      --text-dark: #111827;
+      --text-light: #6b7280;
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --border-color: #e5e7eb;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding: 0;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    /* Mobile Device Container */
+    .mobile-container {
+      max-width: 375px;
+      margin: 2rem auto;
+      background: #000;
+      border-radius: 30px;
+      padding: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .mobile-screen {
+      background: var(--bg-white);
+      border-radius: 22px;
+      overflow: hidden;
+      height: 812px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      background: var(--bg-white);
+      padding: 8px 16px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      height: 44px;
+    }
+    
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    /* Header */
+    .app-header {
+      background: var(--bg-white);
+      padding: 12px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .app-header h1 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 80px;
+      background: var(--bg-light);
+    }
+    
+    /* COVID Banner */
+    .covid-banner {
+      background: var(--bg-white);
+      margin: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      gap: 16px;
+    }
+    
+    .covid-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .covid-image i {
+      font-size: 2rem;
+      color: var(--text-light);
+    }
+    
+    .covid-content {
+      flex: 1;
+    }
+    
+    .covid-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    
+    .covid-button {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .carousel-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-color);
+    }
+    
+    .indicator.active {
+      background: var(--bg-white);
+    }
+    
+    /* Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+    
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-red);
+    }
+    
+    .section-arrow {
+      color: var(--text-light);
+      font-size: 1.25rem;
+    }
+    
+    /* Credentials Card */
+    .credentials-card {
+      background: var(--bg-white);
+      margin: 0 16px 16px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-orange) 0%, #fb923c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .user-avatar i {
+      font-size: 1.5rem;
+      color: white;
+    }
+    
+    .user-details {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+    
+    .user-dni {
+      font-size: 0.875rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .user-code {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-orange);
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+    
+    .token-button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-orange) 0%, #fb923c 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    
+    /* Favorites Card */
+    .favorites-card {
+      background: var(--bg-white);
+      margin: 0 16px 16px;
+      border-radius: 12px;
+      padding: 24px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+    
+    .favorites-icon {
+      font-size: 2.5rem;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    
+    .favorites-text {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    
+    .favorites-link {
+      color: var(--primary-red);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    
+    /* Branch Card */
+    .branch-card {
+      background: var(--bg-white);
+      margin: 0 16px 16px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 375px;
+      background: var(--bg-white);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 24px;
+      z-index: 1000;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px 12px;
+      flex: 1;
+      text-decoration: none;
+    }
+    
+    .nav-item i {
+      font-size: 1.25rem;
+    }
+    
+    .nav-item.active i,
+    .nav-item.active span {
+      color: var(--primary-red);
+    }
+    
+    .nav-item:not(.active) i,
+    .nav-item:not(.active) span {
+      color: var(--text-light);
+    }
+    
+    .nav-item span {
+      font-size: 0.6875rem;
+      font-weight: 500;
+    }
+    
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: var(--bg-white);
+      border-radius: 3px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 400px) {
+      .mobile-container {
+        margin: 0;
+        border-radius: 0;
+        max-width: 100%;
+      }
+      
+      .mobile-screen {
+        border-radius: 0;
+        height: 100vh;
+      }
+      
+      .bottom-nav {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    <div class="mobile-screen">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div class="status-left">
+          <span>Tuenti</span>
+          <i class="bi bi-signal-4"></i>
+        </div>
+        <div class="status-center">14:31</div>
+        <div class="status-right">
+          <i class="bi bi-wifi"></i>
+          <i class="bi bi-lock-fill"></i>
+          <span>71%</span>
+          <i class="bi bi-battery-full"></i>
+        </div>
+      </div>
+      
+      <!-- App Header -->
+      <div class="app-header">
+        <h1>Inicio</h1>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- COVID Banner -->
+        <div class="covid-banner">
+          <div class="covid-image">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <div class="covid-content">
+            <div class="covid-title">COVID-19</div>
+            <button class="covid-button">Más información</button>
+          </div>
+        </div>
+        
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+          <div class="indicator active"></div>
+          <div class="indicator"></div>
+          <div class="indicator"></div>
+        </div>
+        
+        <!-- Mis Credenciales -->
+        <div class="section-header">
+          <div class="section-title">Mis credenciales</div>
+          <i class="bi bi-chevron-right section-arrow"></i>
+        </div>
+        
+        <div class="credentials-card">
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="user-details">
+              <div class="user-name">PATRICIA AGUADO</div>
+              <div class="user-dni">
+                DNI: 99999999
+                <i class="bi bi-eye" style="cursor: pointer;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="user-code">800006 1312731 01 0002</div>
+          <button class="token-button">
+            <i class="bi bi-lock-fill"></i>
+            <span>Generar Token</span>
+          </button>
+        </div>
+        
+        <!-- Favoritos de cartilla -->
+        <div class="section-header">
+          <div class="section-title">Favoritos de cartilla</div>
+          <i class="bi bi-chevron-right section-arrow"></i>
+        </div>
+        
+        <div class="favorites-card">
+          <i class="bi bi-heart favorites-icon"></i>
+          <div class="favorites-text">Todavía no tenés favoritos</div>
+          <a href="#" class="favorites-link">Buscar y agregar</a>
+        </div>
+        
+        <!-- Sucursal más cercana -->
+        <div class="section-header">
+          <div class="section-title">Sucursal más cercana</div>
+        </div>
+        
+        <div class="branch-card">
+          <div style="padding: 16px; text-align: center; color: var(--text-light);">
+            Cargando información...
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+          <i class="bi bi-house-door"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-file-text"></i>
+          <span>Cartilla</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-people"></i>
+          <span>Turnos</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-camera-video"></i>
+          <span>E-consulta</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-three-dots"></i>
+          <span>Más</span>
+        </a>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Toggle DNI visibility
+    document.querySelector('.user-dni i').addEventListener('click', function() {
+      const dniText = this.previousSibling;
+      if (dniText.nodeType === 3) {
+        const dni = dniText.textContent.trim();
+        if (dni.includes('99999999')) {
+          dniText.textContent = 'DNI: •••••••• ';
+        } else {
+          dniText.textContent = 'DNI: 99999999 ';
+        }
+      }
+    });
+    
+    // Generate Token
+    document.querySelector('.token-button').addEventListener('click', function() {
+      alert('Generando token...');
+      // Aquí iría la lógica para generar el token
+    });
+    
+    // COVID Button
+    document.querySelector('.covid-button').addEventListener('click', function() {
+      alert('Más información sobre COVID-19');
+    });
+    
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Section arrows
+    document.querySelectorAll('.section-arrow').forEach(arrow => {
+      arrow.addEventListener('click', function() {
+        const section = this.closest('.section-header');
+        const title = section.querySelector('.section-title').textContent;
+        alert(`Navegando a: ${title}`);
+      });
+    });
+  </script>
+</body>
+</html>
