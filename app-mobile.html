@@ -36,7 +36,7 @@
     
     /* Mobile Device Container */
     .mobile-container {
-      max-width: 375px;
+      max-width: 700px;
       margin: 2rem auto;
       background: #000;
       border-radius: 30px;
@@ -52,6 +52,14 @@
       display: flex;
       flex-direction: column;
       position: relative;
+    }
+    
+    .mobile-screen-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
     }
     
     /* Status Bar */
@@ -106,8 +114,9 @@
     .main-content {
       flex: 1;
       overflow-y: auto;
-      padding-bottom: 80px;
+      padding-bottom: 16px;
       background: var(--bg-light);
+      min-height: 0;
     }
     
     /* COVID Banner */
@@ -317,18 +326,15 @@
     
     /* Bottom Navigation */
     .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative;
       width: 100%;
-      max-width: 375px;
       background: var(--bg-white);
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-around;
       padding: 8px 0 24px;
       z-index: 1000;
+      flex-shrink: 0;
     }
     
     .nav-item {
@@ -386,8 +392,213 @@
       }
       
       .bottom-nav {
-        max-width: 100%;
+        width: 100%;
       }
+    }
+    
+    /* User Selector */
+    .user-selector-container {
+      padding: 16px;
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .user-selector {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      background: var(--bg-white);
+      cursor: pointer;
+    }
+    
+    /* Appointments Section */
+    .appointments-section {
+      margin: 16px;
+    }
+    
+    .appointment-card {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 16px;
+    }
+    
+    .appointment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .appointment-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .appointment-date {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    
+    .appointment-details {
+      font-size: 0.875rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+    
+    .appointment-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-confirm {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .btn-cancel-appointment {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .btn-agendar {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 90%;
+      width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    
+    .form-select,
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      color: var(--text-dark);
+      background: var(--bg-white);
+    }
+    
+    .no-availability {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      text-align: center;
+      margin-top: 16px;
+    }
+    
+    .btn-submit {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -412,6 +623,14 @@
       <!-- App Header -->
       <div class="app-header">
         <h1>Inicio</h1>
+      </div>
+      
+      <!-- User Selector -->
+      <div class="user-selector-container">
+        <select id="userSelector" class="user-selector">
+          <option value="Jorge" selected>Jorge</option>
+          <option value="Joaquin">Joaquin</option>
+        </select>
       </div>
       
       <!-- Main Content -->
@@ -446,7 +665,7 @@
               <i class="bi bi-person-fill"></i>
             </div>
             <div class="user-details">
-              <div class="user-name">PATRICIA AGUADO</div>
+              <div class="user-name" id="userNameDisplay">JORGE MACERA</div>
               <div class="user-dni">
                 DNI: 99999999
                 <i class="bi bi-eye" style="cursor: pointer;"></i>
@@ -458,6 +677,49 @@
             <i class="bi bi-lock-fill"></i>
             <span>Generar Token</span>
           </button>
+        </div>
+        
+        <!-- Appointments Section (solo para Joaquin) -->
+        <div id="appointmentsSection" class="appointments-section" style="display: none;">
+          <div class="section-header">
+            <div class="section-title">Mis Citas</div>
+          </div>
+          <div id="appointmentCard" class="appointment-card">
+            <div class="appointment-header">
+              <div class="appointment-title">Cita Médica</div>
+            </div>
+            <div class="appointment-date" id="appointmentDate"></div>
+            <div class="appointment-details">
+              <div>Especialidad: <strong id="appointmentSpecialty"></strong></div>
+              <div>Horario: <strong id="appointmentTime"></strong></div>
+            </div>
+            <div class="appointment-actions">
+              <button class="btn-confirm" id="btnConfirmAppointment">
+                <i class="bi bi-check-circle"></i>
+                <span>Confirmar</span>
+              </button>
+              <button class="btn-cancel-appointment" id="btnCancelAppointment">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Agendar Cita Button (solo para Jorge) -->
+        <div id="agendarSection" class="appointments-section" style="display: none;">
+          <div class="section-header">
+            <div class="section-title">Mis Citas</div>
+          </div>
+          <div class="appointment-card">
+            <div style="text-align: center; padding: 24px;">
+              <i class="bi bi-calendar-x" style="font-size: 3rem; color: var(--text-light); margin-bottom: 16px;"></i>
+              <div style="color: var(--text-light); margin-bottom: 16px;">No tenés citas agendadas</div>
+              <button class="btn-agendar" id="btnAgendarCita">
+                <i class="bi bi-plus-circle"></i>
+                Agendar una cita
+              </button>
+            </div>
+          </div>
         </div>
         
         <!-- Favoritos de cartilla -->
@@ -481,6 +743,55 @@
           <div style="padding: 16px; text-align: center; color: var(--text-light);">
             Cargando información...
           </div>
+        </div>
+      </div>
+      
+      <!-- Modal para Agendar Cita -->
+      <div id="modalAgendar" class="modal-overlay">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">Agendar Cita</div>
+            <button class="modal-close" id="closeModal">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Especialidad</label>
+            <select id="selectEspecialidad" class="form-select">
+              <option value="">Seleccione una especialidad</option>
+              <option value="Cardiología">Cardiología</option>
+              <option value="Dermatología">Dermatología</option>
+              <option value="Neurología">Neurología</option>
+              <option value="Pediatría">Pediatría</option>
+              <option value="Traumatología">Traumatología</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Fecha</label>
+            <input type="date" id="selectFecha" class="form-input" min="">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Horario</label>
+            <select id="selectHorario" class="form-select">
+              <option value="">Seleccione un horario</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+            </select>
+          </div>
+          
+          <div id="noAvailability" class="no-availability" style="display: none;">
+            <i class="bi bi-exclamation-triangle"></i> No hay disponibilidad para la fecha y horario seleccionados
+          </div>
+          
+          <button class="btn-submit" id="btnBuscarDisponibilidad">Buscar Disponibilidad</button>
         </div>
       </div>
       
@@ -553,6 +864,171 @@
         alert(`Navegando a: ${title}`);
       });
     });
+    
+    // User Selector Logic
+    const userSelector = document.getElementById('userSelector');
+    const appointmentsSection = document.getElementById('appointmentsSection');
+    const agendarSection = document.getElementById('agendarSection');
+    const appointmentDate = document.getElementById('appointmentDate');
+    const appointmentSpecialty = document.getElementById('appointmentSpecialty');
+    const appointmentTime = document.getElementById('appointmentTime');
+    const modalAgendar = document.getElementById('modalAgendar');
+    const btnAgendarCita = document.getElementById('btnAgendarCita');
+    const closeModal = document.getElementById('closeModal');
+    const btnBuscarDisponibilidad = document.getElementById('btnBuscarDisponibilidad');
+    const noAvailability = document.getElementById('noAvailability');
+    const selectFecha = document.getElementById('selectFecha');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    
+    // User names mapping
+    const userNames = {
+      'Jorge': 'JORGE MACERA',
+      'Joaquin': 'JOAQUIN ZOILO'
+    };
+    
+    // Set minimum date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    if (selectFecha) {
+      selectFecha.min = tomorrowStr;
+    }
+    
+    // Function to get tomorrow's date formatted
+    function getTomorrowDate() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      const dayName = days[tomorrow.getDay()];
+      const day = tomorrow.getDate();
+      const month = months[tomorrow.getMonth()];
+      const year = tomorrow.getFullYear();
+      return `${dayName}, ${day} de ${month} de ${year}`;
+    }
+    
+    // Handle user selection change
+    if (userSelector) {
+      userSelector.addEventListener('change', function() {
+        const selectedUser = this.value;
+        
+        // Update user name display
+        if (userNameDisplay && userNames[selectedUser]) {
+          userNameDisplay.textContent = userNames[selectedUser];
+        }
+        
+        if (selectedUser === 'Joaquin') {
+          // Show appointment for Joaquin
+          if (appointmentsSection) appointmentsSection.style.display = 'block';
+          if (agendarSection) agendarSection.style.display = 'none';
+          
+          // Set appointment details for tomorrow
+          if (appointmentDate) appointmentDate.textContent = getTomorrowDate();
+          if (appointmentSpecialty) appointmentSpecialty.textContent = 'Cardiología';
+          if (appointmentTime) appointmentTime.textContent = '10:00';
+        } else {
+          // Show agendar button for Jorge
+          if (appointmentsSection) appointmentsSection.style.display = 'none';
+          if (agendarSection) agendarSection.style.display = 'block';
+        }
+      });
+      
+      // Initialize on load
+      userSelector.dispatchEvent(new Event('change'));
+    }
+    
+    // Confirm appointment
+    const btnConfirmAppointment = document.getElementById('btnConfirmAppointment');
+    if (btnConfirmAppointment) {
+      btnConfirmAppointment.addEventListener('click', function() {
+        alert('Cita confirmada exitosamente');
+      });
+    }
+    
+    // Cancel appointment
+    const btnCancelAppointment = document.getElementById('btnCancelAppointment');
+    if (btnCancelAppointment) {
+      btnCancelAppointment.addEventListener('click', function() {
+        if (confirm('¿Está seguro que desea cancelar esta cita?')) {
+          alert('Cita cancelada');
+          if (appointmentsSection) appointmentsSection.style.display = 'none';
+          if (agendarSection) agendarSection.style.display = 'block';
+        }
+      });
+    }
+    
+    // Open modal to agendar cita
+    if (btnAgendarCita) {
+      btnAgendarCita.addEventListener('click', function() {
+        if (modalAgendar) {
+          modalAgendar.classList.add('active');
+          noAvailability.style.display = 'none';
+        }
+      });
+    }
+    
+    // Close modal
+    if (closeModal) {
+      closeModal.addEventListener('click', function() {
+        if (modalAgendar) {
+          modalAgendar.classList.remove('active');
+        }
+      });
+    }
+    
+    // Close modal on overlay click
+    if (modalAgendar) {
+      modalAgendar.addEventListener('click', function(e) {
+        if (e.target === modalAgendar) {
+          modalAgendar.classList.remove('active');
+        }
+      });
+    }
+    
+    // Buscar disponibilidad (siempre muestra no disponible)
+    if (btnBuscarDisponibilidad) {
+      btnBuscarDisponibilidad.addEventListener('click', function() {
+        const especialidad = document.getElementById('selectEspecialidad').value;
+        const fecha = document.getElementById('selectFecha').value;
+        const horario = document.getElementById('selectHorario').value;
+        
+        if (!especialidad || !fecha || !horario) {
+          alert('Por favor complete todos los campos');
+          return;
+        }
+        
+        // Siempre mostrar no disponible
+        noAvailability.style.display = 'block';
+      });
+    }
+    
+    // Show no availability when any field changes
+    const selectEspecialidad = document.getElementById('selectEspecialidad');
+    const selectHorario = document.getElementById('selectHorario');
+    
+    if (selectEspecialidad) {
+      selectEspecialidad.addEventListener('change', function() {
+        if (this.value && selectFecha.value && selectHorario.value) {
+          noAvailability.style.display = 'block';
+        }
+      });
+    }
+    
+    if (selectFecha) {
+      selectFecha.addEventListener('change', function() {
+        if (this.value && selectEspecialidad.value && selectHorario.value) {
+          noAvailability.style.display = 'block';
+        }
+      });
+    }
+    
+    if (selectHorario) {
+      selectHorario.addEventListener('change', function() {
+        if (this.value && selectEspecialidad.value && selectFecha.value) {
+          noAvailability.style.display = 'block';
+        }
+      });
+    }
   </script>
 </body>
 </html>
