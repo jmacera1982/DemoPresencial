@@ -200,6 +200,17 @@
     .datos-importantes-link:hover {
       text-decoration: underline;
     }
+    
+    /* Estilos para el botón de ayuda de PlayerWeb */
+    .col-md-3 .d-flex {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .col-md-3 .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
     /* Panel lateral de resultados */
     .main-content-wrapper {
       display: flex;
@@ -266,16 +277,30 @@
         max-height: 60px;
       }
     }
+    
+    /* Estilos para sección Usuarios Numia plegable */
+    #usuariosNumiaCollapse {
+      width: 100%;
+    }
+    
+    /* Animación del ícono del botón de colapsar */
+    [data-bs-toggle="collapse"] .bi-chevron-down {
+      transition: transform 0.3s ease;
+    }
+    
+    [data-bs-toggle="collapse"][aria-expanded="true"] .bi-chevron-down {
+      transform: rotate(180deg);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="main-content-wrapper">
       <div class="main-content">
-    <!-- Datos importantes -->
+    <!-- Activos para demostraciones -->
     <div class="card">
       <div class="card-header">
-        <i class="bi bi-info-circle me-2"></i>Datos importantes
+        <i class="bi bi-info-circle me-2"></i>Activos para demostraciones
       </div>
       <div class="card-body p-4">
         <div class="row align-items-center mb-3">
@@ -313,11 +338,48 @@
             <p class="mb-0 mt-1 small text-muted">Avatar</p>
           </div>
         </div>
+        
+        <!-- Nuevos accesos -->
+        <div class="row mt-3">
+          <div class="col-md-3 text-center">
+            <a href="https://numiardo.github.io/numiabank/" target="_blank" rel="noopener" class="datos-importantes-link">
+              <i class="bi bi-bank me-2"></i>Acceso a numia bank para demo digital
+            </a>
+          </div>
+          <div class="col-md-3 text-center">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <a href="https://debq2.debmedia.com/debsign/assets/debPlayerWeb/views/config.html?token=d212e4a639ef4db4acbda25db51e12ba" target="_blank" rel="noopener" class="datos-importantes-link">
+                <i class="bi bi-display me-2"></i>Acceso a PlayerWeb
+              </a>
+              <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPlayerWebConfig" title="¿Cómo configurarlo?">
+                <i class="bi bi-question-circle"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <a href="https://banca.numia.co/" target="_blank" rel="noopener" class="datos-importantes-link">
+              <i class="bi bi-graph-up me-2"></i>Demo Speech Analytics
+            </a>
+          </div>
+          <div class="col-md-3 text-center">
+            <a href="tel:+5491126591500" class="datos-importantes-link">
+              <i class="bi bi-telephone me-2"></i>Demo de Agente de atención al cliente: +54 9 11 2659-1500
+            </a>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-3 text-center">
+            <a href="https://wa.me/5491152734098" target="_blank" rel="noopener" class="datos-importantes-link">
+              <i class="bi bi-whatsapp me-2"></i>Demo agente administración de sucursales: +54 9 11 5273-4098
+            </a>
+          </div>
+        </div>
+        
         <hr class="my-3" />
         <div class="row">
           <div class="col-md-6">
             <h5 class="mb-3 fw-bold text-primary">
-              <i class="bi bi-people me-2"></i>Agentes de demo presencial
+              <i class="bi bi-people me-2"></i>Acceso a JB
             </h5>
             <ul class="datos-importantes-list">
               <li>
@@ -328,26 +390,28 @@
                 <span class="label">URL de Ingreso:</span>
                 <span><a href="https://journeybuilder.numia.co/" target="_blank" rel="noopener">https://journeybuilder.numia.co/</a></span>
               </li>
-              <li>
-                <span class="label">Línea de WhatsApp Admin sucursal:</span>
-                <span><a href="https://wa.me/5491152734098" target="_blank" rel="noopener">+54 9 11 5273-4098</a></span>
-              </li>
             </ul>
           </div>
-          <div class="col-md-6">
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
             <h5 class="mb-3 fw-bold text-primary">
               <i class="bi bi-person-circle me-2"></i>Usuarios Numia
+              <button class="btn btn-sm btn-outline-primary ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#usuariosNumiaCollapse" aria-expanded="true" aria-controls="usuariosNumiaCollapse">
+                <i class="bi bi-chevron-up"></i>
+              </button>
             </h5>
-            <div class="mb-3">
-              <a href="https://app2.numia.co/" target="_blank" rel="noopener" class="datos-importantes-link">
-                <i class="bi bi-link-45deg me-2"></i>Acceso: https://app2.numia.co/
-              </a>
-            </div>
-            <div class="alert alert-info mb-3 py-2">
-              <i class="bi bi-key me-2"></i>
-              <strong>Contraseña para todos:</strong> <code>Sucursales$2026</code>
-            </div>
-            <table class="table table-bordered table-hover">
+            <div class="collapse show" id="usuariosNumiaCollapse">
+              <div class="mb-3">
+                <a href="https://app2.numia.co/" target="_blank" rel="noopener" class="datos-importantes-link">
+                  <i class="bi bi-link-45deg me-2"></i>Acceso: https://app2.numia.co/
+                </a>
+              </div>
+              <div class="alert alert-info mb-3 py-2">
+                <i class="bi bi-key me-2"></i>
+                <strong>Contraseña para todos:</strong> <code>Sucursales$2026</code>
+              </div>
+              <table class="table table-bordered table-hover">
               <thead class="table-light">
                 <tr>
                   <th>Usuario</th>
@@ -417,7 +481,8 @@
                   <td><code>4934-R8TbGe</code></td>
                 </tr>
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -534,6 +599,87 @@
           <div class="text-center text-muted p-4">
             <span class="spinner-border spinner-border-sm me-2"></span>Cargando sucursales...
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para instrucciones de configuración de PlayerWeb -->
+  <div class="modal fade" id="modalPlayerWebConfig" tabindex="-1" aria-labelledby="modalPlayerWebConfigLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalPlayerWebConfigLabel">
+            <i class="bi bi-display me-2"></i>Player web: link y pasos para configurarlo
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <h6 class="fw-bold mb-2">Link al player web:</h6>
+            <a href="https://debq2.debmedia.com/debsign/assets/debPlayerWeb/views/config.html" target="_blank" rel="noopener" class="text-decoration-underline">
+              https://debq2.debmedia.com/debsign/assets/debPlayerWeb/views/config.html
+            </a>
+          </div>
+          
+          <hr />
+          
+          <h6 class="fw-bold mb-3">Pasos para configurar el player:</h6>
+          
+          <ol class="mb-4">
+            <li class="mb-3">
+              <strong>Abrir el link.</strong>
+            </li>
+            <li class="mb-3">
+              <strong>Si la pantalla que se muestra es similar a la siguiente, pasar al paso 4:</strong>
+              <div class="alert alert-info mt-2 mb-0">
+                <small>La pantalla debe mostrar campos para "URL del Servidor", "ID de Pantalla", "Token" y opciones de configuración.</small>
+              </div>
+            </li>
+            <li class="mb-3">
+              <strong>Si la pantalla que se muestra no es similar a la anterior, presionar "Ctrl + Q".</strong>
+              <div class="alert alert-warning mt-2 mb-0">
+                <small>Se cambiará a la pantalla de configuración mencionada en el paso 2.</small>
+              </div>
+            </li>
+            <li class="mb-3">
+              <strong>Se deben completar los siguientes campos:</strong>
+              <ul class="mt-2">
+                <li class="mb-2">
+                  <strong>URL del servidor:</strong> Es la URL dónde está funcionando la compañía. Para el caso de las DEMOs comerciales la URL es:
+                  <div class="mt-1">
+                    <code class="bg-light p-1 rounded">https://debq2.debmedia.com/debsign</code>
+                  </div>
+                </li>
+                <li class="mb-2">
+                  <strong>Token:</strong> Corresponde al ID y token de cada pantalla con el formato "ID-token", y se podrá encontrar en la sección:
+                  <div class="mt-1">
+                    <strong>"debSign → Panel de Compañía → Pantallas"</strong>
+                  </div>
+                  <div class="alert alert-info mt-2 mb-0">
+                    <small>
+                      <i class="bi bi-info-circle me-1"></i>
+                      El token tiene el formato (tomar el de usuarios Numia): <code>ID-token</code> (ejemplo: <code>4679-R8TbGe</code>)
+                    </small>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="mb-3">
+              <strong>Una vez completados los campos, presionar el botón "Guardar" para aplicar la configuración.</strong>
+            </li>
+          </ol>
+          
+          <div class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i>
+            <strong>Nota:</strong> Los demás campos de configuración (impresora, teclado, mouse, etc.) son opcionales y pueden configurarse según las necesidades específicas de cada pantalla.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <a href="https://debq2.debmedia.com/debsign/assets/debPlayerWeb/views/config.html" target="_blank" rel="noopener" class="btn btn-primary">
+            <i class="bi bi-box-arrow-up-right me-2"></i>Abrir PlayerWeb
+          </a>
         </div>
       </div>
     </div>
@@ -1287,6 +1433,30 @@
     
     if (btnRefrescarBranches) {
       btnRefrescarBranches.addEventListener('click', () => cargarBranchesMonitor());
+    }
+    
+    // Manejar el cambio de ícono en el botón de colapsar Usuarios Numia
+    const usuariosNumiaCollapse = document.getElementById('usuariosNumiaCollapse');
+    const usuariosNumiaBtn = document.querySelector('[data-bs-target="#usuariosNumiaCollapse"]');
+    
+    if (usuariosNumiaCollapse && usuariosNumiaBtn) {
+      usuariosNumiaCollapse.addEventListener('show.bs.collapse', function () {
+        const icon = usuariosNumiaBtn.querySelector('i');
+        if (icon) {
+          icon.classList.remove('bi-chevron-down');
+          icon.classList.add('bi-chevron-up');
+        }
+        usuariosNumiaBtn.setAttribute('aria-expanded', 'true');
+      });
+      
+      usuariosNumiaCollapse.addEventListener('hide.bs.collapse', function () {
+        const icon = usuariosNumiaBtn.querySelector('i');
+        if (icon) {
+          icon.classList.remove('bi-chevron-up');
+          icon.classList.add('bi-chevron-down');
+        }
+        usuariosNumiaBtn.setAttribute('aria-expanded', 'false');
+      });
     }
     
     // Cargar scores y monitor de sucursales al cargar la página
