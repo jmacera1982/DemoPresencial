@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Workforce Management - Autobanco Kennedy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary-purple: #863DFF;
+      --primary-dark: #060A27;
+      --success-green: #10b981;
+      --danger-red: #ef4444;
+      --text-dark: #111827;
+      --text-light: #6b7280;
+      --bg-light: #f9fafb;
+      --bg-white: #ffffff;
+      --border-color: #e5e7eb;
+      --border-light: #f3f4f6;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #fafafa;
+      color: var(--text-dark);
+      padding: 0;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Header */
+    .main-header {
+      background: #000000;
+      width: 100%;
+      padding: 1rem 3rem;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      position: relative;
+    }
+    
+    .header-logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+    
+    .main-container {
+      display: flex;
+      min-height: calc(100vh - 72px);
+      position: relative;
+    }
+    
+    .dashboard-content {
+      flex: 1;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+      transition: margin-right 0.3s ease;
+      max-width: 100%;
+    }
+    
+    .dashboard-content.popup-open {
+      margin-right: 480px;
+    }
+    
+    @media (max-width: 1200px) {
+      .dashboard-content.popup-open {
+        margin-right: 0;
+      }
+      
+      .simulation-popup {
+        width: 100%;
+        right: -100%;
+      }
+      
+      .simulation-popup.open {
+        right: 0;
+      }
+    }
+    
+    /* Header */
+    .dashboard-header {
+      margin-bottom: 2rem;
+    }
+    
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .date-info {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+    
+    .week-selector-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .date-selector {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      transition: all 0.2s;
+    }
+    
+    .date-selector:hover {
+      border-color: #d1d5db;
+      background: #fafafa;
+    }
+    
+    .kpi-description {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    
+    .config-button {
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .config-button:hover {
+      background: #7c3aed;
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 1400px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .kpi-card {
+      background: var(--bg-white);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+    }
+    
+    .kpi-label {
+      font-size: 0.8125rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    
+    .kpi-value {
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    
+    .kpi-value.empty {
+      color: var(--text-light);
+      font-weight: 400;
+    }
+    
+    .kpi-change {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+    
+    .kpi-change.positive {
+      color: var(--success-green);
+    }
+    
+    .kpi-change.negative {
+      color: var(--danger-red);
+    }
+    
+    .kpi-average {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-weight: 400;
+      line-height: 1.4;
+      margin-top: 0.25rem;
+    }
+    
+    /* Charts Section */
+    .charts-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+      background: var(--bg-white);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+    }
+    
+    .chart-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 250px;
+    }
+    
+    .full-width-chart {
+      grid-column: 1 / -1;
+    }
+    
+    .full-width-chart .chart-container {
+      height: 300px;
+    }
+    
+    /* Table Section */
+    .table-card {
+      background: var(--bg-white);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+    }
+    
+    .table-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .coverage-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .coverage-table th,
+    .coverage-table td {
+      padding: 0.875rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .coverage-table th {
+      font-weight: 500;
+      color: var(--text-dark);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .coverage-table td {
+      color: var(--text-light);
+      font-size: 0.875rem;
+      font-weight: 400;
+    }
+    
+    .coverage-table tbody tr:hover {
+      background: var(--bg-light);
+    }
+    
+    /* Pop-up Simulation */
+    .simulation-popup {
+      position: fixed;
+      top: 0;
+      right: -480px;
+      width: 480px;
+      height: 100vh;
+      background: var(--bg-white);
+      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+      z-index: 1001;
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      padding: 2rem;
+      border-left: 1px solid var(--border-light);
+    }
+    
+    .simulation-popup.open {
+      right: 0;
+    }
+    
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .popup-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      letter-spacing: -0.01em;
+    }
+    
+    .close-popup {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    
+    .close-popup:hover {
+      color: var(--text-dark);
+      background: var(--bg-light);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: var(--text-dark);
+      background: var(--bg-white);
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-purple);
+      box-shadow: 0 0 0 3px rgba(134, 61, 255, 0.1);
+    }
+    
+    .form-input:hover {
+      border-color: #d1d5db;
+    }
+    
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.375rem;
+      font-weight: 400;
+    }
+    
+    .popup-buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .btn-cancel {
+      flex: 1;
+      padding: 0.625rem 1rem;
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-dark);
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    
+    .btn-cancel:hover {
+      background: var(--bg-light);
+      border-color: #d1d5db;
+    }
+    
+    .btn-update {
+      flex: 1;
+      padding: 0.625rem 1rem;
+      background: var(--primary-purple);
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      color: white;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .btn-update:hover {
+      background: #7c3aed;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .simulated-results {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .simulated-intro {
+      font-size: 0.8125rem;
+      color: var(--text-light);
+      margin-bottom: 1.25rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    
+    .simulated-kpi-card {
+      background: var(--bg-light);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.875rem;
+      border: 1px solid var(--border-light);
+    }
+    
+    .simulated-kpi-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-bottom: 0.375rem;
+      font-weight: 500;
+    }
+    
+    .simulated-kpi-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .simulated-kpi-value.empty {
+      color: var(--text-light);
+      font-weight: 400;
+    }
+    
+    .simulated-kpi-change {
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    
+    .simulated-kpi-change.positive {
+      color: var(--success-green);
+    }
+    
+    .simulated-kpi-change.negative {
+      color: var(--danger-red);
+    }
+    
+    /* Chart Controls */
+    .chart-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .chart-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .chart-select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    
+    .chart-select:hover {
+      border-color: #d1d5db;
+    }
+    
+    .chart-select:focus {
+      outline: none;
+      border-color: var(--primary-purple);
+      box-shadow: 0 0 0 3px rgba(134, 61, 255, 0.1);
+    }
+    
+    /* Custom Tooltip Styles */
+    .custom-tooltip {
+      background: #1e293b;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 0.85rem;
+      min-width: 220px;
+    }
+    
+    .tooltip-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      gap: 1rem;
+    }
+    
+    .tooltip-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 400;
+    }
+    
+    .tooltip-value {
+      color: white;
+      font-weight: 600;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Header -->
+  <header class="main-header">
+    <img src="images/logonumia.png" alt="Numia" class="header-logo">
+  </header>
+  
+  <div class="main-container">
+    <!-- Dashboard Content -->
+    <div class="dashboard-content" id="dashboardContent">
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div class="date-info">Estás viendo los datos de la semana actual.</div>
+        <div class="top-controls">
+          <div class="week-selector-container">
+            <div class="date-selector">
+              <span>Seleccionar semana</span>
+              <i class="bi bi-chevron-down"></i>
+            </div>
+          </div>
+          <button class="config-button" id="configButton">
+            Configurar simulación
+          </button>
+        </div>
+        <div class="kpi-description">Los KPIs del panel principal muestran el promedio semanal de la sucursal.</div>
+      </div>
+      
+      <!-- KPI Cards -->
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card">
+          <div class="kpi-label">Ingresos esperados</div>
+          <div class="kpi-value" id="kpiIngresos">262</div>
+          <div class="kpi-change positive">
+            <i class="bi bi-arrow-up"></i>
+            <span id="kpiIngresosChange">+7.0%</span>
+          </div>
+          <div class="kpi-average">Promedio histórico sucursal (NaNd): 244 turnos</div>
+        </div>
+        
+        <div class="kpi-card">
+          <div class="kpi-label">Probabilidad de abandono</div>
+          <div class="kpi-value" id="kpiAbandono">0.0%</div>
+          <div class="kpi-change positive">
+            <i class="bi bi-arrow-down"></i>
+            <span id="kpiAbandonoChange">-99.8%</span>
+          </div>
+          <div class="kpi-average">Promedio histórico sucursal (NaNd): 4.6%</div>
+        </div>
+        
+        <div class="kpi-card">
+          <div class="kpi-label">Tiempo prom. de espera</div>
+          <div class="kpi-value" id="kpiTiempoEspera">5m 22s</div>
+          <div class="kpi-change positive">
+            <i class="bi bi-arrow-down"></i>
+            <span id="kpiTiempoEsperaChange">-69.1%</span>
+          </div>
+          <div class="kpi-average">Promedio histórico sucursal (NaNd): 17m 23s</div>
+        </div>
+        
+        <div class="kpi-card">
+          <div class="kpi-label">Agentes de atención</div>
+          <div class="kpi-value" id="kpiAgentes">7</div>
+          <div class="kpi-change negative">
+            <i class="bi bi-arrow-down"></i>
+            <span id="kpiAgentesChange">-1.9%</span>
+          </div>
+          <div class="kpi-average">Promedio histórico sucursal (NaNd): 7 agentes</div>
+        </div>
+      </div>
+      
+      <!-- Detalle por sala de espera Chart -->
+      <div class="chart-card full-width-chart">
+        <div class="chart-title">Detalle por sala de espera</div>
+        <div class="chart-container">
+          <canvas id="waitingRoomChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <div class="chart-card">
+          <div class="chart-title">Ingresos de clientes esperado</div>
+          <div class="chart-container">
+            <canvas id="incomeChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-title">Tiempos de espera</div>
+          <div class="chart-controls">
+            <div class="chart-control">
+              <label>Vista:</label>
+              <select class="chart-select">
+                <option>Sala de espera</option>
+              </select>
+            </div>
+            <div class="chart-control">
+              <label>Sala:</label>
+              <select class="chart-select" id="waitingTimeSelect">
+                <option>Caja 1</option>
+                <option>Caja 2</option>
+                <option>Caja 3</option>
+                <option>Caja 4</option>
+                <option>Caja 5</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="waitingTimeChart"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Coverage Table -->
+      <div class="table-card">
+        <div class="chart-title">Cobertura de usuarios por trámite</div>
+        <table class="coverage-table" id="coverageTable">
+          <thead>
+            <tr>
+              <th>Trámite</th>
+              <th>Participación</th>
+              <th>Ingresos estimados</th>
+            </tr>
+          </thead>
+          <tbody id="coverageTableBody">
+            <tr>
+              <td>Otras Transacciones</td>
+              <td>25.1%</td>
+              <td>64</td>
+            </tr>
+            <tr>
+              <td>Operaciones en Caja</td>
+              <td>19.0%</td>
+              <td>49</td>
+            </tr>
+            <tr>
+              <td>Retiros</td>
+              <td>17.9%</td>
+              <td>46</td>
+            </tr>
+            <tr>
+              <td>Depósitos</td>
+              <td>13.7%</td>
+              <td>35</td>
+            </tr>
+            <tr>
+              <td>Otras Gestiones de Servicio</td>
+              <td>5.8%</td>
+              <td>15</td>
+            </tr>
+            <tr>
+              <td>Gestiones de Tarjetas</td>
+              <td>5.2%</td>
+              <td>13</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Simulation Pop-up -->
+    <div class="simulation-popup" id="simulationPopup">
+      <div class="popup-header">
+        <div class="popup-title">Simulación de escenario</div>
+        <button class="close-popup" id="closePopup">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+      
+      <div style="margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--text-light);">
+        Ajustá las variables disponibles para proyectar un escenario sin modificar datos operativos.
+      </div>
+      
+      <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-dark); margin-bottom: 1rem;">Parámetros</div>
+      
+      <div class="form-group">
+        <label class="form-label">Fecha (cualquier día)</label>
+        <input type="date" class="form-input" id="simDate" value="2026-04-22">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Hora</label>
+        <select class="form-input" id="simTime">
+          <option>10:00</option>
+          <option>11:00</option>
+          <option>12:00</option>
+          <option>13:00</option>
+          <option>14:00</option>
+          <option>15:00</option>
+          <option>16:00</option>
+          <option>17:00</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Agentes activos</label>
+        <input type="number" class="form-input" id="simAgents" value="8" min="1" max="20">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Ajuste de demanda (%)</label>
+        <input type="number" class="form-input" id="simDemand" value="10" min="-50" max="100">
+        <div class="form-hint">Sucursal Autobanco Kennedy: base histórica 7 agentes.</div>
+      </div>
+      
+      <div class="popup-buttons">
+        <button class="btn-cancel" id="cancelButton">Cancelar</button>
+        <button class="btn-update" id="updateButton">Actualizar proyección</button>
+      </div>
+      
+      <div class="simulated-results" id="simulatedResults">
+        <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-dark); margin-bottom: 1rem;">Resultado simulado</div>
+        <div class="simulated-intro">
+          Ejecutá la simulación para ver los KPIs proyectados en este panel.
+        </div>
+        
+        <div class="simulated-kpi-card">
+          <div class="simulated-kpi-label">Ingresos esperados</div>
+          <div class="simulated-kpi-value empty" id="simIngresos">—</div>
+          <div class="simulated-kpi-change" id="simIngresosChange" style="display: none;">—</div>
+        </div>
+        
+        <div class="simulated-kpi-card">
+          <div class="simulated-kpi-label">Probabilidad de abandono</div>
+          <div class="simulated-kpi-value empty" id="simAbandono">—</div>
+          <div class="simulated-kpi-change" id="simAbandonoChange" style="display: none;">—</div>
+        </div>
+        
+        <div class="simulated-kpi-card">
+          <div class="simulated-kpi-label">Tiempo prom. de espera</div>
+          <div class="simulated-kpi-value empty" id="simTiempoEspera">—</div>
+          <div class="simulated-kpi-change" id="simTiempoEsperaChange" style="display: none;">—</div>
+        </div>
+        
+        <div class="simulated-kpi-card">
+          <div class="simulated-kpi-label">Agentes activos</div>
+          <div class="simulated-kpi-value empty" id="simAgentes">—</div>
+          <div class="simulated-kpi-change" id="simAgentesChange" style="display: none;">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Base data
+    const baseData = {
+      ingresos: 262,
+      abandono: 0.0,
+      tiempoEspera: { minutes: 5, seconds: 22 },
+      agentes: 7,
+      incomeData: [270, 275, 280, 275, 280, 275, 270],
+      waitingTimeData: [8.5, 5.0, 4.5, 5.5, 4.0, 6.5, 4.0],
+      coverageData: [
+        { tramite: 'Otras Transacciones', participacion: 25.1, ingresos: 64 },
+        { tramite: 'Operaciones en Caja', participacion: 19.0, ingresos: 49 },
+        { tramite: 'Retiros', participacion: 17.9, ingresos: 46 },
+        { tramite: 'Depósitos', participacion: 13.7, ingresos: 35 },
+        { tramite: 'Otras Gestiones de Servicio', participacion: 5.8, ingresos: 15 },
+        { tramite: 'Gestiones de Tarjetas', participacion: 5.2, ingresos: 13 }
+      ]
+    };
+    
+    // Current simulation data
+    let currentSimData = { ...baseData };
+    
+    // Initialize charts
+    const dates = ['9 mar', '10 mar', '11 mar', '12 mar', '13 mar', '14 mar', '15 mar'];
+    
+    // Data for waiting room tooltip calculations
+    const waitingRoomData = {
+      '9 mar': { total: 260, caja3: 50, caja2: 45, caja5: 40, caja4: 35, caja1: 30 },
+      '10 mar': { total: 270, caja3: 55, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
+      '11 mar': { total: 280, caja3: 60, caja2: 55, caja5: 50, caja4: 45, caja1: 40 },
+      '12 mar': { total: 262, caja3: 49, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
+      '13 mar': { total: 280, caja3: 60, caja2: 55, caja5: 50, caja4: 45, caja1: 40 },
+      '14 mar': { total: 270, caja3: 55, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
+      '15 mar': { total: 260, caja3: 50, caja2: 45, caja5: 40, caja4: 35, caja1: 30 }
+    };
+    
+    // Waiting Room Chart (Stacked Bar)
+    const waitingRoomCtx = document.getElementById('waitingRoomChart').getContext('2d');
+    const waitingRoomChart = new Chart(waitingRoomCtx, {
+      type: 'bar',
+      data: {
+        labels: dates,
+        datasets: [
+          { label: 'Caja 3', data: [50, 55, 60, 49, 60, 55, 50], backgroundColor: '#863DFF' },
+          { label: 'Caja 2', data: [45, 50, 55, 50, 55, 50, 45], backgroundColor: '#060A27' },
+          { label: 'Caja 5', data: [40, 45, 50, 45, 50, 45, 40], backgroundColor: '#0056b3' },
+          { label: 'Caja 4', data: [35, 40, 45, 40, 45, 40, 35], backgroundColor: '#10b981' },
+          { label: 'Caja 1', data: [30, 35, 40, 35, 40, 35, 30], backgroundColor: '#f97316' },
+          { label: 'Asesor Comercial 9', data: [25, 30, 35, 30, 35, 30, 25], backgroundColor: '#ef4444' },
+          { label: 'Asesor Comercial 7', data: [20, 25, 30, 25, 30, 25, 20], backgroundColor: '#059669' },
+          { label: 'Asesor SAC 8', data: [15, 20, 25, 20, 25, 20, 15], backgroundColor: '#ec4899' },
+          { label: 'Supervisor Caja', data: [10, 15, 20, 15, 20, 15, 10], backgroundColor: '#06b6d4' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
+          },
+          tooltip: {
+            enabled: false,
+            external: function(context) {
+              const tooltipModel = context.tooltip;
+              const tooltipEl = document.getElementById('chartjs-tooltip');
+              
+              if (!tooltipModel.opacity || tooltipModel.dataPoints.length === 0) {
+                if (tooltipEl) {
+                  tooltipEl.style.opacity = '0';
+                }
+                return;
+              }
+              
+              if (!tooltipEl) {
+                const newTooltip = document.createElement('div');
+                newTooltip.id = 'chartjs-tooltip';
+                newTooltip.className = 'custom-tooltip';
+                newTooltip.style.position = 'absolute';
+                newTooltip.style.pointerEvents = 'none';
+                newTooltip.style.opacity = '0';
+                newTooltip.style.transition = 'opacity 0.2s';
+                document.body.appendChild(newTooltip);
+              }
+              
+              const tooltip = document.getElementById('chartjs-tooltip');
+              
+              // Get data
+              const dataIndex = tooltipModel.dataPoints[0].dataIndex;
+              const datasetIndex = tooltipModel.dataPoints[0].datasetIndex;
+              const date = dates[dataIndex];
+              const dataset = waitingRoomChart.data.datasets[datasetIndex];
+              const value = dataset.data[dataIndex];
+              const sala = dataset.label;
+              
+              // Calculate totals and percentages
+              const dayData = waitingRoomData[date] || { total: 262, caja3: 49 };
+              const totalTurns = dayData.total;
+              const participation = ((value / totalTurns) * 100).toFixed(1);
+              
+              // Calculate estimated wait time (simplified calculation based on value)
+              const avgWaitMinutes = Math.floor((value / 8) + 2);
+              const avgWaitSeconds = Math.floor((value % 8) * 7.5);
+              
+              // Build tooltip HTML
+              let tooltipHTML = `
+                <div class="tooltip-title">${date} · Autobanco Kennedy</div>
+                <div class="tooltip-row">
+                  <span class="tooltip-label">Sala de espera</span>
+                  <span class="tooltip-value">${sala}</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tooltip-label">Turnos por sala</span>
+                  <span class="tooltip-value">${value} turnos</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tooltip-label">Participación</span>
+                  <span class="tooltip-value">${participation}%</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tooltip-label">Turnos esperados día</span>
+                  <span class="tooltip-value">${totalTurns} turnos</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tooltip-label">Espera estimada</span>
+                  <span class="tooltip-value">${avgWaitMinutes}m ${avgWaitSeconds}s</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tooltip-label">Abandono estimado</span>
+                  <span class="tooltip-value">0.0%</span>
+                </div>
+              `;
+              
+              tooltip.innerHTML = tooltipHTML;
+              
+              // Position tooltip
+              const position = context.chart.canvas.getBoundingClientRect();
+              const left = position.left + tooltipModel.caretX;
+              const top = position.top + tooltipModel.caretY;
+              
+              tooltip.style.left = left + 'px';
+              tooltip.style.top = (top - tooltip.offsetHeight - 10) + 'px';
+              tooltip.style.opacity = '1';
+              tooltip.style.zIndex = '10000';
+            }
+          }
+        },
+        onHover: (event, activeElements) => {
+          const canvas = event.native.target;
+          canvas.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+        },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true, max: 500 }
+        }
+      }
+    });
+    
+    // Income Chart
+    const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+    const incomeChart = new Chart(incomeCtx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'Atenciones esperadas',
+          data: baseData.incomeData,
+          borderColor: '#863DFF',
+          backgroundColor: 'rgba(134, 61, 255, 0.1)',
+          tension: 0.4,
+          pointRadius: 4,
+          pointBackgroundColor: '#863DFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: 'bottom' }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 500 }
+        }
+      }
+    });
+    
+    // Waiting Time Chart
+    const waitingTimeCtx = document.getElementById('waitingTimeChart').getContext('2d');
+    const waitingTimeChart = new Chart(waitingTimeCtx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'Caja 1 (estimado)',
+          data: baseData.waitingTimeData,
+          borderColor: '#863DFF',
+          backgroundColor: 'rgba(134, 61, 255, 0.1)',
+          tension: 0.4,
+          pointRadius: 4,
+          pointBackgroundColor: '#863DFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: 'bottom' }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 10 }
+        }
+      }
+    });
+    
+    // Pop-up controls
+    const configButton = document.getElementById('configButton');
+    const simulationPopup = document.getElementById('simulationPopup');
+    const closePopup = document.getElementById('closePopup');
+    const cancelButton = document.getElementById('cancelButton');
+    const updateButton = document.getElementById('updateButton');
+    const dashboardContent = document.getElementById('dashboardContent');
+    
+    configButton.addEventListener('click', () => {
+      simulationPopup.classList.add('open');
+      dashboardContent.classList.add('popup-open');
+    });
+    
+    function closePopupFunc() {
+      simulationPopup.classList.remove('open');
+      dashboardContent.classList.remove('popup-open');
+    }
+    
+    closePopup.addEventListener('click', closePopupFunc);
+    cancelButton.addEventListener('click', closePopupFunc);
+    
+    // Update projection function
+    updateButton.addEventListener('click', () => {
+      const agents = parseInt(document.getElementById('simAgents').value) || 8;
+      const demand = parseInt(document.getElementById('simDemand').value) || 10;
+      
+      // Calculate simulated values based on inputs
+      const baseIngresos = 262;
+      const baseTiempo = { minutes: 5, seconds: 22 };
+      const baseAgentes = 7;
+      
+      // Simulate ingresos (increases with demand, decreases with more agents)
+      const ingresosMultiplier = 1 + (demand / 100);
+      const agentEfficiency = 1 + ((agents - baseAgentes) * 0.05);
+      const newIngresos = Math.round(baseIngresos * ingresosMultiplier * agentEfficiency);
+      const ingresosChange = ((newIngresos - baseIngresos) / baseIngresos * 100).toFixed(1);
+      
+      // Simulate tiempo de espera (decreases with more agents, increases with demand)
+      const tiempoMultiplier = 1 - ((agents - baseAgentes) * 0.15) + (demand / 200);
+      const newTiempoSeconds = Math.max(60, Math.round((baseTiempo.minutes * 60 + baseTiempo.seconds) * tiempoMultiplier));
+      const newTiempoMinutes = Math.floor(newTiempoSeconds / 60);
+      const newTiempoSecs = newTiempoSeconds % 60;
+      const tiempoChange = (((newTiempoSeconds - (baseTiempo.minutes * 60 + baseTiempo.seconds)) / (baseTiempo.minutes * 60 + baseTiempo.seconds)) * 100).toFixed(1);
+      
+      // Simulate abandono (decreases with more agents, increases with demand)
+      const abandonoBase = 0.0;
+      const abandonoChange = Math.max(0, Math.min(100, 97.3 - (agents - baseAgentes) * 5 + demand * 0.5));
+      
+      // Agent change
+      const agentesChange = ((agents - baseAgentes) / baseAgentes * 100).toFixed(1);
+      
+      // Update simulated results display
+      const simIngresosEl = document.getElementById('simIngresos');
+      const simIngresosChangeEl = document.getElementById('simIngresosChange');
+      simIngresosEl.textContent = newIngresos;
+      simIngresosEl.classList.remove('empty');
+      simIngresosChangeEl.textContent = (ingresosChange >= 0 ? '+' : '') + ingresosChange + '%';
+      simIngresosChangeEl.className = 'simulated-kpi-change ' + (ingresosChange >= 0 ? 'positive' : 'negative');
+      simIngresosChangeEl.style.display = 'block';
+      
+      const simAbandonoEl = document.getElementById('simAbandono');
+      const simAbandonoChangeEl = document.getElementById('simAbandonoChange');
+      simAbandonoEl.textContent = abandonoBase.toFixed(1) + '%';
+      simAbandonoEl.classList.remove('empty');
+      simAbandonoChangeEl.textContent = '+' + abandonoChange.toFixed(1) + '%';
+      simAbandonoChangeEl.className = 'simulated-kpi-change positive';
+      simAbandonoChangeEl.style.display = 'block';
+      
+      const simTiempoEsperaEl = document.getElementById('simTiempoEspera');
+      const simTiempoEsperaChangeEl = document.getElementById('simTiempoEsperaChange');
+      simTiempoEsperaEl.textContent = newTiempoMinutes + 'm ' + newTiempoSecs + 's';
+      simTiempoEsperaEl.classList.remove('empty');
+      simTiempoEsperaChangeEl.textContent = tiempoChange + '%';
+      simTiempoEsperaChangeEl.className = 'simulated-kpi-change ' + (tiempoChange < 0 ? 'positive' : 'negative');
+      simTiempoEsperaChangeEl.style.display = 'block';
+      
+      const simAgentesEl = document.getElementById('simAgentes');
+      const simAgentesChangeEl = document.getElementById('simAgentesChange');
+      simAgentesEl.textContent = agents;
+      simAgentesEl.classList.remove('empty');
+      simAgentesChangeEl.textContent = (agentesChange >= 0 ? '+' : '') + agentesChange + '%';
+      simAgentesChangeEl.className = 'simulated-kpi-change ' + (agentesChange >= 0 ? 'positive' : 'negative');
+      simAgentesChangeEl.style.display = 'block';
+      
+      // Update main dashboard KPIs with simulated values
+      document.getElementById('kpiIngresos').textContent = newIngresos;
+      document.getElementById('kpiIngresosChange').textContent = (ingresosChange >= 0 ? '+' : '') + ingresosChange + '%';
+      document.getElementById('kpiIngresosChange').parentElement.className = 'kpi-change ' + (ingresosChange >= 0 ? 'positive' : 'negative');
+      
+      document.getElementById('kpiTiempoEspera').textContent = newTiempoMinutes + 'm ' + newTiempoSecs + 's';
+      document.getElementById('kpiTiempoEsperaChange').textContent = tiempoChange + '%';
+      document.getElementById('kpiTiempoEsperaChange').parentElement.className = 'kpi-change ' + (tiempoChange < 0 ? 'positive' : 'negative');
+      
+      document.getElementById('kpiAgentes').textContent = agents;
+      document.getElementById('kpiAgentesChange').textContent = (agentesChange >= 0 ? '+' : '') + agentesChange + '%';
+      document.getElementById('kpiAgentesChange').parentElement.className = 'kpi-change ' + (agentesChange >= 0 ? 'positive' : 'negative');
+      
+      // Update charts with simulated data
+      const newIncomeData = baseData.incomeData.map(val => Math.round(val * ingresosMultiplier));
+      incomeChart.data.datasets[0].data = newIncomeData;
+      incomeChart.update();
+      
+      const newWaitingTimeData = baseData.waitingTimeData.map(val => Math.max(0, val * tiempoMultiplier));
+      waitingTimeChart.data.datasets[0].data = newWaitingTimeData;
+      waitingTimeChart.update();
+      
+      // Update waiting room data for tooltip
+      dates.forEach((date, index) => {
+        if (waitingRoomData[date]) {
+          waitingRoomData[date].total = newIncomeData[index];
+        }
+      });
+      
+      // Update waiting room chart with simulated data
+      waitingRoomChart.data.datasets.forEach((dataset, idx) => {
+        const multiplier = ingresosMultiplier;
+        dataset.data = dataset.data.map(val => Math.round(val * multiplier));
+      });
+      waitingRoomChart.update();
+      
+      // Update coverage table
+      const totalIngresos = newIncomeData.reduce((a, b) => a + b, 0) / 7; // Average
+      const coverageTableBody = document.getElementById('coverageTableBody');
+      const rows = coverageTableBody.querySelectorAll('tr');
+      baseData.coverageData.forEach((item, index) => {
+        if (rows[index]) {
+          const newIngresosEst = Math.round(item.ingresos * ingresosMultiplier);
+          rows[index].cells[2].textContent = newIngresosEst;
+        }
+      });
+    });
+    
+    // Update waiting time chart when selection changes
+    document.getElementById('waitingTimeSelect').addEventListener('change', (e) => {
+      const selected = e.target.value;
+      waitingTimeChart.data.datasets[0].label = selected + ' (estimado)';
+      // Simulate different data for different cashiers
+      const variations = {
+        'Caja 1': [0, 0, 0, 0, 0, 0, 0],
+        'Caja 2': [0.5, -0.3, 0.2, -0.1, 0.3, -0.2, 0.1],
+        'Caja 3': [-0.3, 0.5, -0.2, 0.3, -0.1, 0.4, -0.2],
+        'Caja 4': [0.2, -0.1, 0.4, -0.2, 0.1, -0.3, 0.3],
+        'Caja 5': [-0.2, 0.3, -0.1, 0.2, -0.3, 0.1, -0.1]
+      };
+      const variation = variations[selected] || variations['Caja 1'];
+      const newData = baseData.waitingTimeData.map((val, i) => Math.max(0, val + variation[i]));
+      waitingTimeChart.data.datasets[0].data = newData;
+      waitingTimeChart.update();
+    });
+    
+    // Hide tooltip when mouse leaves chart area
+    const waitingRoomCanvas = document.getElementById('waitingRoomChart');
+    const chartContainer = waitingRoomCanvas.closest('.chart-container');
+    
+    if (chartContainer) {
+      chartContainer.addEventListener('mouseleave', () => {
+        const tooltip = document.getElementById('chartjs-tooltip');
+        if (tooltip) {
+          tooltip.style.opacity = '0';
+        }
+      });
+    }
+    
+    // Also ensure tooltip hides when chart updates without active elements
+    const originalUpdate = waitingRoomChart.update.bind(waitingRoomChart);
+    waitingRoomChart.update = function(mode) {
+      originalUpdate(mode);
+      // Small delay to check if tooltip should be hidden
+      setTimeout(() => {
+        const tooltip = document.getElementById('chartjs-tooltip');
+        if (tooltip) {
+          const activeElements = waitingRoomChart.getActiveElements();
+          if (activeElements.length === 0) {
+            tooltip.style.opacity = '0';
+          }
+        }
+      }, 50);
+    };
+  </script>
+</body>
+</html>

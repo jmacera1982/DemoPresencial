@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NumiaBank - Innova tu banca</title>
+  <link rel="icon" type="image/png" href="images/N.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+   <script src="https://debq2.debmedia.com/api/cobrowse/widget/5d8b569d2466aa0cd5b8b4756829f014"></script>
+ 
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --numia-azul: #863DFF;
+      --numia-azul-claro: #e6ecf9;
+      --numia-azul-muy-claro: #eef2fc;
+    }
+    body { font-family: 'Roboto', Arial, sans-serif; background: #f7f7f7; }
+    .card.ad-card { border-radius: 1.2rem; box-shadow: 0 4px 18px rgba(0,0,0,0.08); transition: transform .18s, box-shadow .18s; min-width:210px; min-height:380px; display:flex; flex-direction:column; justify-content:stretch; height:100%; }
+    .card.ad-card:hover { transform: translateY(-4px) scale(1.025); box-shadow: 0 8px 32px rgba(0,19,145,0.17); }
+    .card-img-top-holder { width:100%; height:180px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff8f8; border-top-left-radius:1.2rem; border-top-right-radius:1.2rem; }
+    .card-img-top-holder img { width:100%; height:100%; object-fit:cover; object-position:center; transition: transform .3s; }
+    .ad-card .card-body { display:flex; flex-direction:column; justify-content:flex-start; height:100%; padding-bottom:1.5rem; }
+    .ad-card .card-title { font-weight:700; color:var(--numia-azul); font-size:1.25rem; margin-bottom:.25rem; margin-top:1rem; min-height:3rem; display:flex; align-items:center; justify-content:center; text-align:center; }
+    .ad-card .card-text { font-size:1.01rem; color:#2d2d2d; font-weight:500; opacity:.88; margin-bottom:1.1rem; min-height:56px; text-align:center; display:flex; align-items:center; justify-content:center; }
+    .carousel-item img { object-fit:cover; width:100%; height:340px; border-radius:.7rem; }
+    @media (max-width:991px){ .main-cards .col-lg-3 {flex:0 0 50%; max-width:50%; margin-bottom:1rem;} .carousel-item img{height:180px;} }
+    @media (max-width:767px){ .main-cards .col-lg-3 {flex:0 0 100%; max-width:100%;} .carousel-item img{height:140px;} .card-img-top-holder{height:140px;} .ad-card .card-title{font-size:1.08rem;} }
+
+    .rates-section{ display:flex; gap:2.2rem; align-items:stretch; margin:36px 0 0; width:100%; flex-wrap:wrap;}
+    .rates-col-table, .rates-col-side { background:#fff; border-radius:1.1rem; box-shadow:0 2px 12px rgba(0,0,0,0.07); padding:2.1rem 1.6rem 1.6rem 1.7rem; }
+    .rates-col-table{ min-width:340px; flex:2 1 540px; max-width:1000px; display:flex; flex-direction:column; justify-content:flex-start;}
+    .rates-col-side{ min-width:220px; flex:1 1 320px; max-width:420px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;}
+    .rates-col-side .bi{ font-size:2.6rem; color:var(--numia-azul); margin-bottom:.7rem;}
+    .rates-col-side h5{ color:var(--numia-azul); font-weight:700; margin-bottom:.5rem; font-size:1.2rem;}
+    .rates-col-side p{ color:#444; font-size:1.07rem; font-weight:500; margin-bottom:1.2rem; opacity:.93;}
+    .rates-col-side .btn{ background:var(--numia-azul); border:none; color:#fff; font-weight:700; border-radius:24px; padding:.7rem 2.1rem; font-size:1.07rem; box-shadow:0 2px 7px rgba(0,19,145,0.06);}
+    .rates-col-side .btn:hover{ background:#000d73; color:#fff;}
+    .rates-tab-btn{ padding:.7rem 0; border:none; border-radius:9px; font-weight:bold; font-size:1.1rem; background:#fff; color:var(--numia-azul); margin-bottom:0; cursor:pointer; border:2px solid #d1d9f9; min-width:70px;}
+    .rates-tab-btn.active,.rates-tab-btn:focus{ background:var(--numia-azul); color:#fff; border:2px solid var(--numia-azul);}
+    .rates-table{ width:100%; border-collapse:separate; border-spacing:0; background:#fff; border-radius:.8rem; overflow:hidden; margin-top:.7rem;}
+    .rates-table th,.rates-table td{ padding:12px 18px; font-size:1.04rem; text-align:left;}
+    .rates-table th{ color:var(--numia-azul); background:var(--numia-azul-claro); border:none; font-size:1.08rem; font-weight:700; text-align:center; letter-spacing:.02em;}
+    .rates-table tr:not(:last-child){ border-bottom:1px solid #cde0f8;}
+    .rates-table tr:nth-child(2){ background:var(--numia-azul-claro);} .rates-table tr:nth-child(3){ background:var(--numia-azul-muy-claro);}
+    .rates-table td{ color:#222; font-weight:500; text-align:center; vertical-align:middle;}
+    .rates-table td:first-child,.rates-table th:first-child{ text-align:left;}
+    @media (max-width:1300px){ .rates-col-table{min-width:0; flex-basis:400px;} .rates-col-side{min-width:0;} }
+    @media (max-width:991px){ .rates-section{flex-direction:column; gap:1.4rem;} .rates-col-table,.rates-col-side{min-width:0; max-width:100%;} .rates-col-side{align-items:flex-start; padding-top:1.2rem;} }
+
+    .btn-primary{ background-color:var(--numia-azul)!important; border-color:var(--numia-azul)!important;}
+    .btn-primary:hover{ background-color:#000d73!important; border-color:#000d73!important;}
+    .btn-outline-primary{ color:var(--numia-azul)!important; border-color:var(--numia-azul)!important;}
+    .btn-outline-primary:hover{ background-color:var(--numia-azul)!important; color:#fff!important;}
+    #max-chat{ background:var(--numia-azul)!important;} #open-chat{ background:var(--numia-azul)!important;}
+
+    /* --------- Sala de espera / Videollamada --------- */
+    .modal-wait .info-item{ display:flex; justify-content:space-between; align-items:center; padding:.8rem 1rem; border:1px solid #e7e9ff; border-radius:.6rem; background:linear-gradient(135deg,#f8f9ff,#eef2ff);}
+    .modal-wait .info-label{ font-weight:600; color:#4b5563; }
+    .modal-wait .info-value{ font-weight:700; color:#6d28d9; }
+    .badge-live{ background:#22c55e; }
+    .status-warn{ color:#f59e0b; font-weight:700; }
+    .status-ok{ color:#22c55e; font-weight:700; }
+    .status-done{ color:#06b6d4; font-weight:700; }
+    .status-err{ color:#ef4444; font-weight:700; }
+    .modal-video .modal-dialog{ width:var(--video-width, 90vw); max-width:100%; }
+    .modal-video .modal-content{ height:var(--video-height, 80vh); }
+    .modal-video iframe{ width:100%; height:100%; border:0; border-radius:.5rem; }
+
+    /* --------- Citas (estilos chips/horas) --------- */
+    #modalCita .modal-dialog { max-width: 920px; }
+    #modalCita .modal-content { border-radius: 16px; border: 0; box-shadow: 0 14px 40px rgba(0,0,0,.12); }
+    #modalCita .modal-header { border-bottom: 1px solid #eef2fc; }
+    #modalCita .modal-body { padding-top: .75rem; }
+    .cita-toolbar { position: sticky; top: 0; z-index: 2; background: #fff; padding-bottom: .5rem; margin-bottom: .75rem; border-bottom: 1px solid #eef2fc; }
+    #citaSchedule, #citaBranch, #citaFecha { border-radius: 10px; }
+    #citaSlots { display:grid; grid-template-columns:repeat(auto-fill,minmax(88px,1fr)); gap:.5rem; max-height:320px; overflow:auto; padding-right:.25rem; }
+    #citaSlots .btn { border-radius:10px; border:1px solid #c9b6ff; font-weight:600; padding:.45rem .3rem; }
+    #citaSlots .btn:hover { background:#f6f3ff; }
+    #citaSlots .btn.active, #citaSlots .btn:focus { background:var(--numia-azul); color:#fff; border-color:var(--numia-azul); }
+    .cita-legend { font-size:.8rem; color:#6c6c7a; }
+    @media (max-width:576px){ #citaSlots { max-height:260px; } }
+
+    /* --------- Simulador de Crédito --------- */
+    .step-indicator { display: flex; flex-direction: column; align-items: center; position: relative; }
+    .step-number { width: 40px; height: 40px; border-radius: 50%; background: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 8px; transition: all 0.3s; }
+    .step-indicator.active .step-number { background: var(--numia-azul); color: white; }
+    .step-indicator.completed .step-number { background: #28a745; color: white; }
+    .step-label { font-size: 0.875rem; font-weight: 600; color: #6c757d; }
+    .step-indicator.active .step-label { color: var(--numia-azul); }
+    .step-indicator.completed .step-label { color: #28a745; }
+    .step-line { width: 60px; height: 2px; background: #e9ecef; margin: 0 10px; margin-top: -20px; }
+    .step-indicator.completed + .step-line { background: #28a745; }
+    .step-content { min-height: 400px; }
+    .credit-type-card { cursor: pointer; transition: all 0.3s; border: 2px solid #e9ecef; }
+    .credit-type-card:hover { border-color: var(--numia-azul); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(134, 61, 255, 0.15); }
+    .credit-type-card.selected { border-color: var(--numia-azul); background: var(--numia-azul-muy-claro); }
+    .credit-details { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e9ecef; }
+
+    /* Modal Inversiones */
+    .inv-type-card:hover { border-color: var(--numia-azul) !important; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(134, 61, 255, 0.15); }
+    .inv-type-card.selected { border-color: var(--numia-azul) !important; background: var(--numia-azul-muy-claro); }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm py-2 mb-0">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-right">
+        <a href="index.html" class="d-block">
+          <img src="images/numia.png" alt="Numia Bank Logo" class="img-fluid" style="max-height: 88px;" />
+        </a>
+      </div>
+      <p class="lead mt-2 mb-0 text-dark text-start" style="font-size:1rem;">
+        Innovación en tus finanzas, potenciada por IA manteniendo el toque humano
+      </p>
+    </div>
+  </header>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom" style="z-index:1050;">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item dropdown px-2">
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="cuentasDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-wallet2 me-1"></i>Cuentas
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="cuentasDropdown">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-phone me-2"></i>Cuenta Digital</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-cash-coin me-2"></i>Cuenta Nómina</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-emoji-smile me-2"></i>Cuenta Kids</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown px-2">
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="tarjetasDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-credit-card-2-front me-1"></i>Tarjetas
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="tarjetasDropdown">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-credit-card-2-front me-2"></i>Crédito</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-credit-card me-2"></i>Débito</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-card-heading me-2"></i>Prepagada</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown px-2">
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="creditosDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-cash-stack me-1"></i>Créditos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="creditosDropdown">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-currency-dollar me-2"></i>Préstamo Personal</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-car-front me-2"></i>Crédito de Auto</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-house-door me-2"></i>Crédito Hipotecario</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown px-2">
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="inversionesDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-bar-chart-line me-1"></i>Inversiones
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="inversionesDropdown">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-piggy-bank me-2"></i>CETES</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-graph-up-arrow me-2"></i>Fondos de Inversión</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-calendar2-week me-2"></i>Plazo Fijo</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown px-2">
+            <a class="nav-link dropdown-toggle fw-semibold" href="#" id="segurosDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-shield-check me-1"></i>Seguros
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="segurosDropdown">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-truck-front me-2"></i>Auto</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse me-2"></i>Vida</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-hospital me-2"></i>Gastos Médicos</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-house-heart me-2"></i>Hogar</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Carrusel -->
+  <div class="container mb-4">
+    <div id="carouselMain" class="carousel slide shadow-sm rounded-3" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="images/Carrusel 1.png" class="d-block w-100" alt="Promo 1">
+          <div class="carousel-caption d-none d-md-block">
+            <h5 class="fw-bold display-6" style="text-shadow:0 2px 12px rgba(0,0,0,0.36)">¡Lo más hot!</h5>
+            <p class="fs-4">Usa tu tarjeta de crédito digital y recibe hasta un <strong>20% de cashback</strong></p>
+            <a href="#" class="btn btn-primary btn-lg rounded-pill mt-2 px-4 fw-bold">Conoce más</a>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="images/Carrusel 2.png" class="d-block w-100" alt="Promo 2">
+          <div class="carousel-caption d-none d-md-block">
+            <h5 class="fw-bold display-6">Banca digital</h5>
+            <p class="fs-4">Accede a tu banca en línea y administra tus productos 24/7</p>
+            <a href="#" class="btn btn-outline-light btn-lg rounded-pill mt-2 px-4 fw-bold">Regístrate aquí</a>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="images/Carrusel 3.png" class="d-block w-100" alt="Promo 3">
+          <div class="carousel-caption d-none d-md-block">
+            <h5 class="fw-bold display-6">Préstamos numia</h5>
+            <p class="fs-4">Consolida tus deudas y obtén las mejores tasas del mercado</p>
+            <a href="#" class="btn btn-primary btn-lg rounded-pill mt-2 px-4 fw-bold">Simula tu crédito</a>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselMain" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselMain" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+        <span class="visualmente-hidden">Siguiente</span>
+      </button>
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselMain" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselMain" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselMain" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjetas -->
+  <main class="container mb-5">
+    <div class="row g-4 justify-content-center main-cards">
+      <!-- Agenda cita -->
+      <div class="col-lg-3 col-md-6">
+        <div class="card ad-card h-100 text-center">
+          <div class="card-img-top-holder">
+            <img src="images/Tarjeta de credito.jpg" alt="Tarjeta de Crédito">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Agenda una cita</h5>
+            <p class="card-text">Agenda una cita con un agente especialista y recibe atención remota o presencial.</p>
+            <button class="btn btn-primary rounded-pill px-4 mt-2 fw-bold" disabled>Agendar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apertura nómina -->
+      <div class="col-lg-3 col-md-6">
+        <div class="card ad-card h-100 text-center">
+          <div class="card-img-top-holder">
+            <img src="images/Apertura de cuenta.png" alt="Cuenta Nómina">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Apertura de cuenta nómina</h5>
+            <p class="card-text">Recibe tu sueldo y accede a promociones, descuentos y retiros sin costo en miles de cajeros.</p>
+            <button id="btnNominaComenzar" class="btn btn-outline-primary rounded-pill px-4 mt-2 fw-bold">Comenzar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card ad-card h-100 text-center">
+          <div class="card-img-top-holder">
+            <img src="images/Prestamo personal.png" alt="Préstamo Personal">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Préstamos personales</h5>
+            <p class="card-text">Soluciona, planea y disfruta: obtén tu préstamo con tasas preferenciales y pagos flexibles.</p>
+            <button id="btnSimularPrestamo" class="btn btn-primary rounded-pill px-4 mt-2 fw-bold">Simular préstamo</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card ad-card h-100 text-center">
+          <div class="card-img-top-holder">
+            <img src="images/seguros.png" alt="Inversiones">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Inversiones</h5>
+            <p class="card-text">Estoy en una sucursal y quisiera asesoría de un agente de inversiones para hacer crecer mi dinero.</p>
+            <button id="btnInversionesComenzar" class="btn btn-outline-primary rounded-pill px-4 mt-2 fw-bold">Comenzar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rates -->
+    <div class="rates-section mt-5 mb-4">
+      <div class="rates-col-table">
+        <div class="d-flex gap-3 mb-2">
+          <button class="rates-tab-btn active" id="tabDivisas" onclick="showRatesTab('divisas')">Divisas</button>
+          <button class="rates-tab-btn" id="tabTasas" onclick="showRatesTab('tasas')">Tasas</button>
+        </div>
+        <table class="rates-table" id="tablaDivisas">
+          <thead><tr><th>Divisa</th><th>Compra</th><th>Venta</th></tr></thead>
+          <tbody>
+            <tr><td>Dólar USD</td><td>17.12</td><td>17.45</td></tr>
+            <tr><td>Euro</td><td>18.65</td><td>19.15</td></tr>
+            <tr><td>Libra esterlina</td><td>21.15</td><td>21.75</td></tr>
+          </tbody>
+        </table>
+        <table class="rates-table" id="tablaTasas" style="display:none;">
+          <thead><tr><th></th><th>Tasa Bruta al<br><span style="font-size:1rem;font-weight:700;">02/06/2025</span></th><th>Tasa Bruta<br>Anual</th></tr></thead>
+          <tbody>
+            <tr><td>cete Diario</td><td>8.12 %</td><td>9.18 %</td></tr>
+            <tr><td>cete Anualizado</td><td>8.12 %</td><td>9.18 %</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="rates-col-side">
+        <i class="bi bi-piggy-bank"></i>
+        <h5 class="mb-1" style="font-weight:700;">Tus inversiones Numia</h5>
+        <p><strong>Saldo CETES:</strong> $75,000.00 MXN<br><span style="font-size:0.95rem; color:var(--numia-azul); font-weight:700;">¡Estás generando $570/mes solo en intereses!</span></p>
+        <p>¿Quieres diversificar? Simula en 2 clicks tus ganancias potenciales en fondos de inversión o plazo fijo.</p>
+        <button class="btn" disabled>Invertir ahora</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-light text-center py-3 mt-auto border-top">
+    <small>&copy; NumiaBank. Todos los derechos reservados.</small>
+  </footer>
+
+  <!-- ===== MODALES: Turno/Sala/Video ===== -->
+  <div class="modal fade" id="modalGuardiaForm" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-person-vcard me-2"></i>Apertura de cuenta nómina</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="formAlert" class="alert d-none"></div>
+          <form id="guardiaForm" class="row g-3">
+            <div class="col-md-6"><label class="form-label fw-semibold">Nombre</label><input type="text" class="form-control" name="firstName" required></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Apellido</label><input type="text" class="form-control" name="lastName" required></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">DNI</label><input type="text" class="form-control" name="dni" required></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Teléfono</label><input type="tel" class="form-control" name="phone" required></div>
+            <div class="col-12"><label class="form-label fw-semibold">Email</label><input type="email" class="form-control" name="email" required></div>
+          </form>
+          <div class="small text-muted mt-3">Al continuar, te asignaremos un turno y verás una sala de espera. Cuando el agente esté listo, podrás iniciar una videollamada.</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button id="btnEnviarTurno" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i>Generar turno</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade modal-wait" id="modalSalaEspera" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-clock-history me-2"></i>RESERVA TU TURNO</h5>
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" id="btnCloseWait"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-3">
+            <div class="mb-2"><span class="badge badge-live rounded-pill px-3 py-2"><i class="bi bi-check2-circle me-1"></i>Turno Reservado Exitosamente</span></div>
+            <div class="text-success fw-semibold">¡Tu turno ha sido generado en el sistema!</div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12"><div class="info-item"><div class="info-label">Código del Turno:</div><div class="info-value"><a href="#" id="turnCodeDisplay" class="link-primary fw-bold" onclick="return false;">—</a></div></div></div>
+            <div class="col-md-6"><div class="info-item"><div class="info-label">Número de Turno:</div><div class="info-value" id="turnNumber">—</div></div></div>
+            <div class="col-md-6"><div class="info-item"><div class="info-label">Estado del Turno:</div><div class="info-value" id="turnStatus" class="status-warn">Consultando...</div></div></div>
+            <div class="col-md-6"><div class="info-item"><div class="info-label">Tiempo de Espera Actual:</div><div class="info-value" id="currentWaitingTime">N/A</div></div></div>
+            <div class="col-md-6"><div class="info-item"><div class="info-label">Tiempo Promedio de Espera:</div><div class="info-value" id="avgWaitingTime">N/A</div></div></div>
+            <div class="col-md-6"><div class="info-item"><div class="info-label">Cola/Servicio:</div><div class="info-value" id="queueName">—</div></div></div>
+            <div class="col-md-6"><div class="info-item"><div class="info-label">Sala de Espera:</div><div class="info-value" id="waitingRoomName">—</div></div></div>
+          </div>
+          <div id="salaEsperaVideoSection" class="text-center mt-4">
+            <button id="btnAbrirVideo" class="btn btn-primary" disabled><i class="bi bi-camera-video me-1"></i>Conectarme a videollamada</button>
+            <div class="form-text mt-2">El botón se habilitará cuando el agente te llame.</div>
+          </div>
+          <div id="salaEsperaAceptarSection" class="text-center mt-4 d-none">
+            <button id="btnAceptarTurno" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i>Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade modal-video" id="modalVideo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-2">
+        <div class="d-flex justify-content-between align-items-center px-2">
+          <h6 class="m-0"><i class="bi bi-camera-video me-2"></i>Videollamada</h6>
+          <button class="btn btn-sm btn-outline-secondary" id="btnResizeVideo">Cambiar tamaño</button>
+        </div>
+        <div class="mt-2 h-100">
+          <iframe id="videoFrame" src="about:blank"
+            allow="camera; microphone; autoplay; fullscreen; clipboard-write; display-capture"
+            referrerpolicy="no-referrer" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CITAS ===== -->
+  <div class="modal fade" id="modalCita" tabindex="-1" aria-labelledby="modalCitaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCitaLabel"><i class="bi bi-calendar2-week me-2"></i>Agenda tu cita</h5>
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="citaAlert" class="alert d-none"></div>
+
+          <div class="cita-toolbar">
+            <div class="row g-3 align-items-end">
+              <div class="col-lg-4">
+                <label class="form-label fw-semibold">Servicio / Agenda</label>
+                <select id="citaSchedule" class="form-select">
+                  <option value="">Cargando...</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label class="form-label fw-semibold">Sucursal</label>
+                <select id="citaBranch" class="form-select" disabled>
+                  <option value="">Selecciona un servicio</option>
+                </select>
+              </div>
+              <div class="col-lg-4">
+                <label class="form-label fw-semibold">Fecha</label>
+                <div class="d-flex gap-2">
+                  <input id="citaFecha" type="date" class="form-control" disabled/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Horarios disponibles</label>
+            <div id="citaSlots"></div>
+          </div>
+
+          <hr class="my-3">
+
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label fw-semibold">Nombre</label><input id="citaFirst" class="form-control" placeholder="Nombre"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Apellido</label><input id="citaLast" class="form-control" placeholder="Apellido"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">DNI</label><input id="citaDni" class="form-control" placeholder="Documento"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Email</label><input id="citaMail" type="email" class="form-control" placeholder="correo@dominio.com"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="me-auto cita-legend">Selecciona un horario para habilitar la confirmación.</div>
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button id="citaConfirmar" class="btn btn-primary" disabled>Confirmar cita</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL SIMULADOR DE CRÉDITO ===== -->
+  <div class="modal fade" id="modalSimuladorCredito" tabindex="-1" aria-labelledby="modalSimuladorCreditoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalSimuladorCreditoLabel"><i class="bi bi-calculator me-2"></i>Simulador de Crédito</h5>
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="simuladorAlert" class="alert d-none"></div>
+          
+          <!-- Indicador de pasos -->
+          <div class="d-flex justify-content-center mb-4">
+            <div class="d-flex align-items-center">
+              <div class="step-indicator active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Información</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step-indicator" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Tipo de Crédito</div>
+              </div>
+              <div class="step-line"></div>
+              <div class="step-indicator" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Resultados</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 1: Información del Cliente -->
+          <div id="step1" class="step-content">
+            <h6 class="mb-3"><i class="bi bi-person-fill me-2"></i>Información Personal</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Nombre</label>
+                <input type="text" id="simNombre" class="form-control" placeholder="Tu nombre" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Apellido</label>
+                <input type="text" id="simApellido" class="form-control" placeholder="Tu apellido" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">DNI</label>
+                <input type="text" id="simDni" class="form-control" placeholder="Número de documento" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Teléfono</label>
+                <input type="tel" id="simTelefono" class="form-control" placeholder="Tu teléfono" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" id="simEmail" class="form-control" placeholder="correo@ejemplo.com" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Ingresos Mensuales</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" id="simIngresos" class="form-control" placeholder="0" min="0" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Gastos Mensuales</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" id="simGastos" class="form-control" placeholder="0" min="0" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 2: Tipo de Crédito -->
+          <div id="step2" class="step-content d-none">
+            <h6 class="mb-3"><i class="bi bi-cash-stack me-2"></i>Selecciona tu Crédito</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="card h-100 credit-type-card" data-type="personal">
+                  <div class="card-body text-center">
+                    <i class="bi bi-person-workspace text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6 class="card-title">Préstamo Personal</h6>
+                    <p class="card-text small">Para necesidades personales, consolidación de deudas o proyectos.</p>
+                    <div class="credit-details">
+                      <small class="text-muted">Tasa desde: 12.5% anual</small><br>
+                      <small class="text-muted">Plazo: 12-60 meses</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 credit-type-card" data-type="auto">
+                  <div class="card-body text-center">
+                    <i class="bi bi-car-front text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6 class="card-title">Crédito de Auto</h6>
+                    <p class="card-text small">Financia tu vehículo nuevo o usado con las mejores condiciones.</p>
+                    <div class="credit-details">
+                      <small class="text-muted">Tasa desde: 8.9% anual</small><br>
+                      <small class="text-muted">Plazo: 12-84 meses</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 credit-type-card" data-type="hipotecario">
+                  <div class="card-body text-center">
+                    <i class="bi bi-house-door text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6 class="card-title">Crédito Hipotecario</h6>
+                    <p class="card-text small">Tu casa propia con financiamiento a largo plazo.</p>
+                    <div class="credit-details">
+                      <small class="text-muted">Tasa desde: 6.5% anual</small><br>
+                      <small class="text-muted">Plazo: 10-30 años</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 credit-type-card" data-type="libre">
+                  <div class="card-body text-center">
+                    <i class="bi bi-credit-card text-primary mb-3" style="font-size: 2rem;"></i>
+                    <h6 class="card-title">Crédito Libre Inversión</h6>
+                    <p class="card-text small">Para cualquier propósito con flexibilidad total.</p>
+                    <div class="credit-details">
+                      <small class="text-muted">Tasa desde: 14.2% anual</small><br>
+                      <small class="text-muted">Plazo: 6-48 meses</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <label class="form-label fw-semibold">Monto Solicitado</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" id="simMonto" class="form-control" placeholder="0" min="1000" max="50000000" required>
+              </div>
+              <div class="form-text">Monto mínimo: $1,000 - Máximo: $50,000,000</div>
+            </div>
+            
+            <div class="mt-3">
+              <label class="form-label fw-semibold">Plazo en Meses</label>
+              <select id="simPlazo" class="form-select" required>
+                <option value="">Selecciona el plazo</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Paso 3: Resultados -->
+          <div id="step3" class="step-content d-none">
+            <h6 class="mb-3"><i class="bi bi-graph-up me-2"></i>Resultado de tu Simulación</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-primary">Cuota Mensual</h6>
+                    <h4 class="text-primary" id="resultadoCuota">$0</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-primary">Total a Pagar</h6>
+                    <h4 class="text-primary" id="resultadoTotal">$0</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-primary">Tasa de Interés</h6>
+                    <h4 class="text-primary" id="resultadoTasa">0%</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-light">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-primary">Capacidad de Pago</h6>
+                    <h4 class="text-success" id="resultadoCapacidad">Aprobado</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Información importante:</strong> Esta es una simulación preliminar. Los términos finales pueden variar según la evaluación crediticia completa.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button id="btnSolicitarAsistencia" class="btn btn-warning me-auto">
+            <i class="bi bi-headset me-1"></i>Solicitar Asistencia
+          </button>
+          <button id="btnAnterior" class="btn btn-outline-primary d-none">Anterior</button>
+          <button id="btnSiguiente" class="btn btn-primary">Siguiente</button>
+          <button id="btnFinalizar" class="btn btn-success d-none">Finalizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL INVERSIONES ===== -->
+  <div class="modal fade" id="modalInversiones" tabindex="-1" aria-labelledby="modalInversionesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalInversionesLabel"><i class="bi bi-bar-chart-line me-2"></i>Tipos de Inversión</h5>
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Paso 1: Selección de tipo -->
+          <div id="invStep1">
+            <p class="text-muted mb-4">Selecciona el tipo de inversión que mejor se adapte a tus objetivos. Un asesor te ayudará con los detalles.</p>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="card h-100 border-2 inv-type-card" data-detalle="Depósito a Plazo Fijo" style="cursor:pointer; transition: all 0.3s; border-color: #e9ecef;">
+                  <div class="card-body">
+                    <div class="text-center mb-3">
+                      <i class="bi bi-calendar-check text-primary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h6 class="card-title fw-bold text-primary">Depósito a Plazo Fijo</h6>
+                    <p class="card-text small text-muted">Invierte tu dinero por un período fijo (desde 30 días hasta varios años) a una tasa de interés garantizada. Recibes tu capital más los intereses al vencimiento. Ideal para objetivos a corto plazo con bajo riesgo.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card h-100 border-2 inv-type-card" data-detalle="Fondo de Inversión" style="cursor:pointer; transition: all 0.3s; border-color: #e9ecef;">
+                  <div class="card-body">
+                    <div class="text-center mb-3">
+                      <i class="bi bi-graph-up-arrow text-primary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h6 class="card-title fw-bold text-primary">Fondo de Inversión</h6>
+                    <p class="card-text small text-muted">Tu dinero se invierte junto con el de otros inversionistas en un portafolio diversificado (acciones, bonos, etc.). Un profesional administra los recursos. Puedes rescatar o agregar fondos según tu disponibilidad. Mayor potencial de rendimiento con riesgo moderado.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card h-100 border-2 inv-type-card" data-detalle="Plan de Inversión Patrimonial" style="cursor:pointer; transition: all 0.3s; border-color: #e9ecef;">
+                  <div class="card-body">
+                    <div class="text-center mb-3">
+                      <i class="bi bi-briefcase text-primary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h6 class="card-title fw-bold text-primary">Plan de Inversión Patrimonial</h6>
+                    <p class="card-text small text-muted">Estrategia personalizada a largo plazo con asesoría profesional para construir tu patrimonio. El agente diseña un plan según tu perfil, metas y plazo. Incluye diversificación de activos y seguimiento continuo para tu crecimiento financiero.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 2: Formulario de registro -->
+          <div id="invStep2" class="d-none">
+            <div id="invFormAlert" class="alert d-none"></div>
+            <p class="text-muted mb-3">Completa tus datos para que un asesor de inversiones te contacte.</p>
+            <form id="invForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Nombre</label>
+                <input type="text" class="form-control" name="firstName" required placeholder="Ej. Eduardo">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Apellido</label>
+                <input type="text" class="form-control" name="lastName" required placeholder="Ej. Corona">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">DNI / CURP</label>
+                <input type="text" class="form-control" name="dni" required placeholder="Ej. COBB950601HDFRCR03">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Teléfono</label>
+                <input type="tel" class="form-control" name="phone" required placeholder="Ej. 5610238726">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control" name="email" required placeholder="Ej. ecorona@numia.co">
+              </div>
+            </form>
+            <div class="small text-muted mt-3">
+              <strong>Tipo seleccionado:</strong> <span id="invDetalleDisplay">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="invBtnVolver" class="btn btn-outline-secondary d-none">Volver</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" id="invBtnEnviar" class="btn btn-primary d-none"><i class="bi bi-check2-circle me-1"></i>Generar turno</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ===== Pestañas + Chat bubble ===== -->
+  <script>
+    function showRatesTab(tab){
+      const tabDivisas=document.getElementById('tabDivisas');
+      const tabTasas=document.getElementById('tabTasas');
+      const tablaDivisas=document.getElementById('tablaDivisas');
+      const tablaTasas=document.getElementById('tablaTasas');
+      if(tab==='divisas'){ tabDivisas.classList.add('active'); tabTasas.classList.remove('active'); tablaDivisas.style.display=''; tablaTasas.style.display='none'; }
+      else { tabDivisas.classList.remove('active'); tabTasas.classList.add('active'); tablaDivisas.style.display='none'; tablaTasas.style.display=''; }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const iframe = document.getElementById('numia-chat-bubble');
+      const btn = document.getElementById('max-chat');
+      const openBtn = document.getElementById('open-chat');
+      let maximized = false;
+      openBtn.onclick = function() { iframe.style.display='block'; btn.style.display='flex'; openBtn.style.display='none'; };
+      btn.onclick = function() {
+        if (!maximized) { iframe.style.width='98vw'; iframe.style.height='94vh'; iframe.style.bottom='3vh'; iframe.style.right='1vw'; iframe.style.boxShadow='none'; btn.style.bottom='calc(94vh + 3vh + 12px)'; btn.textContent='🗗'; maximized = true; }
+        else { iframe.style.width='370px'; iframe.style.height='550px'; iframe.style.bottom='24px'; iframe.style.right='24px'; iframe.style.boxShadow='none'; btn.style.bottom='590px'; btn.textContent='⛶'; maximized = false; }
+      };
+
+      // Modal de Inversiones (flujo: selección -> formulario -> API)
+      const btnInversiones = document.getElementById('btnInversionesComenzar');
+      const modalInversionesEl = document.getElementById('modalInversiones');
+      const modalInversiones = new bootstrap.Modal(modalInversionesEl);
+      const invStep1 = document.getElementById('invStep1');
+      const invStep2 = document.getElementById('invStep2');
+      const invForm = document.getElementById('invForm');
+      const invFormAlert = document.getElementById('invFormAlert');
+      const invDetalleDisplay = document.getElementById('invDetalleDisplay');
+      const invBtnVolver = document.getElementById('invBtnVolver');
+      const invBtnEnviar = document.getElementById('invBtnEnviar');
+
+      const INV_API_TOKEN = 'iyAUHKKJ2NTsxf4sAH1OWm3fljRsThvxF0kbCGWe';
+      const INV_QUEUE = 8749;
+      const INV_BRANCH = 11;
+      const INV_BASE = 'https://filavirtual2.debmedia.com/api/v1';
+
+      let selectedInvDetalle = null;
+
+      function invSetAlert(type, msg) {
+        invFormAlert.className = `alert alert-${type}`;
+        invFormAlert.textContent = msg;
+        invFormAlert.classList.remove('d-none');
+      }
+      function invClearAlert() {
+        invFormAlert.className = 'alert d-none';
+        invFormAlert.textContent = '';
+      }
+
+      function invResetModal() {
+        selectedInvDetalle = null;
+        invStep1.classList.remove('d-none');
+        invStep2.classList.add('d-none');
+        invBtnVolver.classList.add('d-none');
+        invBtnEnviar.classList.add('d-none');
+        invForm.reset();
+        invClearAlert();
+        document.querySelectorAll('.inv-type-card').forEach(c => c.classList.remove('selected'));
+      }
+
+      if (btnInversiones) {
+        btnInversiones.addEventListener('click', () => {
+          invResetModal();
+          modalInversiones.show();
+        });
+      }
+
+      modalInversionesEl.addEventListener('show.bs.modal', invResetModal);
+
+      document.querySelectorAll('.inv-type-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.inv-type-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedInvDetalle = card.dataset.detalle;
+          invStep1.classList.add('d-none');
+          invStep2.classList.remove('d-none');
+          invDetalleDisplay.textContent = selectedInvDetalle;
+          invBtnVolver.classList.remove('d-none');
+          invBtnEnviar.classList.remove('d-none');
+        });
+      });
+
+      invBtnVolver.addEventListener('click', () => {
+        invStep2.classList.add('d-none');
+        invStep1.classList.remove('d-none');
+        invBtnVolver.classList.add('d-none');
+        invBtnEnviar.classList.add('d-none');
+        selectedInvDetalle = null;
+        document.querySelectorAll('.inv-type-card').forEach(c => c.classList.remove('selected'));
+      });
+
+      invBtnEnviar.addEventListener('click', async () => {
+        invClearAlert();
+        const data = Object.fromEntries(new FormData(invForm).entries());
+        if (!data.firstName || !data.lastName || !data.dni || !data.email || !data.phone) {
+          invSetAlert('danger', 'Completa todos los campos.');
+          return;
+        }
+        invBtnEnviar.disabled = true;
+        invBtnEnviar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
+        try {
+          const url = `${INV_BASE}/queue/${INV_QUEUE}/branch/${INV_BRANCH}/enqueue`;
+          const body = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            dni: data.dni,
+            email: data.email,
+            phone: data.phone,
+            extraFields: [
+              {
+                showable: [{ in: 'workstation', format: 'both' }],
+                "Producto seleccionado": selectedInvDetalle
+              }
+            ],
+            customerExtraFields: [
+              {
+                showable: [{ in: 'workstation', format: 'both' }]
+              }
+            ]
+          };
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'x-api-token': INV_API_TOKEN,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+          const out = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(out?.message || `Error en servidor (${res.status})`);
+
+          // Replicar flujo de sala de espera (igual que Apertura de cuenta nómina)
+          const turnCode = out.code || '—';
+          const turnNumber = out.jsonDetails?.turn || out.jsonDetails?.actualTurn || '—';
+          const avgWait = out.jsonDetails?.averageWaitingTime ?? out.jsonDetails?.serviceTime ?? 'N/A';
+          const queueName = out.jsonDetails?.queue?.name || '—';
+          const wrName = out.jsonDetails?.waitingRoom?.name || '—';
+          const videoCallUrl = out.jsonDetails?.videoCallUrl || 'about:blank';
+
+          window.currentVideoCallUrl = videoCallUrl;
+          const urlWithParam = videoCallUrl.includes('?') ? `${videoCallUrl}&videocallUser=mobile` : `${videoCallUrl}?videocallUser=mobile`;
+          document.getElementById('videoFrame').src = urlWithParam;
+
+          window.fillWaitModal({
+            code: turnCode,
+            number: turnNumber,
+            avgWait: isFinite(avgWait) ? `${Math.floor(parseFloat(avgWait))} min` : 'N/A',
+            queueName,
+            waitingRoom: wrName,
+            presencial: true
+          });
+
+          modalInversiones.hide();
+          invResetModal();
+          const modalWait = new bootstrap.Modal(document.getElementById('modalSalaEspera'), { backdrop: 'static', keyboard: false });
+          modalWait.show();
+          window.startPolling(turnCode, INV_API_TOKEN);
+        } catch (err) {
+          invSetAlert('danger', err.message);
+        } finally {
+          invBtnEnviar.disabled = false;
+          invBtnEnviar.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Generar turno';
+        }
+      });
+    });
+  </script>
+
+  <!-- ===== Flujo Turno / Videollamada ===== -->
+  <script>
+    const FV_TOKEN   = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+    const FV_QUEUE   = 16223;
+    const FV_BRANCH  = 10750;
+    const FV_BASE    = 'https://filavirtual2.debmedia.com/api/v1';
+    const VIDEO_CALL_URL = 'about:blank';
+
+    let pollingInterval = null;
+    let lastTurnCode = null;
+    window.currentVideoCallUrl = 'about:blank';
+
+    const btnNominaComenzar = document.getElementById('btnNominaComenzar');
+    const modalForm = new bootstrap.Modal(document.getElementById('modalGuardiaForm'));
+    const modalWait = new bootstrap.Modal(document.getElementById('modalSalaEspera'), { backdrop: 'static', keyboard: false });
+    const modalVideo = new bootstrap.Modal(document.getElementById('modalVideo'), { backdrop:'static' });
+    const formEl = document.getElementById('guardiaForm');
+    const formAlert = document.getElementById('formAlert');
+    const btnEnviarTurno = document.getElementById('btnEnviarTurno');
+    const $ = (id)=> document.getElementById(id);
+
+    function setFormAlert(type, msg){ formAlert.className = `alert alert-${type}`; formAlert.textContent = msg; formAlert.classList.remove('d-none'); }
+    function clearFormAlert(){ formAlert.className = 'alert d-none'; formAlert.textContent = ''; }
+
+    btnNominaComenzar.addEventListener('click', ()=>{ clearFormAlert(); formEl.reset(); modalForm.show(); });
+
+    btnEnviarTurno.addEventListener('click', async ()=>{
+      clearFormAlert();
+      const data = Object.fromEntries(new FormData(formEl).entries());
+      if(!data.firstName || !data.lastName || !data.dni || !data.email || !data.phone){ setFormAlert('danger','Completa todos los campos.'); return; }
+      btnEnviarTurno.disabled = true; btnEnviarTurno.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generando...';
+      try{
+        const url = `${FV_BASE}/queue/${FV_QUEUE}/branch/${FV_BRANCH}/enqueue`;
+        const res = await fetch(url, { method:'POST', headers:{ 'x-api-token': FV_TOKEN, 'Content-Type':'application/json' }, body: JSON.stringify({ firstName:data.firstName, lastName:data.lastName, dni:data.dni, email:data.email, phone:data.phone })});
+        const out = await res.json().catch(()=> ({}));
+        if(!res.ok) throw new Error(out?.message || `Error en servidor (${res.status})`);
+        const turnCode = out.code || '—'; lastTurnCode = turnCode; localStorage.setItem('turnCode', turnCode);
+        const turnNumber = out.jsonDetails?.turn || out.jsonDetails?.actualTurn || '—';
+        const avgWait    = out.jsonDetails?.averageWaitingTime ?? out.jsonDetails?.serviceTime ?? 'N/A';
+        const queueName  = out.jsonDetails?.queue?.name || '—';
+        const wrName     = out.jsonDetails?.waitingRoom?.name || '—';
+        const videoCallUrl = out.jsonDetails?.videoCallUrl || 'about:blank';
+        window.currentVideoCallUrl = videoCallUrl; // Almacenar la URL de videollamada
+        
+        // Actualizar el src del iframe con la URL de videollamada
+        const urlWithParam = videoCallUrl.includes('?') ? `${videoCallUrl}&videocallUser=mobile` : `${videoCallUrl}?videocallUser=mobile`;
+        document.getElementById('videoFrame').src = urlWithParam;
+        fillWaitModal({ code:turnCode, number:turnNumber, avgWait:isFinite(avgWait)?`${Math.floor(parseFloat(avgWait))} min`:'N/A', queueName, waitingRoom:wrName });
+        modalForm.hide(); modalWait.show(); startPolling(turnCode);
+      }catch(err){ setFormAlert('danger', err.message);
+      }finally{ btnEnviarTurno.disabled = false; btnEnviarTurno.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Generar turno'; }
+    });
+
+    // Función global para llenar el modal de sala de espera (presencial: true = turno presencial, solo botón Aceptar)
+    window.fillWaitModal = function({code, number, avgWait, queueName, waitingRoom, presencial}){
+      $('turnCodeDisplay').textContent = code; $('turnNumber').textContent = number; $('avgWaitingTime').textContent = avgWait;
+      $('queueName').textContent = queueName; $('waitingRoomName').textContent = waitingRoom;
+      $('turnStatus').textContent = 'Consultando...'; $('turnStatus').className = 'info-value status-warn';
+      $('currentWaitingTime').textContent = 'N/A'; $('btnAbrirVideo').disabled = true;
+      if (presencial) {
+        $('salaEsperaVideoSection').classList.add('d-none');
+        $('salaEsperaAceptarSection').classList.remove('d-none');
+      } else {
+        $('salaEsperaVideoSection').classList.remove('d-none');
+        $('salaEsperaAceptarSection').classList.add('d-none');
+      }
+    }
+
+    // Función global para iniciar el polling del turno (token opcional para colas con API distinta, ej. Inversiones)
+    window.startPolling = function(turnCode, apiToken){
+      stopPolling();
+      const token = apiToken || FV_TOKEN;
+      const url = `${FV_BASE}/turn/code/${encodeURIComponent(turnCode)}`;
+      const mapStatus = (s)=> s==='ANNOUNCED'?{text:'Lo estamos llamando',cls:'status-ok'}: s==='WAITING_TO_BE_CALLED'?{text:'En breve lo llamaremos',cls:'status-warn'}: s==='FINALIZED'?{text:'Atención finalizada',cls:'status-done'}:{text:s||'Desconocido',cls:'status-warn'};
+      const tick = async ()=>{
+        try{
+          const res = await fetch(url, { headers: { 'x-api-token': token, 'Content-Type':'text/plain' }});
+          if(!res.ok) throw new Error(`Estado no disponible (${res.status})`);
+          const data = await res.json();
+          const m = mapStatus(data.status); $('turnStatus').textContent = m.text; $('turnStatus').className = `info-value ${m.cls}`;
+          const avg = (data.averageWaitingTime ?? data.serviceTime); if(avg!==undefined && avg!==null && !isNaN(avg)){ $('currentWaitingTime').textContent = `${Math.floor(parseFloat(avg))} min`; }
+          if(data.status === 'ANNOUNCED'){ $('btnAbrirVideo').disabled = false; }
+        }catch(e){ $('turnStatus').textContent = 'Error al consultar'; $('turnStatus').className = 'info-value status-err'; }
+      };
+      tick(); pollingInterval = setInterval(tick, 5000);
+    }
+    function stopPolling(){ if(pollingInterval){ clearInterval(pollingInterval); pollingInterval = null; } }
+    document.getElementById('btnCloseWait').addEventListener('click', stopPolling);
+    document.getElementById('btnAceptarTurno').addEventListener('click', ()=>{
+      stopPolling();
+      const m = bootstrap.Modal.getInstance(document.getElementById('modalSalaEspera'));
+      if (m) m.hide();
+    });
+    document.getElementById('btnAbrirVideo').addEventListener('click', ()=>{ openVideoModal({ width:'90vw', height:'80vh', url: window.currentVideoCallUrl }); });
+    document.getElementById('btnResizeVideo').addEventListener('click', ()=>{
+      const dlg = document.querySelector('#modalVideo .modal-dialog');
+      const curW = dlg.style.getPropertyValue('--video-width') || '90vw';
+      const nextW = (curW.trim()==='90vw') ? '70vw' : '90vw';
+      const nextH = (nextW==='70vw') ? '60vh' : '80vh';
+      dlg.style.setProperty('--video-width', nextW);
+      document.querySelector('#modalVideo .modal-content').style.setProperty('--video-height', nextH);
+    });
+    function openVideoModal({width='90vw', height='80vh', url=null}={}){ 
+      const dlg=document.querySelector('#modalVideo .modal-dialog'); 
+      const content=document.querySelector('#modalVideo .modal-content'); 
+      dlg.style.setProperty('--video-width',width); 
+      content.style.setProperty('--video-height',height); 
+      
+      // Usar la URL almacenada globalmente o la proporcionada como parámetro
+      const videoUrl = url || window.currentVideoCallUrl || 'about:blank';
+      
+      // Agregar el parámetro ?videocallUser=mobile a la URL
+      const urlWithParam = videoUrl.includes('?') ? `${videoUrl}&videocallUser=mobile` : `${videoUrl}?videocallUser=mobile`;
+      
+      document.getElementById('videoFrame').src=urlWithParam; 
+      modalVideo.show(); 
+    }
+  </script>
+
+  <!-- ===== MÓDULO DE CITAS ===== -->
+  <script>
+    (function(){
+      const API_TOKEN = 's9ZmCOGzuRz0OlxtZyJYIvnG7WQVBtnLlNFrHD2U';
+      const SVC_LIST   = 'https://citas2.debmedia.com/api/v2/reducedSchedules';
+      const AVAIL_BASE = 'https://citas2.debmedia.com/api/v2/schedules';
+      const APPT_URL   = 'https://citas2.debmedia.com/api/v2/appointments';
+
+      const modalEl = document.getElementById('modalCita');
+      const modal = new bootstrap.Modal(modalEl);
+      const btnPrimaryCards = document.querySelectorAll('.ad-card .btn.btn-primary');
+      const alertBox = document.getElementById('citaAlert');
+      const selSchedule = document.getElementById('citaSchedule');
+      const selBranch   = document.getElementById('citaBranch');
+      const inputFecha  = document.getElementById('citaFecha');
+      const slotsWrap   = document.getElementById('citaSlots');
+      const btnConfirm  = document.getElementById('citaConfirmar');
+
+      const inFirst = document.getElementById('citaFirst');
+      const inLast  = document.getElementById('citaLast');
+      const inDni   = document.getElementById('citaDni');
+      const inMail  = document.getElementById('citaMail');
+
+      let schedules = [];
+      let selectedSlot = null; // { startAt: 'YYYY-MM-DDTHH:mm:ss-0300', defaultDuration: n }
+
+      // habilita el primer botón primario (“Agendar”)
+      if (btnPrimaryCards && btnPrimaryCards.length) {
+        const btnSolicitar = btnPrimaryCards[0];
+        btnSolicitar.removeAttribute('disabled');
+        btnSolicitar.addEventListener('click', async () => {
+          resetForm();
+          modal.show();
+          await loadSchedules();
+        });
+      }
+
+      const pad = n => String(n).padStart(2,'0');
+
+      function setAlert(type, msg){ alertBox.className = `alert alert-${type}`; alertBox.textContent = msg; alertBox.classList.remove('d-none'); }
+      function clearAlert(){ alertBox.className = 'alert d-none'; alertBox.textContent=''; }
+
+      function resetForm(){
+        clearAlert();
+        selSchedule.innerHTML = `<option value="">Cargando...</option>`;
+        selBranch.innerHTML   = `<option value="">Selecciona un servicio</option>`;
+        selBranch.disabled = true;
+        inputFecha.value = '';
+        inputFecha.disabled = true;
+        slotsWrap.innerHTML = '';
+        selectedSlot = null;
+        btnConfirm.disabled = true;
+        inFirst.value = ''; inLast.value = ''; inDni.value = ''; inMail.value = '';
+      }
+
+      async function loadSchedules(){
+        try{
+          const res = await fetch(SVC_LIST, { headers: { 'x-api-token': API_TOKEN } });
+          if(!res.ok) throw new Error(`No se pudieron obtener las agendas (${res.status})`);
+          schedules = await res.json();
+
+          selSchedule.innerHTML = `<option value="">Selecciona un servicio...</option>`;
+          schedules.forEach(s => selSchedule.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}</option>`));
+
+          const today = new Date();
+          const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+          inputFecha.min = ymd(today);
+          inputFecha.disabled = false;
+
+          selSchedule.onchange = handleScheduleChange;
+          selBranch.onchange = handleBranchOrDateChange;
+          inputFecha.onchange = handleBranchOrDateChange;
+
+        }catch(err){ setAlert('danger', err.message); }
+      }
+
+      function handleScheduleChange(){
+        const schedId = selSchedule.value;
+        selBranch.innerHTML = `<option value="">Selecciona sucursal...</option>`;
+        selBranch.disabled = true;
+        slotsWrap.innerHTML = '';
+        btnConfirm.disabled = true;
+
+        if(!schedId){ return; }
+        const sched = schedules.find(s => String(s.id) === String(schedId));
+        if(!sched || !Array.isArray(sched.branches)) { setAlert('danger','Esta agenda no tiene sucursales asociadas.'); return; }
+        const seen = new Set();
+        sched.branches.forEach(b=>{ if(!seen.has(b.id)){ selBranch.insertAdjacentHTML('beforeend', `<option value="${b.id}">${b.name}</option>`); seen.add(b.id); }});
+        selBranch.disabled = false; clearAlert();
+      }
+
+      async function handleBranchOrDateChange(){
+        clearAlert();
+        slotsWrap.innerHTML = '';
+        selectedSlot = null;
+        btnConfirm.disabled = true;
+
+        const schedId = selSchedule.value;
+        const branchId = selBranch.value;
+        const dateStr  = inputFecha.value;
+
+        if(!schedId || !branchId || !dateStr){ return; }
+
+        try{
+          const url = `${AVAIL_BASE}/${encodeURIComponent(schedId)}/branch/${encodeURIComponent(branchId)}/availability?strDate=${encodeURIComponent(dateStr)}`;
+          const res = await fetch(url, { headers: { 'x-api-token': API_TOKEN }});
+          if(!res.ok) throw new Error(`No se pudo obtener disponibilidad (${res.status})`);
+          const data = await res.json();
+
+          const slots = Array.isArray(data) ? data : (Array.isArray(data.slots) ? data.slots : []);
+          if(slots.length === 0){ setAlert('info','No hay horarios disponibles para la fecha seleccionada.'); return; }
+
+          const frag = document.createDocumentFragment();
+          slots.forEach(slot=>{
+            const hora = slot.zonedStartDate.substring(11,16);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-light';
+            btn.textContent = hora;
+            btn.addEventListener('click', ()=>{
+              [...slotsWrap.querySelectorAll('.btn')].forEach(b=>b.classList.remove('active'));
+              btn.classList.add('active');
+              selectedSlot = { startAt: slot.zonedStartDate, defaultDuration: (slot.defaultDuration||0) };
+              btnConfirm.disabled = false;
+            });
+            frag.appendChild(btn);
+          });
+          slotsWrap.appendChild(frag);
+
+        }catch(err){ setAlert('danger', err.message); }
+      }
+
+      // Helpers para generar endAt con el MISMO offset que startAt (formato ...HH:mm:ss-0300)
+      function minutesOffsetFromSuffix(suffix){ // "-0300" -> -180
+        const m = suffix.match(/^([+-])(\d{2})(\d{2})$/);
+        if(!m) return 0;
+        const sign = m[1] === '-' ? -1 : 1;
+        return sign * (parseInt(m[2],10)*60 + parseInt(m[3],10));
+        }
+      function buildEndAtLikeStart(startAtStr, addMinutes){
+        // startAtStr: "YYYY-MM-DDTHH:mm:ss-0300"
+        const offsetMatch = startAtStr.match(/([+-]\d{4}|Z)$/);
+        const offsetSuffix = offsetMatch ? offsetMatch[1] : 'Z';
+        const offsetMin = offsetSuffix==='Z' ? 0 : minutesOffsetFromSuffix(offsetSuffix);
+
+        const msStart = new Date(startAtStr).getTime();
+        const msEnd = msStart + (addMinutes*60000);
+
+        // Convertimos a "hora local" de ese offset: sumamos offset al UTC para leer UTC* como local de zona
+        const d = new Date(msEnd + offsetMin*60000);
+        const Y = d.getUTCFullYear(), M = d.getUTCMonth()+1, D = d.getUTCDate();
+        const H = d.getUTCHours(), m = d.getUTCMinutes(), S = d.getUTCSeconds();
+        return `${Y}-${pad(M)}-${pad(D)}T${pad(H)}:${pad(m)}:${pad(S)}${offsetSuffix}`;
+      }
+
+      btnConfirm.addEventListener('click', async ()=>{
+        clearAlert();
+        if(!selectedSlot){ setAlert('danger','Selecciona un horario primero.'); return; }
+        const schedId = selSchedule.value;
+        const branchId = selBranch.value;
+        if(!schedId || !branchId){ setAlert('danger','Faltan servicio o sucursal.'); return; }
+        if(!inFirst.value || !inLast.value || !inDni.value){ setAlert('danger','Completa Nombre, Apellido y DNI.'); return; }
+
+        // start/end con el MISMO offset y formato que la API entrega
+        const startAt = selectedSlot.startAt; // usar tal cual "....-0300"
+        const endAt   = buildEndAtLikeStart(startAt, selectedSlot.defaultDuration || 0);
+
+        const body = {
+          branch:   { id: Number(branchId) },
+          schedule: { id: Number(schedId) },
+          startAt,  // "YYYY-MM-DDTHH:mm:ss-0300"
+          endAt,    // "YYYY-MM-DDTHH:mm:ss-0300"
+          customer: {
+            firstName: inFirst.value,
+            lastName:  inLast.value,
+            dni:       String(inDni.value || '').trim(),
+            email:     (inMail.value || '').trim() || undefined
+          },
+          reason: "Solicitud de Tarjeta de Crédito"
+        };
+
+        btnConfirm.disabled = true; btnConfirm.textContent = 'Confirmando...';
+
+        try{
+          const res = await fetch(APPT_URL, {
+            method: 'POST',
+            headers: { 'x-api-token': API_TOKEN, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          const out = await res.json().catch(()=> ({}));
+          if(!res.ok){ throw new Error(out?.message || `Error al crear la cita (${res.status})`); }
+          setAlert('success', `¡Cita creada! ID: ${out.id || '(recibido)'}`);
+          setTimeout(()=> modal.hide(), 1400);
+        }catch(err){
+          setAlert('danger', err.message);
+        }finally{
+          btnConfirm.disabled = false; btnConfirm.textContent = 'Confirmar cita';
+        }
+      });
+    })();
+  </script>
+
+  <!-- ===== SIMULADOR DE CRÉDITO ===== -->
+  <script>
+    (function(){
+      const modalEl = document.getElementById('modalSimuladorCredito');
+      const modal = new bootstrap.Modal(modalEl);
+      const btnSimular = document.getElementById('btnSimularPrestamo');
+      const alertBox = document.getElementById('simuladorAlert');
+      
+      // Elementos del formulario
+      const inputs = {
+        nombre: document.getElementById('simNombre'),
+        apellido: document.getElementById('simApellido'),
+        dni: document.getElementById('simDni'),
+        telefono: document.getElementById('simTelefono'),
+        email: document.getElementById('simEmail'),
+        ingresos: document.getElementById('simIngresos'),
+        gastos: document.getElementById('simGastos'),
+        monto: document.getElementById('simMonto'),
+        plazo: document.getElementById('simPlazo')
+      };
+      
+      // Elementos de navegación
+      const btnAnterior = document.getElementById('btnAnterior');
+      const btnSiguiente = document.getElementById('btnSiguiente');
+      const btnFinalizar = document.getElementById('btnFinalizar');
+      const btnSolicitarAsistencia = document.getElementById('btnSolicitarAsistencia');
+      
+      // Elementos de pasos
+      const stepIndicators = document.querySelectorAll('.step-indicator');
+      const stepContents = document.querySelectorAll('.step-content');
+      
+      // Elementos de resultados
+      const resultadoCuota = document.getElementById('resultadoCuota');
+      const resultadoTotal = document.getElementById('resultadoTotal');
+      const resultadoTasa = document.getElementById('resultadoTasa');
+      const resultadoCapacidad = document.getElementById('resultadoCapacidad');
+      
+      let currentStep = 1;
+      let selectedCreditType = null;
+      let simulacionData = {};
+      
+      // Configuración de tipos de crédito
+      const creditTypes = {
+        personal: { tasa: 12.5, minPlazo: 12, maxPlazo: 60, minMonto: 1000, maxMonto: 5000000 },
+        auto: { tasa: 8.9, minPlazo: 12, maxPlazo: 84, minMonto: 50000, maxMonto: 20000000 },
+        hipotecario: { tasa: 6.5, minPlazo: 120, maxPlazo: 360, minMonto: 500000, maxMonto: 50000000 },
+        libre: { tasa: 14.2, minPlazo: 6, maxPlazo: 48, minMonto: 1000, maxMonto: 10000000 }
+      };
+      
+      // Event listener para cuando se cierra el modal (botón cancelar)
+      modalEl.addEventListener('hide.bs.modal', async (event) => {
+        // Verificar si hay DNI cargado
+        const dniValue = inputs.dni.value.trim();
+        
+        if (dniValue) {
+          // Obtener nombre y apellido del formulario
+          const nombreValue = inputs.nombre.value.trim();
+          const apellidoValue = inputs.apellido.value.trim();
+          
+          // Invocar la API de NocoDB antes de cerrar
+          try {
+            const response = await fetch('https://app.nocodb.com/api/v2/tables/mjg0v238imgxxvm/records', {
+              method: 'POST',
+              headers: {
+                'xc-token': 'esMWeT85CmXjEnt5kvF1J97zD-d4_BX9rq228I9z',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                "Title": null,
+                "DNI": dniValue,
+                "Nombre": nombreValue || null,
+                "Apellido": apellidoValue || null,
+                "OnboardingPrestamoFinalizado": "No",
+                "OnboardingPrestamoIniciado": "Si"
+              })
+            });
+            
+            // No importa si la respuesta es exitosa o no, simplemente continuar cerrando el modal
+            await response.json().catch(() => ({}));
+          } catch (error) {
+            // Silenciar errores de la API, solo cerrar el modal
+            console.error('Error al invocar API:', error);
+          }
+        }
+        // El modal se cerrará automáticamente después de este evento
+      });
+      
+      // Event listeners
+      btnSimular.addEventListener('click', () => {
+        resetSimulador();
+        modal.show();
+      });
+      
+      btnAnterior.addEventListener('click', () => {
+        if (currentStep > 1) {
+          currentStep--;
+          updateStep();
+        }
+      });
+      
+      btnSiguiente.addEventListener('click', () => {
+        if (validateCurrentStep()) {
+          if (currentStep < 3) {
+            currentStep++;
+            updateStep();
+          }
+        }
+      });
+      
+      btnFinalizar.addEventListener('click', () => {
+        modal.hide();
+        resetSimulador();
+      });
+      
+      btnSolicitarAsistencia.addEventListener('click', () => {
+        solicitarAsistencia();
+      });
+      
+      // Event listeners para tarjetas de tipo de crédito
+      document.querySelectorAll('.credit-type-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.credit-type-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedCreditType = card.dataset.type;
+          updatePlazoOptions();
+        });
+      });
+      
+      function resetSimulador() {
+        currentStep = 1;
+        selectedCreditType = null;
+        simulacionData = {};
+        
+        // Limpiar formularios
+        Object.values(inputs).forEach(input => {
+          if (input) input.value = '';
+        });
+        
+        // Limpiar selecciones
+        document.querySelectorAll('.credit-type-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+        
+        // Resetear pasos
+        updateStep();
+        clearAlert();
+      }
+      
+      function updateStep() {
+        // Actualizar indicadores
+        stepIndicators.forEach((indicator, index) => {
+          const stepNum = index + 1;
+          indicator.classList.remove('active', 'completed');
+          
+          if (stepNum < currentStep) {
+            indicator.classList.add('completed');
+          } else if (stepNum === currentStep) {
+            indicator.classList.add('active');
+          }
+        });
+        
+        // Mostrar/ocultar contenido
+        stepContents.forEach((content, index) => {
+          const stepNum = index + 1;
+          if (stepNum === currentStep) {
+            content.classList.remove('d-none');
+          } else {
+            content.classList.add('d-none');
+          }
+        });
+        
+        // Actualizar botones
+        btnAnterior.classList.toggle('d-none', currentStep === 1);
+        btnSiguiente.classList.toggle('d-none', currentStep === 3);
+        btnFinalizar.classList.toggle('d-none', currentStep !== 3);
+        
+        // Actualizar texto del botón siguiente
+        if (currentStep === 2) {
+          btnSiguiente.textContent = 'Calcular';
+        } else if (currentStep === 3) {
+          btnSiguiente.textContent = 'Siguiente';
+        } else {
+          btnSiguiente.textContent = 'Siguiente';
+        }
+      }
+      
+      function validateCurrentStep() {
+        clearAlert();
+        
+        if (currentStep === 1) {
+          const required = ['nombre', 'apellido', 'dni', 'telefono', 'email', 'ingresos', 'gastos'];
+          const missing = required.filter(field => !inputs[field].value.trim());
+          
+          if (missing.length > 0) {
+            setAlert('danger', 'Por favor completa todos los campos requeridos.');
+            return false;
+          }
+          
+          // Validar ingresos vs gastos
+          const ingresos = parseFloat(inputs.ingresos.value);
+          const gastos = parseFloat(inputs.gastos.value);
+          
+          if (gastos >= ingresos) {
+            setAlert('warning', 'Tus gastos no pueden ser iguales o mayores a tus ingresos.');
+            return false;
+          }
+          
+          // Guardar datos del paso 1
+          simulacionData.personal = {
+            nombre: inputs.nombre.value,
+            apellido: inputs.apellido.value,
+            dni: inputs.dni.value,
+            telefono: inputs.telefono.value,
+            email: inputs.email.value,
+            ingresos: ingresos,
+            gastos: gastos
+          };
+          
+        } else if (currentStep === 2) {
+          if (!selectedCreditType) {
+            setAlert('danger', 'Por favor selecciona un tipo de crédito.');
+            return false;
+          }
+          
+          if (!inputs.monto.value || !inputs.plazo.value) {
+            setAlert('danger', 'Por favor completa el monto y plazo.');
+            return false;
+          }
+          
+          const monto = parseFloat(inputs.monto.value);
+          const plazo = parseInt(inputs.plazo.value);
+          const config = creditTypes[selectedCreditType];
+          
+          if (monto < config.minMonto || monto > config.maxMonto) {
+            setAlert('danger', `El monto debe estar entre $${config.minMonto.toLocaleString()} y $${config.maxMonto.toLocaleString()}.`);
+            return false;
+          }
+          
+          if (plazo < config.minPlazo || plazo > config.maxPlazo) {
+            setAlert('danger', `El plazo debe estar entre ${config.minPlazo} y ${config.maxPlazo} meses.`);
+            return false;
+          }
+          
+          // Guardar datos del paso 2
+          simulacionData.credito = {
+            tipo: selectedCreditType,
+            monto: monto,
+            plazo: plazo,
+            tasa: config.tasa
+          };
+          
+          // Calcular simulación
+          calcularSimulacion();
+        }
+        
+        return true;
+      }
+      
+      function updatePlazoOptions() {
+        if (!selectedCreditType) return;
+        
+        const config = creditTypes[selectedCreditType];
+        const plazoSelect = inputs.plazo;
+        
+        plazoSelect.innerHTML = '<option value="">Selecciona el plazo</option>';
+        
+        for (let i = config.minPlazo; i <= config.maxPlazo; i += 6) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = `${i} meses`;
+          plazoSelect.appendChild(option);
+        }
+        
+        // Actualizar límites del monto
+        inputs.monto.min = config.minMonto;
+        inputs.monto.max = config.maxMonto;
+        inputs.monto.placeholder = `Mínimo: $${config.minMonto.toLocaleString()}`;
+      }
+      
+      function calcularSimulacion() {
+        const { credito, personal } = simulacionData;
+        const tasaMensual = credito.tasa / 100 / 12;
+        const cuota = credito.monto * (tasaMensual * Math.pow(1 + tasaMensual, credito.plazo)) / (Math.pow(1 + tasaMensual, credito.plazo) - 1);
+        const total = cuota * credito.plazo;
+        const interes = total - credito.monto;
+        
+        // Verificar capacidad de pago (la cuota no debe superar el 30% de los ingresos netos)
+        const ingresosNetos = personal.ingresos - personal.gastos;
+        const capacidadMaxima = ingresosNetos * 0.3;
+        const aprobado = cuota <= capacidadMaxima;
+        
+        // Mostrar resultados
+        resultadoCuota.textContent = `$${cuota.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        resultadoTotal.textContent = `$${total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        resultadoTasa.textContent = `${credito.tasa}%`;
+        resultadoCapacidad.textContent = aprobado ? 'Aprobado' : 'Revisar';
+        resultadoCapacidad.className = aprobado ? 'text-success' : 'text-warning';
+        
+        // Guardar datos de la simulación
+        simulacionData.resultado = {
+          cuota: cuota,
+          total: total,
+          interes: interes,
+          aprobado: aprobado,
+          capacidadMaxima: capacidadMaxima
+        };
+      }
+      
+      function solicitarAsistencia() {
+        // Validar solo nombre, apellido y email
+        const nombre = inputs.nombre.value.trim();
+        const apellido = inputs.apellido.value.trim();
+        const email = inputs.email.value.trim();
+        
+        if (!nombre || !apellido || !email) {
+          setAlert('danger', 'Por favor completa al menos el nombre, apellido y email antes de solicitar asistencia.');
+          return;
+        }
+        
+        // Usar la misma API que el "generar turno"
+        const FV_TOKEN   = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+    const FV_QUEUE   = 16223;
+    const FV_BRANCH  = 10750;
+        const FV_BASE = 'https://filavirtual2.debmedia.com/api/v1';
+        
+        const data = {
+          firstName: nombre,
+          lastName: apellido,
+          dni: inputs.dni.value.trim() || 'N/A', // Usar valor del campo o 'N/A' si está vacío
+          email: email,
+          phone: inputs.telefono.value.trim() || 'N/A' // Usar valor del campo o 'N/A' si está vacío
+        };
+        
+        btnSolicitarAsistencia.disabled = true;
+        btnSolicitarAsistencia.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Solicitando...';
+        
+        fetch(`${FV_BASE}/queue/${FV_QUEUE}/branch/${FV_BRANCH}/enqueue`, {
+          method: 'POST',
+          headers: {
+            'x-api-token': FV_TOKEN,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(out => {
+          if (out.code) {
+            // Cerrar el modal del simulador
+            modal.hide();
+            resetSimulador();
+            
+            // Usar las funciones existentes para mostrar el modal de sala de espera
+            const turnCode = out.code;
+            const turnNumber = out.jsonDetails?.turn || out.jsonDetails?.actualTurn || '—';
+            const avgWait = out.jsonDetails?.averageWaitingTime ?? out.jsonDetails?.serviceTime ?? 'N/A';
+            const queueName = out.jsonDetails?.queue?.name || '—';
+            const wrName = out.jsonDetails?.waitingRoom?.name || '—';
+            const videoCallUrl = out.jsonDetails?.videoCallUrl || 'about:blank';
+            
+            // Almacenar la URL de videollamada globalmente
+            window.currentVideoCallUrl = videoCallUrl;
+            
+            // Actualizar el src del iframe con la URL de videollamada
+            const urlWithParam = videoCallUrl.includes('?') ? `${videoCallUrl}&videocallUser=mobile` : `${videoCallUrl}?videocallUser=mobile`;
+            document.getElementById('videoFrame').src = urlWithParam;
+            
+            // Llenar el modal de sala de espera con los datos
+            window.fillWaitModal({ 
+              code: turnCode, 
+              number: turnNumber, 
+              avgWait: isFinite(avgWait) ? `${Math.floor(parseFloat(avgWait))} min` : 'N/A', 
+              queueName, 
+              waitingRoom: wrName 
+            });
+            
+            // Mostrar el modal de sala de espera
+            const modalWait = new bootstrap.Modal(document.getElementById('modalSalaEspera'), { backdrop: 'static', keyboard: false });
+            modalWait.show();
+            
+            // Iniciar el polling para verificar el estado del turno
+            window.startPolling(turnCode);
+            
+          } else {
+            throw new Error('No se pudo generar el turno');
+          }
+        })
+        .catch(err => {
+          setAlert('danger', `Error al solicitar asistencia: ${err.message}`);
+        })
+        .finally(() => {
+          btnSolicitarAsistencia.disabled = false;
+          btnSolicitarAsistencia.innerHTML = '<i class="bi bi-headset me-1"></i>Solicitar Asistencia';
+        });
+      }
+      
+      function setAlert(type, msg) {
+        alertBox.className = `alert alert-${type}`;
+        alertBox.textContent = msg;
+        alertBox.classList.remove('d-none');
+      }
+      
+      function clearAlert() {
+        alertBox.className = 'alert d-none';
+        alertBox.textContent = '';
+      }
+    })();
+  </script>
+
+  <!-- CHAT -->
+  <iframe
+    src="https://filavirtual.preprod.debmedia.com/Numiabot/#/Ff5h9OOAsmhNELUjk1Dh"
+    id="numia-chat-bubble"
+    style="position: fixed; bottom: 24px; right: 24px; width: 370px; height: 550px; border: none; z-index: 9999; border-radius: 18px; overflow: hidden; transition: width .3s, height .3s, right .3s, bottom .3s; display: none;"
+    allow="camera; microphone"
+  ></iframe>
+  <button id="max-chat"
+    style="position: fixed; bottom: 590px; right: 24px; z-index: 10000; background: var(--numia-azul); color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1.6rem; box-shadow: 0 2px 8px rgba(0,0,0,0.18); cursor: pointer; display: none; align-items: center; justify-content: center; transition: background .2s;"
+    title="Maximizar/minimizar chat">⛶</button>
+  <button id="open-chat"
+    style="position: fixed; bottom: 24px; right: 24px; z-index: 10001; background: var(--numia-azul); color: #fff; border: none; border-radius: 50%; width: 64px; height: 64px; font-size: 2.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.18); cursor: pointer; display: flex; align-items: center; justify-content: center;"
+    title="Abrir chat">
+    <span style="font-weight:bold;font-size:2rem;">N</span>
+  </button>
+</body>
+</html>
+
