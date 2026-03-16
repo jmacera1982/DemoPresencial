@@ -846,8 +846,8 @@
       abandono: 0.0,
       tiempoEspera: { minutes: 5, seconds: 22 },
       agentes: 7,
-      incomeData: [270, 275, 280, 275, 280, 275, 270],
-      waitingTimeData: [8.5, 5.0, 4.5, 5.5, 4.0, 6.5, 4.0],
+      incomeData: [270, 275, 280, 275, 280],
+      waitingTimeData: [8.5, 5.0, 4.5, 5.5, 4.0],
       coverageData: [
         { tramite: 'Otras Transacciones', participacion: 25.1, ingresos: 64 },
         { tramite: 'Operaciones en Caja', participacion: 19.0, ingresos: 49 },
@@ -861,19 +861,61 @@
     // Current simulation data
     let currentSimData = { ...baseData };
     
-    // Initialize charts
-    const dates = ['9 mar', '10 mar', '11 mar', '12 mar', '13 mar', '14 mar', '15 mar'];
+    // Generate dynamic dates starting from today (only weekdays: Monday to Friday)
+    function generateDates(numDays = 7) {
+      const dates = [];
+      const monthNames = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+      const today = new Date();
+      
+      // Start from today, or next Monday if today is weekend
+      let currentDate = new Date(today);
+      const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 6 = Saturday
+      
+      // If today is Saturday (6), start from Monday (next 2 days)
+      if (dayOfWeek === 6) {
+        currentDate.setDate(today.getDate() + 2);
+      }
+      // If today is Sunday (0), start from Monday (next 1 day)
+      else if (dayOfWeek === 0) {
+        currentDate.setDate(today.getDate() + 1);
+      }
+      
+      // Generate dates, skipping weekends
+      let daysAdded = 0;
+      while (dates.length < numDays) {
+        const dayOfWeek = currentDate.getDay();
+        // Only add Monday (1) to Friday (5)
+        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+          const day = currentDate.getDate();
+          const month = monthNames[currentDate.getMonth()];
+          dates.push(`${day} ${month}`);
+        }
+        // Move to next day
+        currentDate.setDate(currentDate.getDate() + 1);
+        daysAdded++;
+        // Safety check to avoid infinite loop
+        if (daysAdded > 20) break;
+      }
+      
+      return dates;
+    }
     
-    // Data for waiting room tooltip calculations
-    const waitingRoomData = {
-      '9 mar': { total: 260, caja3: 50, caja2: 45, caja5: 40, caja4: 35, caja1: 30 },
-      '10 mar': { total: 270, caja3: 55, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
-      '11 mar': { total: 280, caja3: 60, caja2: 55, caja5: 50, caja4: 45, caja1: 40 },
-      '12 mar': { total: 262, caja3: 49, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
-      '13 mar': { total: 280, caja3: 60, caja2: 55, caja5: 50, caja4: 45, caja1: 40 },
-      '14 mar': { total: 270, caja3: 55, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
-      '15 mar': { total: 260, caja3: 50, caja2: 45, caja5: 40, caja4: 35, caja1: 30 }
-    };
+    // Initialize charts with dynamic dates (5 weekdays: Monday to Friday)
+    const dates = generateDates(5);
+    
+    // Data for waiting room tooltip calculations (using dynamic dates)
+    const baseWaitingRoomData = [
+      { total: 260, caja3: 50, caja2: 45, caja5: 40, caja4: 35, caja1: 30 },
+      { total: 270, caja3: 55, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
+      { total: 280, caja3: 60, caja2: 55, caja5: 50, caja4: 45, caja1: 40 },
+      { total: 262, caja3: 49, caja2: 50, caja5: 45, caja4: 40, caja1: 35 },
+      { total: 280, caja3: 60, caja2: 55, caja5: 50, caja4: 45, caja1: 40 }
+    ];
+    
+    const waitingRoomData = {};
+    dates.forEach((date, index) => {
+      waitingRoomData[date] = baseWaitingRoomData[index] || baseWaitingRoomData[0];
+    });
     
     // Waiting Room Chart (Stacked Bar)
     const waitingRoomCtx = document.getElementById('waitingRoomChart').getContext('2d');
@@ -882,15 +924,15 @@
       data: {
         labels: dates,
         datasets: [
-          { label: 'Caja 3', data: [50, 55, 60, 49, 60, 55, 50], backgroundColor: '#863DFF' },
-          { label: 'Caja 2', data: [45, 50, 55, 50, 55, 50, 45], backgroundColor: '#060A27' },
-          { label: 'Caja 5', data: [40, 45, 50, 45, 50, 45, 40], backgroundColor: '#0056b3' },
-          { label: 'Caja 4', data: [35, 40, 45, 40, 45, 40, 35], backgroundColor: '#10b981' },
-          { label: 'Caja 1', data: [30, 35, 40, 35, 40, 35, 30], backgroundColor: '#f97316' },
-          { label: 'Asesor Comercial 9', data: [25, 30, 35, 30, 35, 30, 25], backgroundColor: '#ef4444' },
-          { label: 'Asesor Comercial 7', data: [20, 25, 30, 25, 30, 25, 20], backgroundColor: '#059669' },
-          { label: 'Asesor SAC 8', data: [15, 20, 25, 20, 25, 20, 15], backgroundColor: '#ec4899' },
-          { label: 'Supervisor Caja', data: [10, 15, 20, 15, 20, 15, 10], backgroundColor: '#06b6d4' }
+          { label: 'Caja 3', data: [50, 55, 60, 49, 60], backgroundColor: '#863DFF' },
+          { label: 'Caja 2', data: [45, 50, 55, 50, 55], backgroundColor: '#060A27' },
+          { label: 'Caja 5', data: [40, 45, 50, 45, 50], backgroundColor: '#0056b3' },
+          { label: 'Caja 4', data: [35, 40, 45, 40, 45], backgroundColor: '#10b981' },
+          { label: 'Caja 1', data: [30, 35, 40, 35, 40], backgroundColor: '#f97316' },
+          { label: 'Asesor Comercial 9', data: [25, 30, 35, 30, 35], backgroundColor: '#ef4444' },
+          { label: 'Asesor Comercial 7', data: [20, 25, 30, 25, 30], backgroundColor: '#059669' },
+          { label: 'Asesor SAC 8', data: [15, 20, 25, 20, 25], backgroundColor: '#ec4899' },
+          { label: 'Supervisor Caja', data: [10, 15, 20, 15, 20], backgroundColor: '#06b6d4' }
         ]
       },
       options: {
@@ -1175,7 +1217,7 @@
       waitingRoomChart.update();
       
       // Update coverage table
-      const totalIngresos = newIncomeData.reduce((a, b) => a + b, 0) / 7; // Average
+      const totalIngresos = newIncomeData.reduce((a, b) => a + b, 0) / dates.length; // Average
       const coverageTableBody = document.getElementById('coverageTableBody');
       const rows = coverageTableBody.querySelectorAll('tr');
       baseData.coverageData.forEach((item, index) => {
@@ -1192,11 +1234,11 @@
       waitingTimeChart.data.datasets[0].label = selected + ' (estimado)';
       // Simulate different data for different cashiers
       const variations = {
-        'Caja 1': [0, 0, 0, 0, 0, 0, 0],
-        'Caja 2': [0.5, -0.3, 0.2, -0.1, 0.3, -0.2, 0.1],
-        'Caja 3': [-0.3, 0.5, -0.2, 0.3, -0.1, 0.4, -0.2],
-        'Caja 4': [0.2, -0.1, 0.4, -0.2, 0.1, -0.3, 0.3],
-        'Caja 5': [-0.2, 0.3, -0.1, 0.2, -0.3, 0.1, -0.1]
+        'Caja 1': [0, 0, 0, 0, 0],
+        'Caja 2': [0.5, -0.3, 0.2, -0.1, 0.3],
+        'Caja 3': [-0.3, 0.5, -0.2, 0.3, -0.1],
+        'Caja 4': [0.2, -0.1, 0.4, -0.2, 0.1],
+        'Caja 5': [-0.2, 0.3, -0.1, 0.2, -0.3]
       };
       const variation = variations[selected] || variations['Caja 1'];
       const newData = baseData.waitingTimeData.map((val, i) => Math.max(0, val + variation[i]));
