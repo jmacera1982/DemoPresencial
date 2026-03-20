@@ -431,7 +431,7 @@
             <p class="mb-0 mt-1 small text-muted">formulario de atención orquestado por AI</p>
           </div>
           <div class="activo-item">
-            <a href="app-mobileSalud.html" target="_blank" rel="noopener" class="datos-importantes-link">
+            <a href="app-mobileSalud.html" target="_blank" rel="noopener" class="datos-importantes-link" id="linkAppMobileSalud" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-html="true" title="Script - App Mobile Salud">
               <i class="bi bi-phone me-2"></i>App Mobile Salud
             </a>
           </div>
@@ -447,7 +447,7 @@
             </a>
           </div>
           <div class="activo-item">
-            <a href="https://filavirtual.preprod.debmedia.com/Numiabot/#/aAsDTThHwOIrsB3C2uVh" target="_blank" rel="noopener" class="datos-importantes-link" title="Avatar">
+            <a href="https://filavirtual.preprod.debmedia.com/Numiabot/#/aAsDTThHwOIrsB3C2uVh" target="_blank" rel="noopener" class="datos-importantes-link" id="linkAvatarSalud" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-html="true" title="Script - Avatar">
               <i class="bi bi-person-circle" style="font-size: 3rem; color: var(--primary);"></i>
             </a>
             <p class="mb-0 mt-1 small text-muted">Avatar</p>
@@ -720,6 +720,30 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Contenido popover Avatar Salud (oculto) -->
+  <div id="popoverAvatarSaludContent" class="d-none">
+    Hacer clic en la cámara del menú inferior (e-consulta)<br><br>
+    Preguntarle al Avatar si el plan N1 posee cobertura internacional<br><br>
+    El avatar indicará que solo los planes superiores poseen cobertura internacional<br><br>
+    El avatar pregunta si deseamos gestionar el upgrade,<br><br>
+    Respondemos que si, lo cual genera una videollamada
+  </div>
+
+  <!-- Contenido popover App Mobile Salud (oculto) -->
+  <div id="popoverAppSaludContent" class="d-none">
+    Esta historia comienza con Maria buscando una cita médica, ella busca para el dia de mañana y no encuentra (Reducir No-Show)<br><br>
+    En otro lugar de la ciudad esta [nuestro usuario (Natalia, Juanca, Juanma, Aldo o Edu], que cancela una cita para mañana<br><br>
+    Llega un mensaje a la cuenta de whatsapp (recuerden que una vez al dia debemos iniciar una conversación con el agente con un Hola al menos)<br><br>
+    Respondemos ok, tomo el turno.<br><br>
+    Llega el dia de la cita, y el cliente saluda (enviamos Hola) - Mejorar CSAT, Menor costo por servir<br><br>
+    Debemos enviar la ubicación<br><br>
+    El agente saludará a Maria, preguntando si la cita es para ella o para su hijo<br><br>
+    Solicitará un token<br><br>
+    Ofrecerá atenciones de demanda espontanea o la cita programada, respondemos cita programada.<br><br>
+    Preguntará si deseamos pagar por Mercado Pago, respondemos que si y genera el link de pago<br><br>
+    Una vez realizado el pago, lo detecta automáticamente y confirma el check in
   </div>
 
   <!-- Modal para instrucciones de configuración de PlayerWeb -->
@@ -1614,6 +1638,28 @@
       tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
       });
+      // Inicializar popover App Mobile Salud
+      const linkAppSalud = document.getElementById('linkAppMobileSalud');
+      if (linkAppSalud) {
+        const contentEl = document.getElementById('popoverAppSaludContent');
+        new bootstrap.Popover(linkAppSalud, {
+          content: contentEl ? contentEl.innerHTML : '',
+          html: true,
+          trigger: 'hover',
+          placement: 'top'
+        });
+      }
+      // Inicializar popover Avatar Salud
+      const linkAvatarSalud = document.getElementById('linkAvatarSalud');
+      if (linkAvatarSalud) {
+        const contentEl = document.getElementById('popoverAvatarSaludContent');
+        new bootstrap.Popover(linkAvatarSalud, {
+          content: contentEl ? contentEl.innerHTML : '',
+          html: true,
+          trigger: 'hover',
+          placement: 'top'
+        });
+      }
     });
   </script>
 </body>
