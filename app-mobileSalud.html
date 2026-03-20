@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>App Mobile Salud - Inicio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Paleta Numia - https://numia.co/ */
+      --primary-purple: #863DFF;
+      --primary-purple-hover: #7c3aed;
+      --primary-purple-light: #a78bfa;
+      --primary-purple-dark: #6d28d9;
+      --text-dark: #1e1b4b;
+      --text-light: #6b7280;
+      --bg-light: #faf5ff;
+      --bg-white: #ffffff;
+      --border-color: #e9d5ff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding: 0;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    /* Mobile Device Container */
+    .mobile-container {
+      max-width: 400px;
+      margin: 2rem auto;
+      background: #000;
+      border-radius: 30px;
+      padding: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .mobile-screen {
+      background: var(--bg-white);
+      border-radius: 22px;
+      overflow: hidden;
+      height: 812px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .mobile-screen-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      background: var(--bg-white);
+      padding: 8px 16px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      height: 44px;
+    }
+    
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    /* Header */
+    .app-header {
+      background: var(--bg-white);
+      padding: 12px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .app-header h1 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 16px;
+      background: var(--bg-light);
+      min-height: 0;
+    }
+    
+    /* COVID Banner */
+    .covid-banner {
+      background: var(--bg-white);
+      margin: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      gap: 16px;
+    }
+    
+    .covid-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #e9d5ff 0%, #ddd6fe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .covid-image i {
+      font-size: 2rem;
+      color: var(--primary-purple);
+    }
+    
+    .covid-content {
+      flex: 1;
+    }
+    
+    .covid-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    
+    .covid-button {
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .carousel-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-color);
+    }
+    
+    .indicator.active {
+      background: var(--primary-purple);
+    }
+    
+    /* Section Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+    
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-purple);
+    }
+    
+    .section-arrow {
+      color: var(--text-light);
+      font-size: 1.25rem;
+    }
+    
+    /* Credentials Card */
+    .credentials-card {
+      background: var(--bg-white);
+      margin: 0 16px 16px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-light) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .user-avatar i {
+      font-size: 1.5rem;
+      color: white;
+    }
+    
+    .user-details {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+    
+    .user-dni {
+      font-size: 0.875rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .user-code {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-purple);
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+    
+    .token-button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-light) 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    
+    /* Favorites Card */
+    .favorites-card {
+      background: var(--bg-white);
+      margin: 0 16px 16px;
+      border-radius: 12px;
+      padding: 24px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+    
+    .favorites-icon {
+      font-size: 2.5rem;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    
+    .favorites-text {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+    
+    .favorites-link {
+      color: var(--primary-purple);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    
+    /* Branch Card */
+    .branch-card {
+      background: var(--bg-white);
+      margin: 0 16px 16px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: relative;
+      width: 100%;
+      background: var(--bg-white);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 24px;
+      z-index: 1000;
+      flex-shrink: 0;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px 12px;
+      flex: 1;
+      text-decoration: none;
+    }
+    
+    .nav-item i {
+      font-size: 1.25rem;
+    }
+    
+    .nav-item.active i,
+    .nav-item.active span {
+      color: var(--primary-purple);
+    }
+    
+    .nav-item:not(.active) i,
+    .nav-item:not(.active) span {
+      color: var(--text-light);
+    }
+    
+    .nav-item span {
+      font-size: 0.6875rem;
+      font-weight: 500;
+    }
+    
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: var(--bg-white);
+      border-radius: 3px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 400px) {
+      .mobile-container {
+        margin: 0;
+        border-radius: 0;
+        max-width: 100%;
+      }
+      
+      .mobile-screen {
+        border-radius: 0;
+        height: 100vh;
+      }
+      
+      .bottom-nav {
+        width: 100%;
+      }
+    }
+    
+    /* User Selector */
+    .user-selector-container {
+      padding: 16px;
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .user-selector {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      background: var(--bg-white);
+      cursor: pointer;
+    }
+    
+    /* Appointments Section */
+    .appointments-section {
+      margin: 16px;
+    }
+    
+    .appointment-card {
+      background: var(--bg-white);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 16px;
+    }
+    
+    .appointment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .appointment-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .appointment-date {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    
+    .appointment-details {
+      font-size: 0.875rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+    
+    .appointment-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-confirm {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .btn-cancel-appointment {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .btn-agendar {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 90%;
+      width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    
+    .form-select,
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      color: var(--text-dark);
+      background: var(--bg-white);
+    }
+    
+    .no-availability {
+      background: #faf5ff;
+      border: 1px solid #e9d5ff;
+      color: var(--primary-purple-dark);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      text-align: center;
+      margin-top: 16px;
+    }
+    
+    .btn-submit {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    
+    /* Botón flotante fuera de la app */
+    .btn-numiabot {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(134, 61, 255, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    
+    .btn-numiabot:hover {
+      background: var(--primary-purple-hover);
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(134, 61, 255, 0.5);
+    }
+    
+    .btn-numiabot i {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="https://filavirtual.preprod.debmedia.com/Numiabot/#/aAsDTThHwOIrsB3C2uVh" target="_blank" rel="noopener" class="btn-numiabot" title="Abrir Numia Bot">
+    <i class="bi bi-chat-dots-fill"></i>
+  </a>
+  
+  <div class="mobile-container">
+    <div class="mobile-screen">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div class="status-left">
+          <span>Tuenti</span>
+          <i class="bi bi-signal-4"></i>
+        </div>
+        <div class="status-center">14:31</div>
+        <div class="status-right">
+          <i class="bi bi-wifi"></i>
+          <i class="bi bi-lock-fill"></i>
+          <span>71%</span>
+          <i class="bi bi-battery-full"></i>
+        </div>
+      </div>
+      
+      <!-- App Header -->
+      <div class="app-header">
+        <h1>Inicio</h1>
+      </div>
+      
+      <!-- User Selector -->
+      <div class="user-selector-container">
+        <select id="userSelector" class="user-selector">
+          <option value="Maria" selected>Maria</option>
+          <option value="Jorge">Jorge</option>
+          <option value="Joaquin">Joaquin</option>
+          <option value="Gustavo">Gustavo</option>
+          <option value="Martin">Martin</option>
+          <option value="Juanma S">Juanma S</option>
+          <option value="Juanma L">Juanma L</option>
+          <option value="Andrea">Andrea</option>
+          <option value="Natalia">Natalia</option>
+          <option value="Aldo">Aldo</option>
+          <option value="Eduardo">Eduardo</option>
+          <option value="Manuel">Manuel</option>
+          <option value="Juanca">Juanca</option>
+          <option value="demo">demo</option>
+        </select>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- COVID Banner -->
+        <div class="covid-banner">
+          <div class="covid-image">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <div class="covid-content">
+            <div class="covid-title">COVID-19</div>
+            <button class="covid-button">Más información</button>
+          </div>
+        </div>
+        
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+          <div class="indicator active"></div>
+          <div class="indicator"></div>
+          <div class="indicator"></div>
+        </div>
+        
+        <!-- Mis Credenciales -->
+        <div class="section-header">
+          <div class="section-title">Mis credenciales</div>
+          <i class="bi bi-chevron-right section-arrow"></i>
+        </div>
+        
+        <div class="credentials-card">
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="user-details">
+              <div class="user-name" id="userNameDisplay">MARIA USUARIO</div>
+              <div class="user-dni">
+                DNI: 99999999
+                <i class="bi bi-eye" style="cursor: pointer;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="user-code">800006 1312731 01 0002</div>
+          <button class="token-button">
+            <i class="bi bi-lock-fill"></i>
+            <span>Generar Token</span>
+          </button>
+        </div>
+        
+        <!-- Appointments Section (para todos excepto Maria: cita al día siguiente a las 10:00) -->
+        <div id="appointmentsSection" class="appointments-section" style="display: none;">
+          <div class="section-header">
+            <div class="section-title">Mis Citas</div>
+          </div>
+          <div id="appointmentCard" class="appointment-card">
+            <div class="appointment-header">
+              <div class="appointment-title">Cita Médica</div>
+            </div>
+            <div class="appointment-date" id="appointmentDate"></div>
+            <div class="appointment-details">
+              <div>Especialidad: <strong id="appointmentSpecialty"></strong></div>
+              <div>Horario: <strong id="appointmentTime"></strong></div>
+            </div>
+            <div class="appointment-actions">
+              <button class="btn-confirm" id="btnConfirmAppointment">
+                <i class="bi bi-check-circle"></i>
+                <span>Confirmar</span>
+              </button>
+              <button class="btn-cancel-appointment" id="btnCancelAppointment">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Agendar Cita Button (solo para Maria - sin citas) -->
+        <div id="agendarSection" class="appointments-section">
+          <div class="section-header">
+            <div class="section-title">Mis Citas</div>
+          </div>
+          <div class="appointment-card">
+            <div style="text-align: center; padding: 24px;">
+              <i class="bi bi-calendar-x" style="font-size: 3rem; color: var(--text-light); margin-bottom: 16px;"></i>
+              <div style="color: var(--text-light); margin-bottom: 16px;">No tenés citas agendadas</div>
+              <button class="btn-agendar" id="btnAgendarCita">
+                <i class="bi bi-plus-circle"></i>
+                Agendar una cita
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Favoritos de cartilla -->
+        <div class="section-header">
+          <div class="section-title">Favoritos de cartilla</div>
+          <i class="bi bi-chevron-right section-arrow"></i>
+        </div>
+        
+        <div class="favorites-card">
+          <i class="bi bi-heart favorites-icon"></i>
+          <div class="favorites-text">Todavía no tenés favoritos</div>
+          <a href="#" class="favorites-link">Buscar y agregar</a>
+        </div>
+        
+        <!-- Sucursal más cercana -->
+        <div class="section-header">
+          <div class="section-title">Sucursal más cercana</div>
+        </div>
+        
+        <div class="branch-card">
+          <div style="padding: 16px; text-align: center; color: var(--text-light);">
+            Cargando información...
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal para Agendar Cita -->
+      <div id="modalAgendar" class="modal-overlay">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">Agendar Cita</div>
+            <button class="modal-close" id="closeModal">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Especialidad</label>
+            <select id="selectEspecialidad" class="form-select">
+              <option value="">Seleccione una especialidad</option>
+              <option value="Cardiología">Cardiología</option>
+              <option value="Dermatología">Dermatología</option>
+              <option value="Neurología">Neurología</option>
+              <option value="Pediatría">Pediatría</option>
+              <option value="Traumatología">Traumatología</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Fecha</label>
+            <input type="date" id="selectFecha" class="form-input" min="">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Horario</label>
+            <select id="selectHorario" class="form-select">
+              <option value="">Seleccione un horario</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+            </select>
+          </div>
+          
+          <div id="noAvailability" class="no-availability" style="display: none;">
+            <i class="bi bi-exclamation-triangle"></i> No hay disponibilidad para la fecha y horario seleccionados
+          </div>
+          
+          <button class="btn-submit" id="btnBuscarDisponibilidad">Buscar Disponibilidad</button>
+        </div>
+      </div>
+      
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+          <i class="bi bi-house-door"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-file-text"></i>
+          <span>Cartilla</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-people"></i>
+          <span>Turnos</span>
+        </a>
+        <a href="https://filavirtual.preprod.debmedia.com/Numiabot/#/aAsDTThHwOIrsB3C2uVh" class="nav-item">
+          <i class="bi bi-camera-video"></i>
+          <span>E-consulta</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="bi bi-three-dots"></i>
+          <span>Más</span>
+        </a>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Usuarios con tel y apellido
+    const usuarios = {
+      'Maria': { tel: '5491123456789', apellido: 'Usuario' },
+      'Jorge': { tel: '5491121598038', apellido: 'Macera' },
+      'Joaquin': { tel: '5491137801465', apellido: 'Zolio' },
+      'Gustavo': { tel: '5491155067319', apellido: 'Lauria' },
+      'Martin': { tel: '5491168912979', apellido: 'Fernandez' },
+      'Juanma S': { tel: '5491168362891', apellido: 'Suarez' },
+      'Juanma L': { tel: '5491150122857', apellido: 'Liza' },
+      'Andrea': { tel: '1020799451', apellido: 'Usuario' },
+      'Natalia': { tel: '573104007114', apellido: 'Pantoja' },
+      'Aldo': { tel: '5215610238745', apellido: 'Usuario' },
+      'Eduardo': { tel: '5215610238726', apellido: 'Corona' },
+      'Manuel': { tel: '5491131809091', apellido: 'Ormachea' },
+      'Juanca': { tel: '573102498804', apellido: 'Soto' },
+      'demo': { tel: '12345678', apellido: 'Demo' }
+    };
+    
+    // Toggle DNI visibility
+    document.querySelector('.user-dni i').addEventListener('click', function() {
+      const dniText = this.previousSibling;
+      if (dniText.nodeType === 3) {
+        const dni = dniText.textContent.trim();
+        if (dni.includes('99999999')) {
+          dniText.textContent = 'DNI: •••••••• ';
+        } else {
+          dniText.textContent = 'DNI: 99999999 ';
+        }
+      }
+    });
+    
+    // Generate Token
+    document.querySelector('.token-button').addEventListener('click', function() {
+      alert('Generando token...');
+      // Aquí iría la lógica para generar el token
+    });
+    
+    // COVID Button
+    document.querySelector('.covid-button').addEventListener('click', function() {
+      alert('Más información sobre COVID-19');
+    });
+    
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href !== '#') {
+          return;
+        }
+        e.preventDefault();
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Section arrows
+    document.querySelectorAll('.section-arrow').forEach(arrow => {
+      arrow.addEventListener('click', function() {
+        const section = this.closest('.section-header');
+        const title = section.querySelector('.section-title').textContent;
+        alert(`Navegando a: ${title}`);
+      });
+    });
+    
+    // User Selector Logic
+    const userSelector = document.getElementById('userSelector');
+    const appointmentsSection = document.getElementById('appointmentsSection');
+    const agendarSection = document.getElementById('agendarSection');
+    const appointmentDate = document.getElementById('appointmentDate');
+    const appointmentSpecialty = document.getElementById('appointmentSpecialty');
+    const appointmentTime = document.getElementById('appointmentTime');
+    const modalAgendar = document.getElementById('modalAgendar');
+    const btnAgendarCita = document.getElementById('btnAgendarCita');
+    const closeModal = document.getElementById('closeModal');
+    const btnBuscarDisponibilidad = document.getElementById('btnBuscarDisponibilidad');
+    const noAvailability = document.getElementById('noAvailability');
+    const selectFecha = document.getElementById('selectFecha');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    
+    // Función para obtener nombre completo en mayúsculas desde usuarios
+    function getDisplayName(nombre) {
+      if (usuarios[nombre]) {
+        return (nombre + ' ' + usuarios[nombre].apellido).toUpperCase();
+      }
+      return nombre.toUpperCase();
+    }
+    
+    // Set minimum date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    if (selectFecha) {
+      selectFecha.min = tomorrowStr;
+    }
+    
+    // Function to get tomorrow's date formatted
+    function getTomorrowDate() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+      const dayName = days[tomorrow.getDay()];
+      const day = tomorrow.getDate();
+      const month = months[tomorrow.getMonth()];
+      const year = tomorrow.getFullYear();
+      return `${dayName}, ${day} de ${month} de ${year}`;
+    }
+    
+    // Handle user selection change - Maria: sin citas (agendar). Resto: cita al día siguiente a las 10:00
+    if (userSelector) {
+      userSelector.addEventListener('change', function() {
+        const selectedUser = this.value;
+        
+        // Update user name display desde usuarios
+        if (userNameDisplay) {
+          userNameDisplay.textContent = getDisplayName(selectedUser);
+        }
+        
+        if (selectedUser === 'Maria') {
+          // Maria: sin citas, mostrar botón agendar
+          if (appointmentsSection) appointmentsSection.style.display = 'none';
+          if (agendarSection) agendarSection.style.display = 'block';
+        } else {
+          // Resto: mostrar cita para el día siguiente a las 10:00
+          if (appointmentsSection) {
+            appointmentsSection.style.display = 'block';
+            if (appointmentDate) appointmentDate.textContent = getTomorrowDate();
+            if (appointmentSpecialty) appointmentSpecialty.textContent = 'Cardiología';
+            if (appointmentTime) appointmentTime.textContent = '10:00';
+          }
+          if (agendarSection) agendarSection.style.display = 'none';
+        }
+      });
+      
+      // Initialize on load
+      userSelector.dispatchEvent(new Event('change'));
+    }
+    
+    // Confirm appointment
+    const btnConfirmAppointment = document.getElementById('btnConfirmAppointment');
+    if (btnConfirmAppointment) {
+      btnConfirmAppointment.addEventListener('click', function() {
+        alert('Cita confirmada exitosamente');
+      });
+    }
+    
+    // Cancel appointment
+    const btnCancelAppointment = document.getElementById('btnCancelAppointment');
+    if (btnCancelAppointment) {
+      btnCancelAppointment.addEventListener('click', async function() {
+        if (confirm('¿Está seguro que desea cancelar esta cita?')) {
+          const selectedUser = userSelector ? userSelector.value : '';
+          const tel = usuarios[selectedUser] ? usuarios[selectedUser].tel : '';
+          const fecha = appointmentDate ? appointmentDate.textContent : '';
+          const hora = appointmentTime ? appointmentTime.textContent : '';
+          const especialidad = appointmentSpecialty ? appointmentSpecialty.textContent : '';
+          const inputValue = `Se ha cancelado una cita. Fecha: ${fecha}, Hora: ${hora}, Especialidad: ${especialidad}`;
+          
+          try {
+            const response = await fetch('https://api.journeybuilder.numia.co/api/v1/run/c6a6614e-7495-4361-9a0f-de5939d7d480?stream=false', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM'
+              },
+              body: JSON.stringify({
+                input_value: inputValue,
+                input_type: 'chat',
+                tel: tel
+              })
+            });
+            
+            if (!response.ok) {
+              throw new Error('Error al notificar la cancelación');
+            }
+          } catch (err) {
+            console.error('Error al invocar API de cancelación:', err);
+          }
+          
+          alert('Cita cancelada');
+          if (appointmentsSection) appointmentsSection.style.display = 'none';
+          if (agendarSection) agendarSection.style.display = 'block';
+        }
+      });
+    }
+    
+    // Open modal to agendar cita
+    if (btnAgendarCita) {
+      btnAgendarCita.addEventListener('click', function() {
+        if (modalAgendar) {
+          modalAgendar.classList.add('active');
+          noAvailability.style.display = 'none';
+        }
+      });
+    }
+    
+    // Close modal
+    if (closeModal) {
+      closeModal.addEventListener('click', function() {
+        if (modalAgendar) {
+          modalAgendar.classList.remove('active');
+        }
+      });
+    }
+    
+    // Close modal on overlay click
+    if (modalAgendar) {
+      modalAgendar.addEventListener('click', function(e) {
+        if (e.target === modalAgendar) {
+          modalAgendar.classList.remove('active');
+        }
+      });
+    }
+    
+    // Buscar disponibilidad (siempre muestra no disponible)
+    if (btnBuscarDisponibilidad) {
+      btnBuscarDisponibilidad.addEventListener('click', function() {
+        const especialidad = document.getElementById('selectEspecialidad').value;
+        const fecha = document.getElementById('selectFecha').value;
+        const horario = document.getElementById('selectHorario').value;
+        
+        if (!especialidad || !fecha || !horario) {
+          alert('Por favor complete todos los campos');
+          return;
+        }
+        
+        // Siempre mostrar no disponible
+        noAvailability.style.display = 'block';
+      });
+    }
+    
+    // Show no availability when any field changes
+    const selectEspecialidad = document.getElementById('selectEspecialidad');
+    const selectHorario = document.getElementById('selectHorario');
+    
+    if (selectEspecialidad) {
+      selectEspecialidad.addEventListener('change', function() {
+        if (this.value && selectFecha.value && selectHorario.value) {
+          noAvailability.style.display = 'block';
+        }
+      });
+    }
+    
+    if (selectFecha) {
+      selectFecha.addEventListener('change', function() {
+        if (this.value && selectEspecialidad.value && selectHorario.value) {
+          noAvailability.style.display = 'block';
+        }
+      });
+    }
+    
+    if (selectHorario) {
+      selectHorario.addEventListener('change', function() {
+        if (this.value && selectEspecialidad.value && selectFecha.value) {
+          noAvailability.style.display = 'block';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
