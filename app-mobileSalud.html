@@ -1029,7 +1029,7 @@
           const fecha = appointmentDate ? appointmentDate.textContent : '';
           const hora = appointmentTime ? appointmentTime.textContent : '';
           const especialidad = appointmentSpecialty ? appointmentSpecialty.textContent : '';
-          const inputValue = `Se ha cancelado una cita. Fecha: ${fecha}, Hora: ${hora}, Especialidad: ${especialidad}`;
+          const inputValue = `Se ha cancelado una cita. Tel: ${tel}, Fecha: ${fecha}, Hora: ${hora}, Especialidad: ${especialidad}`;
           
           try {
             const response = await fetch('https://api.journeybuilder.numia.co/api/v1/run/c6a6614e-7495-4361-9a0f-de5939d7d480?stream=false', {
