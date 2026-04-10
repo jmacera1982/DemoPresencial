@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>miBA — Demo</title>
+  <meta name="description" content="Demo visual inspirada en la app miBA — sin vínculo oficial con el GCBA." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/gh/debmedia/numiajb-widget@1.0.4/dist/build/static/js/bundle.min.js"></script>
+  <style>
+    :root {
+      --gcba-yellow: #f5c400;
+      --gcba-yellow-dark: #d4a800;
+      --gcba-blue: #003865;
+      --gcba-blue-soft: #e8f0f7;
+      --gcba-text: #1a1a2e;
+      --gcba-muted: #5c6470;
+      --gcba-bg: #f5f6f8;
+      --gcba-white: #fff;
+      --header-h: 56px;
+      --nav-h: 68px;
+      /* Marco tipo teléfono: ~20% más ancho que 430px */
+      --app-frame-max: 516px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      color: var(--gcba-text);
+      background: var(--gcba-bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .demo-strip {
+      background: #fff8e6;
+      border-bottom: 1px solid #f0e0a0;
+      color: #6b5a00;
+      font-size: 11px;
+      padding: 6px 12px;
+      text-align: center;
+    }
+
+    .app-shell {
+      max-width: var(--app-frame-max);
+      margin: 0 auto;
+      min-height: 100dvh;
+      background: var(--gcba-white);
+      box-shadow: 0 0 40px rgba(0,0,0,.08);
+      position: relative;
+    }
+
+    /* Marco interno: altura de pantalla + scroll solo en main.
+       Sin transform aquí: si no, position:fixed del widget cae en un contexto raro y puede ocultarse o clippearse. */
+    .app-frame {
+      position: relative;
+      min-height: 100dvh;
+      max-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      height: var(--header-h);
+      padding: 0 16px;
+      padding-top: env(safe-area-inset-top);
+      background: var(--gcba-white);
+      border-bottom: 1px solid #eef0f3;
+      z-index: 100;
+    }
+    .logo-miba {
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      color: var(--gcba-blue);
+    }
+    .logo-miba span { color: var(--gcba-yellow-dark); }
+    .btn-icon-nav {
+      border: none;
+      background: none;
+      font-size: 1.25rem;
+      color: var(--gcba-text);
+      padding: 8px;
+      border-radius: 50%;
+    }
+    .btn-icon-nav:hover { background: var(--gcba-blue-soft); }
+
+    main {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+
+    .view {
+      display: none;
+      animation: fadeIn .25s ease;
+    }
+    .view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Onboarding (referencia pantalla bienvenida miBA) */
+    .app-frame.is-onb .app-topbar {
+      display: none;
+    }
+    .app-frame.is-onb main {
+      display: flex;
+      flex-direction: column;
+    }
+    #view-onb.active {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--gcba-white);
+      padding: env(safe-area-inset-top, 0) 0 16px;
+      min-height: 0;
+    }
+    .onb-skip {
+      text-align: right;
+      padding: 12px 20px 0;
+    }
+    .onb-skip a {
+      color: #8a9199;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .onb-skip a:hover { color: var(--gcba-muted); }
+    .onb-illu {
+      height: 220px;
+      margin: 20px 28px 24px;
+      border-radius: 20px;
+      background: #e4eef6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gcba-blue);
+      font-size: 4rem;
+    }
+    .onb-title {
+      text-align: center;
+      padding: 0 28px 10px;
+      font-weight: 700;
+      font-size: 1.4rem;
+      line-height: 1.3;
+      color: var(--gcba-blue);
+    }
+    .onb-sub {
+      text-align: center;
+      color: var(--gcba-muted);
+      font-size: 0.95rem;
+      padding: 0 36px 8px;
+      line-height: 1.45;
+    }
+    .onb-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 16px 8px;
+    }
+    .onb-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d5dce3;
+    }
+    .onb-dots span.active {
+      background: var(--gcba-blue);
+      width: 22px;
+      border-radius: 4px;
+    }
+
+    /* Hero secciones */
+    .hero-block {
+      position: relative;
+      min-height: 140px;
+      border-radius: 0 0 20px 20px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .hero-block.cabildo {
+      background: linear-gradient(135deg, rgba(0,56,101,.85), rgba(0,40,75,.92)),
+        url('https://images.unsplash.com/photo-1566438480900-0609be27a4be?w=800&q=70') center/cover;
+    }
+    .hero-block.skyline {
+      background: linear-gradient(135deg, rgba(0,56,101,.82), rgba(15,35,60,.9)),
+        url('https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=800&q=70') center/cover;
+    }
+    .hero-inner {
+      padding: 28px 20px 32px;
+      color: #fff;
+    }
+    .hero-inner h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+    .hero-inner p {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: .92;
+      line-height: 1.4;
+    }
+
+    .section-pad { padding: 0 16px 16px; }
+
+    .card-doc {
+      background: var(--gcba-yellow);
+      border: none;
+      border-radius: 14px;
+      padding: 18px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 14px rgba(212,168,0,.25);
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .card-doc:hover { transform: translateY(-2px); }
+    .card-doc .ba-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--gcba-blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-doc strong { display: block; font-size: 0.95rem; color: var(--gcba-text); }
+
+    .fab-qr {
+      position: fixed;
+      right: max(16px, calc(50vw - min(var(--app-frame-max), 100vw) / 2 + 16px));
+      bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom));
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--gcba-white);
+      border: 2px solid var(--gcba-blue-soft);
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gcba-blue);
+      font-size: 1.35rem;
+      z-index: 90;
+      cursor: pointer;
+    }
+
+    .card-white {
+      background: var(--gcba-white);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      border: 1px solid #eef0f3;
+      margin-bottom: 12px;
+    }
+    .badge-count {
+      background: var(--gcba-blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+    .turno-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+    .estado-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--gcba-muted);
+      margin-bottom: 10px;
+    }
+    .btn-detalle {
+      float: right;
+      background: var(--gcba-blue);
+      color: #fff;
+      border: none;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .historial-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .fab-nueva {
+      position: fixed;
+      right: max(16px, calc(50vw - min(var(--app-frame-max), 100vw) / 2 + 16px));
+      bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom));
+      background: var(--gcba-yellow);
+      color: var(--gcba-text);
+      border: none;
+      border-radius: 28px;
+      padding: 12px 18px 12px 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 20px rgba(212,168,0,.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 90;
+      cursor: pointer;
+    }
+    .fab-nueva:hover { filter: brightness(1.05); }
+
+    .bottom-nav {
+      flex-shrink: 0;
+      position: relative;
+      width: 100%;
+      height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+      background: var(--gcba-white);
+      border-top: 1px solid #e8eaed;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding-top: 8px;
+      z-index: 200;
+    }
+    .bottom-nav button {
+      flex: 1;
+      border: none;
+      background: none;
+      padding: 4px 8px;
+      font-size: 10px;
+      color: var(--gcba-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      max-width: 120px;
+    }
+    .bottom-nav button i { font-size: 1.35rem; }
+    .bottom-nav button.active {
+      color: var(--gcba-blue);
+      font-weight: 600;
+    }
+
+    .view-perfil {
+      padding: 24px 20px;
+      text-align: center;
+      color: var(--gcba-muted);
+    }
+
+    /* Journey Builder: capa sobre el marco; el widget usa position fixed respecto al viewport */
+    .jb-chat-shell {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 300;
+    }
+    .jb-chat-shell journey-builder-chat {
+      display: block;
+      width: 65%;
+      height: 50%;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-strip">Demo visual inspirada en miBA / GCBA — Sin afiliación oficial.</div>
+
+  <div class="app-shell">
+    <div class="app-frame is-onb" id="app-frame">
+    <header class="app-topbar">
+      <div class="logo-miba">mi<span>BA</span></div>
+      <button type="button" class="btn-icon-nav" aria-label="Notificaciones"><i class="bi bi-bell"></i></button>
+    </header>
+
+    <main>
+      <!-- Vista bienvenida -->
+      <section id="view-onb" class="view active">
+        <div class="onb-skip"><a href="#" id="onb-skip">Omitir</a></div>
+        <div class="onb-illu" aria-hidden="true"><i class="bi bi-people-fill"></i></div>
+        <p class="onb-title">¡Te damos la bienvenida a miBA!</p>
+        <p class="onb-sub">La Ciudad al alcance de tu mano.</p>
+        <div class="onb-dots" role="presentation">
+          <span class="active"></span><span></span><span></span>
+        </div>
+      </section>
+
+      <!-- Vista documentos -->
+      <section id="view-docs" class="view">
+        <div class="hero-block cabildo">
+          <div class="hero-inner">
+            <h1>Mis Documentos</h1>
+            <p>Acá podés encontrar tus documentos.</p>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="card-doc" role="button">
+            <div class="ba-mark">BA</div>
+            <div><strong>Credencial ciudadana</strong></div>
+          </div>
+          <div class="card-doc" role="button">
+            <div class="ba-mark">BA</div>
+            <div><strong>Constancia de ingresos brutos</strong></div>
+          </div>
+        </div>
+            <!-- Fuera de .app-frame: evita overflow/stacking que ocultaban el launcher del widget -->
+    <div class="jb-chat-shell">
+
+    </div>
+        <button type="button" class="fab-qr" title="Escanear QR" aria-label="Escanear QR"><i class="bi bi-qr-code-scan"></i></button>
+      </section>
+
+      <!-- Vista actividad -->
+      <section id="view-act" class="view">
+        <div class="hero-block skyline">
+          <div class="hero-inner">
+            <h1>Mi Actividad</h1>
+            <p>Tené a mano tus trámites, solicitudes y turnos.</p>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="card-white clearfix">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Gestiones en curso</span>
+              <span class="badge-count">3</span>
+            </div>
+            <div class="turno-title">Turno Médico Clínico</div>
+            <div class="estado-pill"><i class="bi bi-hourglass-split"></i> En proceso de aprobación</div>
+            <p class="small text-muted mb-3" style="clear: both;">
+              El 3/4/2023 a las 13:30 hs. Presentate en Hospital Pirovano. Av. Monroe 3555, C1430 CABA.
+            </p>
+            <button type="button" class="btn-detalle">Detalles</button>
+          </div>
+          <div class="card-white">
+            <div class="historial-toggle">
+              <span>Historial</span>
+              <i class="bi bi-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="fab-nueva"><i class="bi bi-plus-lg"></i> Nueva gestión</button>
+      </section>
+
+      <!-- Vista perfil -->
+      <section id="view-perfil" class="view view-perfil">
+        <i class="bi bi-person-circle" style="font-size: 3rem; color: #ccd2d8;"></i>
+        <p class="mt-3 mb-0">Mi Perfil</p>
+        <p class="small mt-2">Contenido de demo.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Principal">
+      <button type="button" data-view="view-docs" class="nav-item">
+        <i class="bi bi-folder2-open"></i>
+        Mis Documentos
+      </button>
+      <button type="button" data-view="view-act" class="nav-item">
+        <i class="bi bi-clipboard2-check"></i>
+        Mi actividad
+      </button>
+      <button type="button" data-view="view-perfil" class="nav-item">
+        <i class="bi bi-person-circle"></i>
+        Mi Perfil
+      </button>
+          <!-- Fuera de .app-frame: evita overflow/stacking que ocultaban el launcher del widget -->
+    <div class="jb-chat-shell">
+      <journey-builder-chat
+        window_title="Asistente de BAX"
+        flow_id="2c47f677-226d-4157-9f93-092f484ce42f"
+        host_url="https://api.journeybuilder.numia.co"
+        api_key="sk-Q6K4cRLD_l3L7ZuTNIRVl8hSwR8nMwuHWFqiwhv4st0"
+        chat_position="top-right">
+      </journey-builder-chat>
+    </div>
+    </nav>
+    </div>
+
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function () {
+      var views = ['view-onb', 'view-docs', 'view-act', 'view-perfil'];
+      var fabQr = document.querySelector('.fab-qr');
+      var fabNueva = document.querySelector('.fab-nueva');
+      var appFrame = document.getElementById('app-frame');
+
+      function show(id) {
+        views.forEach(function (v) {
+          var el = document.getElementById(v);
+          if (el) el.classList.toggle('active', v === id);
+        });
+        document.querySelectorAll('.bottom-nav button[data-view]').forEach(function (btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-view') === id);
+        });
+        if (fabQr) fabQr.style.display = id === 'view-docs' ? 'flex' : 'none';
+        if (fabNueva) fabNueva.style.display = id === 'view-act' ? 'flex' : 'none';
+        if (appFrame) appFrame.classList.toggle('is-onb', id === 'view-onb');
+      }
+
+      document.querySelectorAll('.bottom-nav button[data-view]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          show(btn.getAttribute('data-view'));
+        });
+      });
+
+      var skip = document.getElementById('onb-skip');
+      if (skip) {
+        skip.addEventListener('click', function (e) {
+          e.preventDefault();
+          show('view-docs');
+        });
+      }
+
+      show('view-onb');
+    })();
+  </script>
+</body>
+</html>
