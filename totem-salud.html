@@ -347,6 +347,31 @@
       box-shadow: 0 8px 24px rgba(134, 61, 255, 0.3);
     }
     
+    .opcion-card.opcion-pago-qr {
+      border-color: #0d9488;
+      background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+      cursor: pointer;
+    }
+    .opcion-card.opcion-pago-caja {
+      border-color: var(--numia-azul);
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      cursor: pointer;
+    }
+    
+    .qr-sim-wrap {
+      padding: 1.5rem;
+      background: #fff;
+      border-radius: 16px;
+      display: inline-block;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin: 1rem auto;
+    }
+    .qr-sim-wrap img {
+      display: block;
+      width: 220px;
+      height: 220px;
+    }
+    
     .opcion-card.disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -768,6 +793,34 @@
         </div>
       </div>
       
+      <!-- Pantalla: Forma de pago (tras especialidad en demanda o check-in en citas; opciones visibles solo al terminar el análisis simulado) -->
+      <div class="screen-opciones" id="screenPago" style="display: none;">
+        <h2>Forma de pago</h2>
+        <div class="subtitle" id="pagoSubtituloEspera" style="text-align: center; color: var(--numia-text-light);">
+          <i class="bi bi-hourglass-split me-2"></i>Completando análisis del agente… Las opciones de pago se habilitarán al finalizar.
+        </div>
+        <div class="subtitle" id="pagoSubtituloElegir" style="display: none;">Seleccione cómo desea abonar</div>
+        <div class="opciones-grid" id="pagoOpcionesRow" style="display: none; grid-template-columns: 1fr 1fr;">
+          <div class="opcion-card opcion-pago-qr" id="btnPagoQr" role="button" tabindex="0">
+            <div class="opcion-icon" style="color: #0d9488;"><i class="bi bi-qr-code"></i></div>
+            <div class="opcion-title">Pago con QR</div>
+            <div class="opcion-desc">Abone con su billetera o banca móvil</div>
+          </div>
+          <div class="opcion-card opcion-pago-caja" id="btnPagoCaja" role="button" tabindex="0">
+            <div class="opcion-icon" style="color: var(--numia-azul);"><i class="bi bi-cash-coin"></i></div>
+            <div class="opcion-title">Pago en caja</div>
+            <div class="opcion-desc">Encolar turno para abonar en ventanilla</div>
+          </div>
+        </div>
+        <div id="pagoQrSimulacion" style="display: none; text-align: center; margin-top: 1rem;">
+          <p style="font-weight: 600; color: var(--numia-text); margin-bottom: 0.5rem;">Escaneé el código para simular el pago</p>
+          <div class="qr-sim-wrap">
+            <img id="imgQrPagoSimulado" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=NUMIA-SALUD-PAGO-DEMO" width="220" height="220" alt="Código QR de pago (demo)" />
+          </div>
+          <p class="subtitle" style="margin-top: 0.75rem;"><i class="bi bi-hourglass-split me-1"></i>Procesando pago… espere</p>
+        </div>
+      </div>
+      
       <!-- Pantalla 4: Opciones de atención (legacy - para compatibilidad) -->
       <div class="screen-opciones" id="screenOpciones" style="display: none;">
         <h2>Seleccione su preferencia</h2>
@@ -833,6 +886,11 @@
       // Variables de estado
       let dniIngresado = '';
       let tipoAtencion = null; // 'demanda' | 'cita'
+      /** @type {'demanda'|'cita'|null} */
+      let contextoPagoOrigen = null;
+      /** @type {string|null} */
+      let especialidadDemandaSeleccionada = null;
+      let pagoQrTimerId = null;
       let analisisCompletado = false;
       let recomendacionVideollamada = false;
       let messageText = null;
@@ -842,6 +900,7 @@
       const screenDni = document.getElementById('screenDni');
       const screenDemandaOpciones = document.getElementById('screenDemandaOpciones');
       const screenCitaCardiologia = document.getElementById('screenCitaCardiologia');
+      const screenPago = document.getElementById('screenPago');
       const screenOpciones = document.getElementById('screenOpciones');
       const screenConfirmacion = document.getElementById('screenConfirmacion');
       const dniDisplay = document.getElementById('dniDisplay');
@@ -853,9 +912,138 @@
       const summarySection = document.getElementById('summarySection');
       const summaryContent = document.getElementById('summaryContent');
       const logContainer = document.querySelector('.log-container');
+      /** @type {number[]} */
+      let simulacionPasosAgenteTimeouts = [];
+      let pagoOpcionesRevealTimeoutId = null;
       
       // Inicializar display
       actualizarDisplay();
+      
+      function cancelarSimulacionPasosAgente() {
+        simulacionPasosAgenteTimeouts.forEach(function (id) { clearTimeout(id); });
+        simulacionPasosAgenteTimeouts = [];
+        if (pagoOpcionesRevealTimeoutId !== null) {
+          clearTimeout(pagoOpcionesRevealTimeoutId);
+          pagoOpcionesRevealTimeoutId = null;
+        }
+      }
+      
+      function revelarOpcionesPagoTrasAnalisis() {
+        var row = document.getElementById('pagoOpcionesRow');
+        var subEspera = document.getElementById('pagoSubtituloEspera');
+        var subElegir = document.getElementById('pagoSubtituloElegir');
+        if (subEspera) subEspera.style.display = 'none';
+        if (subElegir) subElegir.style.display = 'block';
+        if (row) row.style.display = 'grid';
+        pagoOpcionesRevealTimeoutId = null;
+      }
+      
+      function ocultarOpcionesPagoHastaAnalisis() {
+        var row = document.getElementById('pagoOpcionesRow');
+        var subEspera = document.getElementById('pagoSubtituloEspera');
+        var subElegir = document.getElementById('pagoSubtituloElegir');
+        if (row) row.style.display = 'none';
+        if (subEspera) subEspera.style.display = 'block';
+        if (subElegir) subElegir.style.display = 'none';
+      }
+      
+      /** Simula el análisis del agente (panel derecho): un paso por segundo. */
+      function iniciarSimulacionPasosAgente() {
+        cancelarSimulacionPasosAgente();
+        if (!stepsContainer) return;
+        if (logContainer) logContainer.classList.add('visible');
+        if (atencionSection) {
+          atencionSection.style.display = 'block';
+          atencionSection.classList.add('active');
+        }
+        if (summarySection) summarySection.style.display = 'none';
+        stepsContainer.innerHTML = '';
+        var titulos = [
+          'Buscar datos del paciente',
+          'Consultando información de prepaga',
+          'buscando historia clínica',
+          'Pririzando Cliente'
+        ];
+        titulos.forEach(function (titulo, i) {
+          var tid = setTimeout(function () {
+            var stepItem = document.createElement('div');
+            stepItem.className = 'step-item processing';
+            stepItem.innerHTML =
+              '<div class="step-title">' + escapeHtml(titulo) + '</div>' +
+              '<div class="step-output-content">' +
+              '<em style="color: #ffffff;">Herramienta ejecutada correctamente</em>' +
+              '</div>';
+            stepsContainer.appendChild(stepItem);
+            setTimeout(function () {
+              stepItem.classList.remove('processing');
+              stepItem.classList.add('completed');
+            }, 400);
+            var logContentEl = document.querySelector('.log-content');
+            if (logContentEl) logContentEl.scrollTop = logContentEl.scrollHeight;
+          }, i * 1000);
+          simulacionPasosAgenteTimeouts.push(tid);
+        });
+        /* Último paso a los (n-1)s; +600 ms para la animación "completed" → recién ahí se muestran QR / caja */
+        var delayReveladoMs = (titulos.length - 1) * 1000 + 600;
+        pagoOpcionesRevealTimeoutId = setTimeout(function () {
+          revelarOpcionesPagoTrasAnalisis();
+        }, delayReveladoMs);
+      }
+      
+      function resetVistaPago() {
+        const row = document.getElementById('pagoOpcionesRow');
+        const qr = document.getElementById('pagoQrSimulacion');
+        if (row) row.style.display = 'grid';
+        var subEspera = document.getElementById('pagoSubtituloEspera');
+        var subElegir = document.getElementById('pagoSubtituloElegir');
+        if (subEspera) subEspera.style.display = 'none';
+        if (subElegir) subElegir.style.display = 'block';
+        if (qr) qr.style.display = 'none';
+        const bq = document.getElementById('btnPagoQr');
+        const bc = document.getElementById('btnPagoCaja');
+        if (bq) { bq.classList.remove('disabled'); bq.style.pointerEvents = ''; }
+        if (bc) { bc.classList.remove('disabled'); bc.style.pointerEvents = ''; }
+      }
+      
+      function cerrarPagoYMostrarConfirmacionFinalQr() {
+        if (pagoQrTimerId) {
+          clearTimeout(pagoQrTimerId);
+          pagoQrTimerId = null;
+        }
+        if (screenPago) screenPago.style.display = 'none';
+        resetVistaPago();
+        document.getElementById('tiempoEspera').style.display = 'none';
+        document.getElementById('videoLinkContainer').style.display = 'none';
+        screenConfirmacion.classList.add('active');
+        const confirmacionTitle = screenConfirmacion.querySelector('h2');
+        const confirmacionMessage = screenConfirmacion.querySelector('.message');
+        const nombresEsp = { nutricion: 'Nutrición', laboratorio: 'Laboratorio', clinico: 'Clínico' };
+        if (contextoPagoOrigen === 'cita') {
+          if (confirmacionTitle) confirmacionTitle.textContent = '¡Pago registrado!';
+          if (confirmacionMessage) confirmacionMessage.innerHTML = 'Su pago fue simulado correctamente.<br>Su cita de Cardiología queda lista. Por favor, espere a ser llamado.';
+        } else if (contextoPagoOrigen === 'demanda' && especialidadDemandaSeleccionada) {
+          if (confirmacionTitle) confirmacionTitle.textContent = '¡Pago registrado!';
+          if (confirmacionMessage) {
+            confirmacionMessage.innerHTML = 'Pago simulado correctamente.<br>Se ha registrado su solicitud de <strong>' +
+              nombresEsp[especialidadDemandaSeleccionada] + '</strong>. Espere a ser llamado.';
+          }
+        }
+      }
+      
+      function abrirPantallaPago(origen, especialidadKey) {
+        contextoPagoOrigen = origen;
+        especialidadDemandaSeleccionada = especialidadKey || null;
+        screenTipoAtencion.style.display = 'none';
+        screenDni.style.display = 'none';
+        screenDemandaOpciones.style.display = 'none';
+        screenCitaCardiologia.style.display = 'none';
+        screenOpciones.classList.remove('active');
+        screenConfirmacion.classList.remove('active');
+        resetVistaPago();
+        if (screenPago) screenPago.style.display = 'block';
+        ocultarOpcionesPagoHastaAnalisis();
+        iniciarSimulacionPasosAgente();
+      }
       
       // Pantalla inicial: Demanda espontánea o Citas
       document.querySelectorAll('#tipoAtencionGrid .opcion-card').forEach(card => {
@@ -975,33 +1163,43 @@
         }
       });
       
-      // Botón Check-in (Cita Cardiología)
+      // Botón Check-in (Cita Cardiología) → forma de pago
       document.getElementById('btnCheckin').addEventListener('click', () => {
-        screenCitaCardiologia.style.display = 'none';
-        document.getElementById('tiempoEspera').style.display = 'none';
-        document.getElementById('videoLinkContainer').style.display = 'none';
-        screenConfirmacion.classList.add('active');
-        const confirmacionTitle = screenConfirmacion.querySelector('h2');
-        const confirmacionMessage = screenConfirmacion.querySelector('.message');
-        if (confirmacionTitle) confirmacionTitle.textContent = '¡Check-in realizado!';
-        if (confirmacionMessage) confirmacionMessage.innerHTML = 'Su cita de Cardiología ha sido confirmada.<br>Por favor, espere a ser llamado.';
+        abrirPantallaPago('cita', null);
       });
       
-      // Opciones Demanda espontánea (Nutrición, Laboratorio, Clínico)
+      // Opciones Demanda espontánea (Nutrición, Laboratorio, Clínico) → forma de pago
       document.querySelectorAll('.opcion-demanda').forEach(card => {
         card.addEventListener('click', () => {
           const especialidad = card.getAttribute('data-especialidad');
-          const nombres = { nutricion: 'Nutrición', laboratorio: 'Laboratorio', clinico: 'Clínico' };
-          screenDemandaOpciones.style.display = 'none';
-          document.getElementById('tiempoEspera').style.display = 'none';
-          document.getElementById('videoLinkContainer').style.display = 'none';
-          screenConfirmacion.classList.add('active');
-          const confirmacionTitle = screenConfirmacion.querySelector('h2');
-          const confirmacionMessage = screenConfirmacion.querySelector('.message');
-          if (confirmacionTitle) confirmacionTitle.textContent = '¡Atención solicitada!';
-          if (confirmacionMessage) confirmacionMessage.innerHTML = `Se ha registrado su solicitud de <strong>${nombres[especialidad]}</strong>.<br>Por favor, espere a ser llamado.`;
+          abrirPantallaPago('demanda', especialidad);
         });
       });
+      
+      // Pago con QR: simular QR y a los 5 s ir al paso final
+      const btnPagoQr = document.getElementById('btnPagoQr');
+      const btnPagoCaja = document.getElementById('btnPagoCaja');
+      if (btnPagoQr) {
+        btnPagoQr.addEventListener('click', () => {
+          if (pagoQrTimerId) return;
+          const row = document.getElementById('pagoOpcionesRow');
+          const qr = document.getElementById('pagoQrSimulacion');
+          if (row) row.style.display = 'none';
+          if (qr) qr.style.display = 'block';
+          btnPagoQr.classList.add('disabled');
+          if (btnPagoCaja) btnPagoCaja.classList.add('disabled');
+          pagoQrTimerId = setTimeout(function () {
+            pagoQrTimerId = null;
+            cerrarPagoYMostrarConfirmacionFinalQr();
+          }, 5000);
+        });
+      }
+      if (btnPagoCaja) {
+        btnPagoCaja.addEventListener('click', async () => {
+          if (pagoQrTimerId) return;
+          await solicitarAtencionPresencialDirecta();
+        });
+      }
       
       // Mostrar pantalla de opciones (Educación: Matrícula, Certificados, Becas)
       function mostrarPantallaOpciones() {
@@ -1117,6 +1315,7 @@
       
       async function llamarAgenteConOpcionTotem(opcion) {
         try {
+          cancelarSimulacionPasosAgente();
           // Ocultar pantalla de opciones y mostrar loading
           screenOpciones.classList.remove('active');
           
@@ -1354,9 +1553,17 @@
         opcionesGrid.appendChild(cardPresencial);
       }
       
-      // Solicitar atención presencial directamente (cuando no hay recomendación de videollamada)
+      // Solicitar atención presencial directamente (cuando no hay recomendación de videollamada o pago en caja)
       async function solicitarAtencionPresencialDirecta() {
         try {
+          if (pagoQrTimerId) {
+            clearTimeout(pagoQrTimerId);
+            pagoQrTimerId = null;
+          }
+          if (screenPago) {
+            screenPago.style.display = 'none';
+            resetVistaPago();
+          }
           const apiUrl = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
           const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
           
@@ -1436,6 +1643,10 @@
       // Mostrar pantalla de confirmación
       function mostrarPantallaConfirmacion(data, tipo) {
         screenOpciones.classList.remove('active');
+        if (screenPago) {
+          screenPago.style.display = 'none';
+          resetVistaPago();
+        }
         screenConfirmacion.classList.add('active');
         
         // Ocultar elementos que no aplican si no hay data
@@ -1461,6 +1672,10 @@
       // Mostrar pantalla de confirmación presencial (cuando no hay videollamada recomendada)
       function mostrarPantallaConfirmacionPresencial() {
         screenOpciones.classList.remove('active');
+        if (screenPago) {
+          screenPago.style.display = 'none';
+          resetVistaPago();
+        }
         screenConfirmacion.classList.add('active');
         
         // Ocultar elementos que no aplican
