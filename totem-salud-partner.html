@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tótem de Atención - Salud</title>
+  <title>Tótem de Atención - Salud (Partner)</title>
   <link rel="icon" type="image/png" href="images/N.png" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -695,7 +695,7 @@
     }
   </style>
 </head>
-<body>
+<body data-partner="">
   <!-- Contenedor del tótem -->
   <div class="totem-container">
     <!-- Header -->
@@ -888,8 +888,68 @@
       const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/38223ec2-6123-4e6e-862a-4945161ed221?stream=false';
       const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
       
-      const FV_ENQUEUE_TOTEM_URL = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
-      const FV_API_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+      /**
+       * Fila virtual (tótem / pago / caja / QR): token, queue, branch por partner.
+       * queueVideollamada: cola journey videollamada (misma sucursal y token).
+       * Editar cada entrada cuando un partner tenga credenciales propias.
+       */
+      var FV_DEFAULT_OTROS = {
+        token: '4rrSxgFZ7ynesiGoiIEs5sVWpxmP8qcsIO2PUvNw',
+        queue: '16087',
+        branch: '10715',
+        queueVideollamada: '16223'
+      };
+      var FV_BRILLIANT = {
+        token: '0luLnrK9theGzXrnHWYWee9Q31kGINPQNGMMEYcF',
+        queue: '3219',
+        branch: '119',
+        queueVideollamada: '16223'
+      };
+      var PARTNER_FV_CONFIG = {
+        brilliant: Object.assign({}, FV_BRILLIANT),
+        musux: Object.assign({}, FV_DEFAULT_OTROS),
+        remotemedia: Object.assign({}, FV_DEFAULT_OTROS),
+        sigroup: Object.assign({}, FV_DEFAULT_OTROS),
+        biometrika: Object.assign({}, FV_DEFAULT_OTROS),
+        interastar: Object.assign({}, FV_DEFAULT_OTROS),
+        keengo: Object.assign({}, FV_DEFAULT_OTROS),
+        siitecs: Object.assign({}, FV_DEFAULT_OTROS),
+        sisa: Object.assign({}, FV_DEFAULT_OTROS),
+        inalambria: Object.assign({}, FV_DEFAULT_OTROS),
+        ticservices: Object.assign({}, FV_DEFAULT_OTROS),
+        enlace: Object.assign({}, FV_DEFAULT_OTROS),
+        conectasalud: Object.assign({}, FV_DEFAULT_OTROS),
+        conectafinanciera: Object.assign({}, FV_DEFAULT_OTROS),
+        metatelco: Object.assign({}, FV_DEFAULT_OTROS),
+        hasar: Object.assign({}, FV_DEFAULT_OTROS),
+        avcellll: Object.assign({}, FV_DEFAULT_OTROS),
+        mediterranea: Object.assign({}, FV_DEFAULT_OTROS),
+        vlera: Object.assign({}, FV_DEFAULT_OTROS)
+      };
+      
+      function normalizePartnerSlug(raw) {
+        if (raw == null || String(raw).trim() === '') return '';
+        var s = String(raw).trim().toLowerCase();
+        if (s === 'brillant') return 'brilliant';
+        return s;
+      }
+      
+      function getPartnerSlugFromQuery() {
+        var p = new URLSearchParams(window.location.search);
+        return normalizePartnerSlug(p.get('partner') || p.get('musux') || '');
+      }
+      
+      function getPartnerFvConfig() {
+        var slug = getPartnerSlugFromQuery();
+        if (slug && PARTNER_FV_CONFIG[slug]) return PARTNER_FV_CONFIG[slug];
+        return FV_DEFAULT_OTROS;
+      }
+      
+      (function initPartnerFromQuery() {
+        var slug = getPartnerSlugFromQuery();
+        document.body.setAttribute('data-partner', slug || '');
+        document.title = 'Tótem de Atención - Salud' + (slug ? ' (' + slug + ')' : '');
+      })();
       
       function resetBloquesTurnoYEsperaConfirmacion() {
         var nb = document.getElementById('numeroTurnoBlock');
@@ -938,11 +998,13 @@
       }
       
       async function enqueueTotemSaludFilaVirtual() {
-        var response = await fetch(FV_ENQUEUE_TOTEM_URL, {
+        var cfg = getPartnerFvConfig();
+        var url = 'https://filavirtual2.debmedia.com/api/v1/queue/' + cfg.queue + '/branch/' + cfg.branch + '/enqueue';
+        var response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-api-token': FV_API_TOKEN
+            'x-api-token': cfg.token
           },
           body: JSON.stringify({ dni: dniIngresado })
         });
@@ -1657,9 +1719,10 @@
       // Solicitar atención
       async function solicitarAtencion(tipo) {
         try {
-          const queueId = tipo === 'videollamada' ? '16223' : '16221';
-          const apiUrl = `https://filavirtual2.debmedia.com/api/v1/queue/${queueId}/branch/10750/enqueue`;
-          const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+          var cfg = getPartnerFvConfig();
+          var queueId = tipo === 'videollamada' ? (cfg.queueVideollamada || '16223') : cfg.queue;
+          var apiUrl = 'https://filavirtual2.debmedia.com/api/v1/queue/' + queueId + '/branch/' + cfg.branch + '/enqueue';
+          var apiToken = cfg.token;
           
           const datos = {
         
