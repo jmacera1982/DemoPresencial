@@ -647,6 +647,29 @@
       font-family: 'Courier New', monospace;
     }
     
+    .agent-conclusions {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #444;
+    }
+    
+    .agent-conclusions-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #e8e8e8;
+    }
+    
+    .agent-conclusions-text {
+      margin: 0;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    
+    .summary-resumen-api {
+      margin-bottom: 0.75rem;
+      white-space: pre-wrap;
+    }
+    
     .conversation-output {
       display: flex;
       flex-direction: column;
@@ -887,9 +910,12 @@
       // Configuración de la API Journey Builder (para flujos avanzados)
       const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/38223ec2-6123-4e6e-862a-4945161ed221?stream=false';
       const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
+      var CONCLUSIONES_AGENTE_TEXTO = 'De acuerdo a lo analizado se detecta que de acuerdo a la cobertura del paciente, corresponde realizar el pago. De acuerdo a experiencias negativas anteriores y a que no se detectan pacientes en la sala de espera que requieren una atención urgente, el paciente recibirá atención prioritaria';
+      var CONCLUSIONES_AGENTE_FRASE_NEGRITA = 'el paciente recibirá atención prioritaria';
       
       const FV_ENQUEUE_TOTEM_URL = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
       const FV_API_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+      var TIEMPO_ESPERA_CONFIRMACION_TEXTO = '3 min 0 seg';
       
       function resetBloquesTurnoYEsperaConfirmacion() {
         var nb = document.getElementById('numeroTurnoBlock');
@@ -926,14 +952,8 @@
           }
         }
         if (te && teVal) {
-          if (ex.waitSeconds != null) {
-            var m = Math.floor(ex.waitSeconds / 60);
-            var s = Math.floor(ex.waitSeconds % 60);
-            teVal.textContent = m + ' min ' + s + ' seg';
-            te.style.display = 'block';
-          } else {
-            te.style.display = 'none';
-          }
+          teVal.textContent = TIEMPO_ESPERA_CONFIRMACION_TEXTO;
+          te.style.display = 'block';
         }
       }
       
@@ -1060,6 +1080,7 @@
         var delayReveladoMs = (titulos.length - 1) * 1000 + 600;
         pagoOpcionesRevealTimeoutId = setTimeout(function () {
           revelarOpcionesPagoTrasAnalisis();
+          mostrarConclusionesFinalesAgente(null);
         }, delayReveladoMs);
       }
       
@@ -1101,7 +1122,7 @@
               nombresEsp[especialidadDemandaSeleccionada] + '</strong>. Espere a ser llamado.';
           }
         }
-        if (apiData) aplicarTurnoYEsperaEnConfirmacion(apiData);
+        aplicarTurnoYEsperaEnConfirmacion(apiData || {});
       }
       
       function abrirPantallaPago(origen, especialidadKey) {
@@ -1533,6 +1554,14 @@
                   }
                 }, 1000);
               }, contents.length * 800 + 500);
+            } else {
+              setTimeout(function () {
+                mostrarConclusionesFinalesAgente(null);
+                recomendacionVideollamada = false;
+                setTimeout(function () {
+                  solicitarAtencionPresencialDirecta();
+                }, 1000);
+              }, contents.length * 800 + 500);
             }
           } else {
             if (messageText) {
@@ -1703,17 +1732,10 @@
         
         var nbFv = document.getElementById('numeroTurnoBlock');
         if (nbFv) nbFv.style.display = 'none';
-        document.getElementById('tiempoEspera').style.display = 'none';
         document.getElementById('videoLinkContainer').style.display = 'none';
         
-        var waitSec = data && (data.averageWaitingTime != null ? data.averageWaitingTime : (data.jsonDetails && (data.jsonDetails.averageWaitingTime != null ? data.jsonDetails.averageWaitingTime : data.jsonDetails.serviceTime)));
-        if (data && waitSec !== undefined && waitSec !== null && isFinite(Number(waitSec))) {
-          const w = Number(waitSec);
-          const minutos = Math.floor(w / 60);
-          const segundos = Math.floor(w % 60);
-          document.getElementById('tiempoEspera').style.display = 'block';
-          document.getElementById('tiempoEsperaValor').textContent = `${minutos} min ${segundos} seg`;
-        }
+        document.getElementById('tiempoEsperaValor').textContent = TIEMPO_ESPERA_CONFIRMACION_TEXTO;
+        document.getElementById('tiempoEspera').style.display = 'block';
         
         // Mostrar enlace de videollamada si aplica
         if (tipo === 'videollamada' && data && data.videoCallUrl) {
@@ -1805,11 +1827,33 @@
         }
       }
       
+      function mostrarConclusionesFinalesAgente(resumenOpcional) {
+        if (!summaryContent || !summarySection) return;
+        var html = '';
+        if (resumenOpcional != null && resumenOpcional !== '') {
+          var t = typeof resumenOpcional === 'string' ? resumenOpcional : (resumenOpcional.message || JSON.stringify(resumenOpcional, null, 2));
+          html += '<div class="summary-resumen-api">' + escapeHtml(t) + '</div>';
+        }
+        html += '<div class="agent-conclusions">';
+        html += '<div class="agent-conclusions-title">Conclusiones del agente</div>';
+        var textoConc = CONCLUSIONES_AGENTE_TEXTO;
+        var posNegrita = textoConc.indexOf(CONCLUSIONES_AGENTE_FRASE_NEGRITA);
+        var innerConclusiones = posNegrita < 0
+          ? escapeHtml(textoConc)
+          : escapeHtml(textoConc.substring(0, posNegrita)) + '<strong>' + escapeHtml(CONCLUSIONES_AGENTE_FRASE_NEGRITA) + '</strong>' + escapeHtml(textoConc.substring(posNegrita + CONCLUSIONES_AGENTE_FRASE_NEGRITA.length));
+        html += '<p class="agent-conclusions-text">' + innerConclusiones + '</p>';
+        html += '</div>';
+        summaryContent.innerHTML = html;
+        summarySection.style.display = 'block';
+        var logContentEl = document.querySelector('.log-content');
+        if (logContentEl) logContentEl.scrollTop = logContentEl.scrollHeight;
+      }
+      
       function mostrarResumen(message) {
         try {
-          const messageText = typeof message === 'string' ? message : (message.message || JSON.stringify(message, null, 2));
-          summaryContent.textContent = messageText;
-          summarySection.style.display = 'block';
+          mostrarConclusionesFinalesAgente(
+            typeof message === 'string' ? message : (message && (message.message || JSON.stringify(message, null, 2)))
+          );
         } catch (err) {
           console.error('Error al mostrar resumen:', err);
         }
