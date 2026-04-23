@@ -100,12 +100,6 @@
       background: #555;
     }
     
-    #menuOpcionesPresencial button.opcion-presencial-seleccionada {
-      background-color: var(--numia-azul-claro) !important;
-      border-width: 3px !important;
-      box-shadow: 0 0 0 2px rgba(134, 61, 255, 0.35);
-    }
-    
     /* Sección de logs a la derecha */
     .log-container {
       flex: 1;
@@ -946,8 +940,8 @@
       <div id="resultadoAtencionApp" style="margin-top: 1rem; display: none;"></div>
     </div>
 
-    <!-- Menú de opciones presenciales (el panel derecho solo aparece al elegir una opción; la API se llama con «Estoy en la sucursal») -->
-    <div id="menuOpcionesPresencial" class="dni-input-section" style="display: block;">
+    <!-- Menú de opciones presenciales (se mostrará al presionar "Estoy en la sucursal") -->
+    <div id="menuOpcionesPresencial" class="dni-input-section" style="display: none;">
       <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--numia-text); margin-bottom: 1rem; text-align: center;">¿Cómo podemos ayudarlo?</h3>
       <div style="display: flex; flex-direction: column; gap: 0.75rem;">
         <button id="btnOpcionPrestamos" class="btn w-100" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
@@ -1011,8 +1005,8 @@
         'Andrea': { dni: '1020799451', apellido: 'Usuario' },
         'Natalia': { dni: '1072655461', apellido: 'Pantoja' },
         'Aldo': { dni: '22222222', apellido: 'Romero' },
-        'Eduardo': { dni: '240696', apellido: 'Corona' },
-        'Manuel': { dni: '43819140', apellido: 'Ormachea' },
+        'Eduardo': { dni: '33333333', apellido: 'Corona' },
+        'Manuel': { dni: '12345678', apellido: 'Ormachea' },
         'Juanca': { dni: '1090378365', apellido: 'Soto' },
         'Romy': { dni: '35975313', apellido: 'Cardenas' },
         'demo': { dni: '12345678', apellido: 'Demo' }
@@ -1054,94 +1048,61 @@
       const opcionesAtencionSection = document.getElementById('opcionesAtencionSection');
       const opcionesAtencionContainer = document.getElementById('opcionesAtencionContainer');
       const resultadoAtencionApp = document.getElementById('resultadoAtencionApp');
-      const menuOpcionesPresencial = document.getElementById('menuOpcionesPresencial');
-      const btnOpcionPrestamos = document.getElementById('btnOpcionPrestamos');
-      const btnOpcionTarjetas = document.getElementById('btnOpcionTarjetas');
-      const btnOpcionInversiones = document.getElementById('btnOpcionInversiones');
 
       // Verificar que todos los elementos existan
-      if (!btnSolicitarAtencion || !atencionSection || !stepsContainer || !summarySection || !summaryContent || !opcionesAtencionSection || !opcionesAtencionContainer || !resultadoAtencionApp || !menuOpcionesPresencial || !btnOpcionPrestamos || !btnOpcionTarjetas || !btnOpcionInversiones) {
+      if (!btnSolicitarAtencion || !atencionSection || !stepsContainer || !summarySection || !summaryContent || !opcionesAtencionSection || !opcionesAtencionContainer || !resultadoAtencionApp) {
         console.error('Error: No se encontraron todos los elementos del DOM');
         return;
       }
 
       // DNI fijo a usar
       const DNI_FIJO = '12345678';
-      /** @type {'prestamos'|'tarjetas'|'inversiones'|null} */
-      let opcionPresencialSeleccionada = null;
 
-      const textosOpcionPresencial = {
-        prestamos: 'Préstamos',
-        tarjetas: 'Tarjetas de crédito',
-        inversiones: 'Inversiones'
-      };
-
-      const botonesPorOpcion = {
-        prestamos: btnOpcionPrestamos,
-        tarjetas: btnOpcionTarjetas,
-        inversiones: btnOpcionInversiones
-      };
-
-      function marcarSeleccionPresencial(opcion) {
-        opcionPresencialSeleccionada = opcion;
-        Object.keys(botonesPorOpcion).forEach(function (key) {
-          var b = botonesPorOpcion[key];
-          if (b) b.classList.toggle('opcion-presencial-seleccionada', key === opcion);
-        });
-      }
-
-      /** Solo UI: muestra el marco derecho y deja listo para pulsar «Estoy en la sucursal» (sin API). */
-      function seleccionarOpcionPresencial(opcion) {
-        marcarSeleccionPresencial(opcion);
-        var logContainer = document.querySelector('.log-container');
-        if (logContainer) {
-          logContainer.classList.add('visible');
-        }
-        atencionSection.style.display = 'block';
-        atencionSection.classList.add('active');
-        summarySection.style.display = 'none';
-        stepsContainer.innerHTML =
-          '<div class="alert alert-info mb-0"><i class="bi bi-info-circle me-2"></i>Elegiste <strong>' +
-          textosOpcionPresencial[opcion] +
-          '</strong>. Pulsa <strong>Estoy en la sucursal</strong> para iniciar el análisis con el agente.</div>';
-        stepsContainer.style.display = 'block';
-      }
-
-      // Event listener: la API Journey Builder se dispara aquí (con la opción ya elegida)
-      btnSolicitarAtencion.addEventListener('click', async function (e) {
+      // Event listener para el botón "Estoy en la sucursal"
+      btnSolicitarAtencion.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!opcionPresencialSeleccionada) {
-          menuOpcionesPresencial.style.display = 'block';
-          setTimeout(function () {
-            menuOpcionesPresencial.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 50);
-          return;
-        }
-        await ejecutarLlamadaAgenteJourney(opcionPresencialSeleccionada);
+        
+        // Mostrar el menú de opciones (el botón ya está en el header)
+        menuOpcionesPresencial.style.display = 'block';
+        
+        // Scroll al menú
+        setTimeout(() => {
+          menuOpcionesPresencial.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
       });
       
-      btnOpcionPrestamos.addEventListener('click', function () {
-        seleccionarOpcionPresencial('prestamos');
+      // Event listeners para las opciones del menú
+      btnOpcionPrestamos.addEventListener('click', async () => {
+        await llamarAgenteConOpcionDesdeMenu('prestamos', btnOpcionPrestamos);
       });
       
-      btnOpcionTarjetas.addEventListener('click', function () {
-        seleccionarOpcionPresencial('tarjetas');
+      btnOpcionTarjetas.addEventListener('click', async () => {
+        await llamarAgenteConOpcionDesdeMenu('tarjetas', btnOpcionTarjetas);
       });
       
-      btnOpcionInversiones.addEventListener('click', function () {
-        seleccionarOpcionPresencial('inversiones');
+      btnOpcionInversiones.addEventListener('click', async () => {
+        await llamarAgenteConOpcionDesdeMenu('inversiones', btnOpcionInversiones);
       });
       
-      async function ejecutarLlamadaAgenteJourney(opcion) {
+      // Función para llamar al agente desde el menú inicial
+      async function llamarAgenteConOpcionDesdeMenu(opcion, btn) {
         try {
-          btnSolicitarAtencion.disabled = true;
-          btnSolicitarAtencion.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
+          
+          // Ocultar el menú
+          menuOpcionesPresencial.style.display = 'none';
           
           const dni = DNI_FIJO;
           
           // Construir mensaje con la opción seleccionada
-          const mensaje = `Necesito atención sobre ${textosOpcionPresencial[opcion]}. DNI: ${dni}`;
+          const opcionesTexto = {
+            prestamos: 'Préstamos',
+            tarjetas: 'Tarjetas de crédito',
+            inversiones: 'Inversiones'
+          };
+          const mensaje = `Necesito atención sobre ${opcionesTexto[opcion]}. DNI: ${dni}`;
           
           // Mostrar el contenedor de logs
           const logContainer = document.querySelector('.log-container');
@@ -1412,8 +1373,14 @@
           </div>
         `;
         } finally {
-          btnSolicitarAtencion.disabled = false;
-          btnSolicitarAtencion.innerHTML = '<i class="bi bi-geo-alt"></i><span>Estoy en la sucursal</span>';
+          btn.disabled = false;
+          // Restaurar texto del botón según la opción
+          const textosBotones = {
+            prestamos: '<i class="bi bi-cash-coin me-2"></i>Préstamos',
+            tarjetas: '<i class="bi bi-credit-card me-2"></i>Tarjetas de crédito',
+            inversiones: '<i class="bi bi-graph-up-arrow me-2"></i>Inversiones'
+          };
+          btn.innerHTML = textosBotones[opcion];
         }
       }
       
