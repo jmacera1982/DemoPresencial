@@ -319,6 +319,29 @@
 </head>
 <body>
   <div class="container">
+    <div class="card mb-3 border-primary" id="portalAuthCard" style="border-width: 2px;">
+      <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2 py-2" style="background: var(--primary);">
+        <span><i class="bi bi-shield-lock me-2"></i>Acceso demo unificado (Tótem · App cliente · QR · App Salud)</span>
+        <span id="portalAuthBadge" class="badge bg-light text-dark d-none">Sesión activa</span>
+      </div>
+      <div class="card-body py-3" id="portalAuthLoggedOut">
+        <p class="small text-muted mb-2">Una sola contraseña para abrir las demos protegidas. Si entrás aquí, podés abrir el tótem y la app en nuevas pestañas sin volver a pedirla (mismo navegador).</p>
+        <div class="row g-2 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label small mb-0" for="portalAuthPwd">Contraseña</label>
+            <input type="password" class="form-control form-control-sm" id="portalAuthPwd" autocomplete="current-password" />
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary btn-sm" id="portalAuthBtn">Entrar</button>
+          </div>
+        </div>
+        <p class="text-danger small mb-0 mt-2 d-none" id="portalAuthErr">Contraseña incorrecta.</p>
+      </div>
+      <div class="card-body py-3 d-none" id="portalAuthLoggedIn">
+        <p class="small mb-2">Sesión lista. Enlaces directos: <a href="totem.html" target="_blank" rel="noopener">totem.html</a> · <a href="app-cliente.html" target="_blank" rel="noopener">app-cliente.html</a> · <a href="QR.html" target="_blank" rel="noopener">QR.html</a> · <a href="app-mobileSalud.html" target="_blank" rel="noopener">app-mobileSalud.html</a></p>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="portalAuthLogout">Cerrar sesión demo</button>
+      </div>
+    </div>
     <div class="main-content-wrapper">
       <div class="main-content">
     <!-- Activos para demostración -->
@@ -887,6 +910,7 @@
     </div>
   </div>
 
+  <script src="auth-portal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const FV_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
@@ -1658,8 +1682,54 @@
       });
     }
     
+    function syncPortalAuthCard() {
+      var loggedOut = document.getElementById('portalAuthLoggedOut');
+      var loggedIn = document.getElementById('portalAuthLoggedIn');
+      var badge = document.getElementById('portalAuthBadge');
+      var err = document.getElementById('portalAuthErr');
+      if (!loggedOut || !loggedIn) return;
+      var ok = typeof AuthPortal !== 'undefined' && AuthPortal.isAuthenticated();
+      if (ok) {
+        loggedOut.classList.add('d-none');
+        loggedIn.classList.remove('d-none');
+        if (badge) badge.classList.remove('d-none');
+      } else {
+        loggedOut.classList.remove('d-none');
+        loggedIn.classList.add('d-none');
+        if (badge) badge.classList.add('d-none');
+      }
+      if (err) err.classList.add('d-none');
+    }
+
     // Cargar scores y monitor de sucursales al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
+      syncPortalAuthCard();
+      var btn = document.getElementById('portalAuthBtn');
+      var pwd = document.getElementById('portalAuthPwd');
+      var err = document.getElementById('portalAuthErr');
+      if (btn && pwd) {
+        btn.addEventListener('click', function () {
+          if (typeof AuthPortal === 'undefined') return;
+          var v = (pwd.value || '').trim();
+          if (AuthPortal.login(v)) {
+            syncPortalAuthCard();
+            pwd.value = '';
+          } else if (err) {
+            err.classList.remove('d-none');
+          }
+        });
+        pwd.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') btn.click();
+        });
+      }
+      var lo = document.getElementById('portalAuthLogout');
+      if (lo) {
+        lo.addEventListener('click', function () {
+          if (typeof AuthPortal !== 'undefined') AuthPortal.logout();
+          syncPortalAuthCard();
+        });
+      }
+
       cargarScores();
       cargarBranchesMonitor();
       // Inicializar tooltips de Bootstrap
