@@ -1121,84 +1121,78 @@
           // Mostrar la sección explícitamente
           atencionSection.style.display = 'block';
           atencionSection.classList.add('active');
-          stepsContainer.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split me-2"></i>Conectando con el asistente...</div>';
-          stepsContainer.style.display = 'block';
+
           summarySection.style.display = 'none';
-          
-          // Scroll automático al log
+          summaryContent.innerHTML = '';
+
+          const pasosInicio = Date.now();
+          const delayPaso = 800;
+          const nPasos = PASOS_ANALISIS_UI.length;
+          const pasosAnimacionMs = nPasos * delayPaso + 500;
+
+          stepsContainer.innerHTML = '';
+          stepsContainer.style.display = 'block';
+          stepsContainer.style.visibility = 'visible';
+          stepsContainer.style.opacity = '1';
+
+          PASOS_ANALISIS_UI.forEach((paso, index) => {
+            setTimeout(() => {
+              agregarPaso({ name: paso.titulo, output: paso.detalle }, index);
+            }, index * delayPaso);
+          });
+
           setTimeout(() => {
             const logContent = document.querySelector('.log-content');
             if (logContent) {
               logContent.scrollTop = logContent.scrollHeight;
             }
           }, 100);
-          
-          // Llamar a la API de Journey Builder
-          const response = await fetch(JOURNEY_API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': JOURNEY_API_KEY,
-              'Origin': 'journeybuilder.numia.co'
-            },
-            body: JSON.stringify({
-              input_value: mensaje,
-              input_type: 'chat'
-            })
-          });
-        
-        if (!response.ok) {
-          throw new Error(`Error en servidor (${response.status})`);
-        }
-        
-        const data = await response.json();
-        
-        console.log('Respuesta completa de la API:', JSON.stringify(data, null, 2));
-        
-        // Asegurar que el contenedor de logs esté visible (ya está declarado arriba)
-        if (logContainer) {
-          logContainer.classList.add('visible');
-        }
-        
-        // Asegurar que la sección esté visible
-        atencionSection.style.display = 'block';
-        atencionSection.classList.add('active');
-        
-        // Extraer texto del análisis (campo text / artifacts / message)
-        let messageText = null;
-        if (data.outputs?.[0]?.outputs?.[0]) {
-          const innerOutput = data.outputs[0].outputs[0];
-          if (innerOutput.artifacts?.message) {
-            messageText = typeof innerOutput.artifacts.message === 'string'
-              ? innerOutput.artifacts.message
-              : innerOutput.artifacts.message.message || JSON.stringify(innerOutput.artifacts.message);
-          } else if (innerOutput.outputs?.message?.message) {
-            messageText = innerOutput.outputs.message.message;
-          } else if (innerOutput.results?.message?.text) {
-            messageText = innerOutput.results.message.text;
+
+          let messageText = null;
+          try {
+            const response = await fetch(JOURNEY_API_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': JOURNEY_API_KEY,
+                'Origin': 'journeybuilder.numia.co'
+              },
+              body: JSON.stringify({
+                input_value: mensaje,
+                input_type: 'chat'
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Error en servidor (${response.status})`);
+            }
+
+            const data = await response.json();
+            console.log('Respuesta completa de la API:', JSON.stringify(data, null, 2));
+
+            if (data.outputs?.[0]?.outputs?.[0]) {
+              const innerOutput = data.outputs[0].outputs[0];
+              if (innerOutput.artifacts?.message) {
+                messageText = typeof innerOutput.artifacts.message === 'string'
+                  ? innerOutput.artifacts.message
+                  : innerOutput.artifacts.message.message || JSON.stringify(innerOutput.artifacts.message);
+              } else if (innerOutput.outputs?.message?.message) {
+                messageText = innerOutput.outputs.message.message;
+              } else if (innerOutput.results?.message?.text) {
+                messageText = innerOutput.results.message.text;
+              }
+            }
+            console.log('Message text (análisis API):', messageText);
+          } catch (apiErr) {
+            const transcurrido = Date.now() - pasosInicio;
+            await new Promise(function(resolve) { setTimeout(resolve, Math.max(0, pasosAnimacionMs - transcurrido)); });
+            throw apiErr;
           }
-        }
-        console.log('Message text (análisis API):', messageText);
 
-        summarySection.style.display = 'none';
-        summaryContent.innerHTML = '';
+          const transcurridoFin = Date.now() - pasosInicio;
+          await new Promise(function(resolve) { setTimeout(resolve, Math.max(0, pasosAnimacionMs - transcurridoFin)); });
 
-        const delayPaso = 800;
-        const nPasos = PASOS_ANALISIS_UI.length;
-        stepsContainer.innerHTML = '';
-        stepsContainer.style.display = 'block';
-        stepsContainer.style.visibility = 'visible';
-        stepsContainer.style.opacity = '1';
-
-        PASOS_ANALISIS_UI.forEach((paso, index) => {
-          setTimeout(() => {
-            agregarPaso({ name: paso.titulo, output: paso.detalle }, index);
-          }, index * delayPaso);
-        });
-
-        setTimeout(() => {
           mostrarResumen(messageText || 'No se recibió el texto de análisis de la API.');
-        }, nPasos * delayPaso + 500);
         
       } catch (err) {
         console.error('Error completo:', err);
@@ -1689,51 +1683,15 @@
           
           atencionSection.style.display = 'block';
           atencionSection.classList.add('active');
-          stepsContainer.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split me-2"></i>Conectando con el asistente...</div>';
-          
-          // Llamar al agente con el DNI fijo y la opción seleccionada
-          const dni = DNI_FIJO;
-          const mensaje = `Necesito atención sobre ${opcion}. DNI: ${dni}`;
-          
-          const response = await fetch(JOURNEY_API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': JOURNEY_API_KEY,
-              'Origin': 'journeybuilder.numia.co'
-            },
-            body: JSON.stringify({
-              input_value: mensaje,
-              input_type: 'chat'
-            })
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Error en servidor (${response.status})`);
-          }
-          
-          const data = await response.json();
-          console.log('Respuesta completa de la API:', JSON.stringify(data, null, 2));
-          
-          let messageText = null;
-          if (data.outputs?.[0]?.outputs?.[0]) {
-            const innerOutput = data.outputs[0].outputs[0];
-            if (innerOutput.artifacts?.message) {
-              messageText = typeof innerOutput.artifacts.message === 'string'
-                ? innerOutput.artifacts.message
-                : innerOutput.artifacts.message.message || JSON.stringify(innerOutput.artifacts.message);
-            } else if (innerOutput.outputs?.message?.message) {
-              messageText = innerOutput.outputs.message.message;
-            } else if (innerOutput.results?.message?.text) {
-              messageText = innerOutput.results.message.text;
-            }
-          }
 
           summarySection.style.display = 'none';
           summaryContent.innerHTML = '';
 
+          const pasosInicio = Date.now();
           const delayPaso = 800;
           const nPasos = PASOS_ANALISIS_UI.length;
+          const pasosAnimacionMs = nPasos * delayPaso + 500;
+
           stepsContainer.innerHTML = '';
           stepsContainer.style.display = 'block';
 
@@ -1743,9 +1701,53 @@
             }, index * delayPaso);
           });
 
-          setTimeout(() => {
-            mostrarResumen(messageText || 'No se recibió el texto de análisis de la API.');
-          }, nPasos * delayPaso + 500);
+          const dni = DNI_FIJO;
+          const mensaje = `Necesito atención sobre ${opcion}. DNI: ${dni}`;
+
+          let messageText = null;
+          try {
+            const response = await fetch(JOURNEY_API_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': JOURNEY_API_KEY,
+                'Origin': 'journeybuilder.numia.co'
+              },
+              body: JSON.stringify({
+                input_value: mensaje,
+                input_type: 'chat'
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`Error en servidor (${response.status})`);
+            }
+
+            const data = await response.json();
+            console.log('Respuesta completa de la API:', JSON.stringify(data, null, 2));
+
+            if (data.outputs?.[0]?.outputs?.[0]) {
+              const innerOutput = data.outputs[0].outputs[0];
+              if (innerOutput.artifacts?.message) {
+                messageText = typeof innerOutput.artifacts.message === 'string'
+                  ? innerOutput.artifacts.message
+                  : innerOutput.artifacts.message.message || JSON.stringify(innerOutput.artifacts.message);
+              } else if (innerOutput.outputs?.message?.message) {
+                messageText = innerOutput.outputs.message.message;
+              } else if (innerOutput.results?.message?.text) {
+                messageText = innerOutput.results.message.text;
+              }
+            }
+          } catch (apiErr) {
+            const transcurrido = Date.now() - pasosInicio;
+            await new Promise(function(resolve) { setTimeout(resolve, Math.max(0, pasosAnimacionMs - transcurrido)); });
+            throw apiErr;
+          }
+
+          const transcurridoFin = Date.now() - pasosInicio;
+          await new Promise(function(resolve) { setTimeout(resolve, Math.max(0, pasosAnimacionMs - transcurridoFin)); });
+
+          mostrarResumen(messageText || 'No se recibió el texto de análisis de la API.');
           
         } catch (err) {
           console.error('Error al llamar al agente:', err);
