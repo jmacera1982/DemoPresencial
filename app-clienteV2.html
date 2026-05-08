@@ -997,8 +997,8 @@
       const PASOS_ANALISIS_UI = [
         { titulo: 'Comportamiento digital', detalle: 'Evaluación de onboarding y señales digitales.' },
         { titulo: 'Scoring', detalle: 'Puntuación y mejor oferta disponible.' },
-        { titulo: 'Asignación', detalle: 'Priorización del canal de atención.' },
-        { titulo: 'Tipo de atención sugerida', detalle: 'Recomendación según perfil y políticas.' }
+        { titulo: 'Sugerencia de canal', detalle: 'Priorización del canal de atención.' },
+        { titulo: 'Calcular prioridad', detalle: 'Analisis del estado actual de la sucursal comparado con el cliente.' }
       ];
 
       // Objeto con nombres y DNI
@@ -1375,6 +1375,21 @@
         return html;
       }
       
+      function formatearNombrePasoAmigable(toolName) {
+        if (!toolName || typeof toolName !== 'string') return 'Herramienta desconocida';
+        const t = toolName.trim();
+        if (!t) return 'Herramienta desconocida';
+        // Frases con espacios ya legibles: no usar /\b\w/g (en JS \w no incluye acentos y rompe palabras como "atención")
+        if (/\s/.test(t) && !/[a-z][A-Z]/.test(t)) {
+          return t;
+        }
+        return t
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase())
+          .trim()
+          .replace(/\b\w/g, l => l.toUpperCase());
+      }
+
       function agregarPaso(content, index) {
         try {
           console.log(`Agregando paso ${index}:`, content);
@@ -1393,12 +1408,7 @@
                           content.tool_use?.name || 
                           'Herramienta desconocida';
           
-          // Formatear el nombre de manera amigable (ej: "consultaclientenumia" -> "Consultar Cliente Numia")
-          const friendlyName = toolName
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, str => str.toUpperCase())
-            .trim()
-            .replace(/\b\w/g, l => l.toUpperCase());
+          const friendlyName = formatearNombrePasoAmigable(toolName);
           
           // Obtener el output - buscar en diferentes ubicaciones
           let toolOutput = content.output || 
