@@ -1012,7 +1012,7 @@
         'Juanma L': { dni: '38004650', apellido: 'Liza' },
         'Andrea': { dni: '1020799451', apellido: 'Usuario' },
         'Natalia': { dni: '1072655461', apellido: 'Pantoja' },
-        'Aldo': { dni: '22222222', apellido: 'Romero' },
+        'Aldo': { dni: '5215610238745', apellido: 'Romero' },
         'Eduardo': { dni: '33333333', apellido: 'Corona' },
         'Manuel': { dni: '12345678', apellido: 'Ormachea' },
         'Juanca': { dni: '1090378365', apellido: 'Soto' },
@@ -1066,6 +1066,27 @@
       // DNI fijo a usar
       const DNI_FIJO = '12345678';
 
+      const DETALLE_EXTRA_FIELDS_DEFAULT = 'El cliente registra un Score crediticio >700. Adicionalmente registro el abandono de un proceso de oboarding digital. Se recomienda ofrecer Prestamo personal';
+      let ultimoDetalleExtraFields = DETALLE_EXTRA_FIELDS_DEFAULT;
+
+      function buildExtraFields(detalle) {
+        return [{
+          showable: [{ in: 'workstation', format: 'both' }],
+          Detalle: detalle
+        }];
+      }
+
+      function buildDatosEnqueue(usuarioActual, nombreActual) {
+        return {
+          firstName: nombreActual,
+          lastName: usuarioActual.apellido,
+          dni: usuarioActual.dni,
+          email: 'mail@mail.com',
+          phone: '12345678',
+          extraFields: buildExtraFields(ultimoDetalleExtraFields || DETALLE_EXTRA_FIELDS_DEFAULT)
+        };
+      }
+
       // Event listener para el botón "Estoy en la sucursal"
       btnSolicitarAtencion.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1097,6 +1118,11 @@
       async function llamarAgenteConOpcionDesdeMenu(opcion, btn) {
         try {
           btn.disabled = true;
+          if (opcion === 'inversiones') {
+            try {
+              window.open('app-inversion-bdb.html#cdt', '_blank');
+            } catch (eOpen) {}
+          }
           btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
           
           // Ocultar el menú
@@ -1539,6 +1565,9 @@
       function mostrarResumen(message) {
         try {
           const messageText = typeof message === 'string' ? message : (message.message || JSON.stringify(message, null, 2));
+          if (messageText && !messageText.startsWith('No se recibió el texto de análisis')) {
+            ultimoDetalleExtraFields = messageText;
+          }
           
           // Extraer Scoring y detectar si recomienda videollamada
           const scoring = extraerScoring(messageText);
@@ -1677,6 +1706,11 @@
       async function llamarAgenteConOpcion(opcion, btn) {
         try {
           btn.disabled = true;
+          if (opcion === 'inversiones') {
+            try {
+              window.open('app-inversion-bdb.html#cdt', '_blank');
+            } catch (eOpen) {}
+          }
           btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conectando...';
           
           // Ocultar opciones y mostrar loading
@@ -1787,12 +1821,7 @@
           const usuarioActual = getUsuarioActual();
           const nombreActual = getNombreActual();
           
-          const datos = {
-            firstName: nombreActual,
-            lastName: usuarioActual.apellido,
-            dni: usuarioActual.dni,
-            email: 'mail@mail.com'
-          };
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
           
           const response = await fetch(apiUrl, {
             method: 'POST',
@@ -1840,12 +1869,7 @@
           const usuarioActual = getUsuarioActual();
           const nombreActual = getNombreActual();
           
-          const datos = {
-            firstName: nombreActual,
-            lastName: usuarioActual.apellido,
-            dni: usuarioActual.dni,
-            email: 'mail@mail.com'
-          };
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
           
           const response = await fetch(apiUrl, {
             method: 'POST',
@@ -1920,12 +1944,7 @@
           const usuarioActual = getUsuarioActual();
           const nombreActual = getNombreActual();
           
-          const datos = {
-            firstName: nombreActual,
-            lastName: usuarioActual.apellido,
-            dni: usuarioActual.dni,
-            email: 'mail@mail.com'
-          };
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
           
           // Llamar a la API
           const response = await fetch(apiUrl, {
