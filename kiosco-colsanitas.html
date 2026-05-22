@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colsanitas - Atención en línea</title>
+  <link rel="icon" type="image/png" href="images/logo-colsanitas.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cols-teal: #00697B;
+      --cols-teal-dark: #004D5A;
+      --cols-teal-hover: #005566;
+      --cols-green: #00B388;
+      --cols-green-light: #e8f7f3;
+      --cols-amber-light: #fef3c7;
+      --cols-amber: #b45309;
+      --cols-text: #1a2b3c;
+      --cols-text-light: #6b7f8e;
+      --cols-border: #d0e8e8;
+      --cols-bg: #f0f7f7;
+      --cols-white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--cols-bg);
+      color: var(--cols-text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .site-header {
+      background: linear-gradient(135deg, var(--cols-teal-dark) 0%, var(--cols-teal) 100%);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 12px rgba(0, 77, 90, 0.2);
+    }
+
+    .site-header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .site-header img {
+      height: 40px;
+      background: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      object-fit: contain;
+    }
+
+    .site-header h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+    }
+
+    .site-header p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.88);
+      margin: 0;
+    }
+
+    .page-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    .form-card {
+      background: var(--cols-white);
+      border-radius: 16px;
+      border: 1px solid var(--cols-border);
+      box-shadow: 0 4px 24px rgba(0, 105, 123, 0.08);
+      padding: 2rem;
+    }
+
+    .form-card h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cols-teal-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .form-card .lead {
+      font-size: 0.95rem;
+      color: var(--cols-text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--cols-text);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control-cols {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--cols-border);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-control-cols:focus {
+      outline: none;
+      border-color: var(--cols-teal);
+      box-shadow: 0 0 0 3px rgba(0, 105, 123, 0.12);
+    }
+
+    .form-error {
+      color: #dc2626;
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    .tipo-opciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (max-width: 540px) {
+      .tipo-opciones { grid-template-columns: 1fr; }
+    }
+
+    .tipo-opcion {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .tipo-opcion input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .tipo-opcion-box {
+      border: 2px solid var(--cols-border);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: all 0.2s;
+      height: 100%;
+      background: var(--cols-bg);
+    }
+
+    .tipo-opcion input:checked + .tipo-opcion-box {
+      border-color: var(--cols-teal);
+      background: var(--cols-green-light);
+      box-shadow: 0 0 0 3px rgba(0, 105, 123, 0.1);
+    }
+
+    .tipo-opcion-box i {
+      font-size: 2rem;
+      color: var(--cols-teal);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .tipo-opcion-box strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--cols-teal-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .tipo-opcion-box span {
+      font-size: 0.8rem;
+      color: var(--cols-text-light);
+    }
+
+    .btn-cols {
+      width: 100%;
+      padding: 0.9rem 1.25rem;
+      background: var(--cols-teal);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-cols:hover:not(:disabled) {
+      background: var(--cols-teal-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-cols:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-cols-outline {
+      background: transparent;
+      color: var(--cols-teal);
+      border: 2px solid var(--cols-teal);
+      margin-top: 0.75rem;
+    }
+
+    .btn-cols-outline:hover:not(:disabled) {
+      background: var(--cols-green-light);
+    }
+
+    .btn-link-back {
+      background: none;
+      border: none;
+      color: var(--cols-teal);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-link-back:hover { color: var(--cols-teal-dark); }
+
+    /* Autorización */
+    .auth-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--cols-green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .auth-icon i { font-size: 1.75rem; color: var(--cols-teal); }
+
+    .auth-description {
+      text-align: center;
+      color: var(--cols-text);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .file-upload-area {
+      border: 2px dashed var(--cols-border);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--cols-bg);
+      transition: all 0.2s;
+      margin-bottom: 1.25rem;
+    }
+
+    .file-upload-area:hover {
+      border-color: var(--cols-teal);
+      background: var(--cols-green-light);
+    }
+
+    .file-upload-area.has-file {
+      border-color: var(--cols-green);
+      background: #f0fdf9;
+      cursor: default;
+    }
+
+    .file-upload-icon { font-size: 2.25rem; color: var(--cols-teal); margin-bottom: 0.5rem; }
+    .file-upload-text { font-size: 0.9rem; color: var(--cols-text-light); }
+    .file-upload-text strong { color: var(--cols-teal); }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+
+    .status-badge.pending-auth {
+      background: var(--cols-amber-light);
+      color: var(--cols-amber);
+      border: 1px solid #fcd34d;
+    }
+
+    .status-badge.authorized {
+      background: var(--cols-green-light);
+      color: #047857;
+      border: 1px solid #86efac;
+    }
+
+    .auth-final-message {
+      display: none;
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--cols-green-light);
+      border-radius: 12px;
+      border: 1px solid var(--cols-green);
+      margin-top: 1rem;
+    }
+
+    .auth-final-message.visible { display: block; }
+
+    .auth-final-message i {
+      font-size: 2.5rem;
+      color: var(--cols-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-solicitar-auth {
+      display: none;
+      margin-bottom: 1rem;
+    }
+
+    .btn-solicitar-auth.visible { display: block; }
+
+    .btn-checkin {
+      width: 100%;
+      padding: 0.9rem 1.25rem;
+      background: var(--cols-green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+
+    .btn-checkin.visible { display: flex; }
+
+    .btn-checkin:hover:not(:disabled) { background: #009973; }
+
+    .btn-checkin:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .turn-info-card {
+      display: none;
+      background: var(--cols-green-light);
+      border: 2px solid var(--cols-green);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .turn-info-card.visible { display: block; }
+
+    .turn-info-card .turn-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--cols-teal-dark);
+      text-align: center;
+      padding: 0.25rem 0 0.75rem;
+    }
+
+    /* Sala de espera videollamada */
+    .loading-panel {
+      text-align: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .loading-panel .spinner-border {
+      color: var(--cols-teal);
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .sala-espera-card {
+      background: var(--cols-green-light);
+      border: 2px solid var(--cols-green);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .turn-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--cols-teal-dark);
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid rgba(0, 105, 123, 0.15);
+      font-size: 0.9rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-label { color: var(--cols-text-light); font-weight: 500; }
+    .info-value { color: var(--cols-teal-dark); font-weight: 700; }
+
+    .btn-video {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      margin-top: 1.25rem;
+      padding: 1rem;
+      background: var(--cols-green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-video:hover {
+      background: #009973;
+      color: white;
+    }
+
+    .alert-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <img src="images/logo-colsanitas.png" alt="Colsanitas">
+      <div>
+        <h1>Colsanitas</h1>
+        <p>Medicina prepagada · Atención en línea</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <div class="form-card">
+      <!-- Pantalla 1: Cédula + tipo de atención -->
+      <section class="screen active" id="screenInicio">
+        <h2>Solicitud de atención</h2>
+        <p class="lead">Ingrese su número de cédula y seleccione el tipo de atención que necesita.</p>
+
+        <form id="formInicio" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="inputCedula">Número de cédula</label>
+            <input type="text" class="form-control-cols" id="inputCedula" name="cedula"
+              placeholder="Ej. 1234567890" inputmode="numeric" autocomplete="off" maxlength="15" required>
+            <div class="form-error" id="errorCedula"></div>
+          </div>
+
+          <label class="form-label">Tipo de atención</label>
+          <div class="tipo-opciones">
+            <label class="tipo-opcion">
+              <input type="radio" name="tipoAtencion" value="autorizacion" required>
+              <div class="tipo-opcion-box">
+                <i class="bi bi-file-earmark-medical"></i>
+                <strong>Autorizar atención médica</strong>
+                <span>Adjunte orden médica o documentación</span>
+              </div>
+            </label>
+            <label class="tipo-opcion">
+              <input type="radio" name="tipoAtencion" value="asesoramiento" required>
+              <div class="tipo-opcion-box">
+                <i class="bi bi-camera-video"></i>
+                <strong>Asesoramiento</strong>
+                <span>Videollamada con un asesor</span>
+              </div>
+            </label>
+          </div>
+          <div class="form-error" id="errorTipo"></div>
+
+          <button type="submit" class="btn-cols" id="btnContinuar">Continuar</button>
+        </form>
+      </section>
+
+      <!-- Pantalla 2: Autorización médica -->
+      <section class="screen" id="screenAutorizacion">
+        <button type="button" class="btn-link-back" data-volver="inicio">
+          <i class="bi bi-arrow-left"></i> Volver al inicio
+        </button>
+        <h2>Autorizar atención médica</h2>
+        <p class="lead">Cédula: <strong id="cedulaAutorizacionLabel">—</strong></p>
+
+        <div class="auth-icon"><i class="bi bi-shield-check"></i></div>
+        <p class="auth-description">
+          Para iniciar el proceso de autorización, adjunte la documentación requerida (orden médica, estudios previos, etc.)
+        </p>
+
+        <div class="file-upload-area" id="fileUploadArea">
+          <input type="file" id="authFileInput" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <div class="file-upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+          <div class="file-upload-text">Haga clic para <strong>adjuntar documento</strong></div>
+          <div id="fileNameText" style="margin-top:0.75rem;font-size:0.875rem;color:var(--cols-green);font-weight:600;display:none;"></div>
+        </div>
+
+        <button type="button" class="btn-cols btn-solicitar-auth" id="btnSolicitarAutorizacion">
+          <i class="bi bi-send me-2"></i>Solicitar autorización
+        </button>
+
+        <div id="statusAutorizacion"></div>
+
+        <button type="button" class="btn-checkin" id="btnCheckin">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Check-in</span>
+        </button>
+
+        <div class="turn-info-card" id="turnInfoCard"></div>
+      </section>
+
+      <!-- Pantalla 3: Sala de espera videollamada (asesoramiento) -->
+      <section class="screen" id="screenSalaEspera">
+        <button type="button" class="btn-link-back" data-volver="inicio">
+          <i class="bi bi-arrow-left"></i> Volver al inicio
+        </button>
+
+        <div id="salaEsperaLoading" class="loading-panel">
+          <div class="spinner-border" role="status"></div>
+          <p>Conectando con la sala de espera de videollamada…</p>
+        </div>
+
+        <div id="salaEsperaContenido" style="display:none;">
+          <h2>Sala de espera</h2>
+          <p class="lead">Su solicitud de asesoramiento fue registrada. Espere a ser atendido por videollamada.</p>
+          <p style="font-size:0.9rem;color:var(--cols-text-light);margin-bottom:0.5rem;">
+            Cédula: <strong id="cedulaSalaLabel">—</strong>
+          </p>
+
+          <div class="sala-espera-card">
+            <div class="turn-number" id="turnoValor">—</div>
+            <div class="info-row">
+              <span class="info-label">Sala de espera</span>
+              <span class="info-value" id="salaNombre">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Tiempo estimado</span>
+              <span class="info-value" id="tiempoEsperaValor">—</span>
+            </div>
+          </div>
+
+          <a href="#" class="btn-video" id="btnVideoLink" target="_blank" rel="noopener" style="display:none;">
+            <i class="bi bi-camera-video"></i> Iniciar videollamada
+          </a>
+        </div>
+
+        <div id="salaEsperaError" class="alert-error" style="display:none;"></div>
+        <button type="button" class="btn-cols btn-cols-outline" data-volver="inicio" id="btnReintentar" style="display:none;">
+          Intentar de nuevo
+        </button>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var FV_API_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+      var FV_BRANCH = '10750';
+      var FV_AUTH_QUEUE = '18306';
+      var FV_CHECKIN_QUEUE = '16221';
+      var FV_VIDEO_QUEUE = '16223';
+
+      var cedulaIngresada = '';
+      var authTimeoutId = null;
+      var archivoAdjunto = null;
+      var autorizacionEnviada = false;
+
+      var screens = {
+        inicio: document.getElementById('screenInicio'),
+        autorizacion: document.getElementById('screenAutorizacion'),
+        salaEspera: document.getElementById('screenSalaEspera')
+      };
+
+      function showScreen(name) {
+        Object.keys(screens).forEach(function(k) {
+          if (screens[k]) screens[k].classList.remove('active');
+        });
+        if (screens[name]) screens[name].classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function buildPayloadEnqueue() {
+        return {
+          firstName: 'Paciente',
+          lastName: 'Colsanitas',
+          dni: cedulaIngresada,
+          email: 'mail@mail.com',
+          phone: '12345678'
+        };
+      }
+
+      document.querySelectorAll('[data-volver="inicio"]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          if (authTimeoutId) {
+            clearTimeout(authTimeoutId);
+            authTimeoutId = null;
+          }
+          resetAutorizacion();
+          showScreen('inicio');
+        });
+      });
+
+      /* ——— Pantalla inicio ——— */
+      document.getElementById('formInicio').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var cedula = document.getElementById('inputCedula').value.trim();
+        var tipo = document.querySelector('input[name="tipoAtencion"]:checked');
+        var errCedula = document.getElementById('errorCedula');
+        var errTipo = document.getElementById('errorTipo');
+        errCedula.style.display = 'none';
+        errTipo.style.display = 'none';
+
+        var valid = true;
+        if (!cedula) {
+          errCedula.textContent = 'Ingrese su número de cédula';
+          errCedula.style.display = 'block';
+          valid = false;
+        }
+        if (!tipo) {
+          errTipo.textContent = 'Seleccione un tipo de atención';
+          errTipo.style.display = 'block';
+          valid = false;
+        }
+        if (!valid) return;
+
+        cedulaIngresada = cedula;
+
+        if (tipo.value === 'autorizacion') {
+          document.getElementById('cedulaAutorizacionLabel').textContent = cedulaIngresada;
+          resetAutorizacion();
+          showScreen('autorizacion');
+        } else {
+          iniciarAsesoramientoVideollamada();
+        }
+      });
+
+      /* ——— Autorización: adjuntar → Solicitar autorización → turno → autorizado → Check-in ——— */
+      var fileUploadArea = document.getElementById('fileUploadArea');
+      var authFileInput = document.getElementById('authFileInput');
+      var statusAutorizacion = document.getElementById('statusAutorizacion');
+      var fileNameText = document.getElementById('fileNameText');
+      var btnSolicitarAutorizacion = document.getElementById('btnSolicitarAutorizacion');
+      var btnCheckin = document.getElementById('btnCheckin');
+      var turnInfoCard = document.getElementById('turnInfoCard');
+
+      function resetAutorizacion() {
+        authFileInput.value = '';
+        archivoAdjunto = null;
+        autorizacionEnviada = false;
+        fileUploadArea.classList.remove('has-file');
+        fileNameText.style.display = 'none';
+        fileNameText.textContent = '';
+        statusAutorizacion.innerHTML = '';
+        btnSolicitarAutorizacion.classList.remove('visible');
+        btnSolicitarAutorizacion.disabled = false;
+        btnSolicitarAutorizacion.innerHTML = '<i class="bi bi-send me-2"></i>Solicitar autorización';
+        btnCheckin.classList.remove('visible');
+        btnCheckin.disabled = false;
+        btnCheckin.innerHTML = '<i class="bi bi-box-arrow-in-right"></i><span>Check-in</span>';
+        turnInfoCard.classList.remove('visible');
+        turnInfoCard.innerHTML = '';
+        fileUploadArea.style.pointerEvents = '';
+        if (authTimeoutId) {
+          clearTimeout(authTimeoutId);
+          authTimeoutId = null;
+        }
+      }
+
+      fileUploadArea.addEventListener('click', function() {
+        if (!autorizacionEnviada && !fileUploadArea.classList.contains('has-file')) {
+          authFileInput.click();
+        }
+      });
+
+      authFileInput.addEventListener('change', function() {
+        if (!this.files || this.files.length === 0) return;
+
+        archivoAdjunto = this.files[0];
+        fileNameText.textContent = archivoAdjunto.name;
+        fileNameText.style.display = 'block';
+        fileUploadArea.classList.add('has-file');
+        btnSolicitarAutorizacion.classList.add('visible');
+      });
+
+      btnSolicitarAutorizacion.addEventListener('click', async function() {
+        if (!archivoAdjunto || autorizacionEnviada) return;
+
+        btnSolicitarAutorizacion.disabled = true;
+        btnSolicitarAutorizacion.innerHTML =
+          '<span class="spinner-border spinner-border-sm me-2"></span>Enviando solicitud…';
+        fileUploadArea.style.pointerEvents = 'none';
+
+        try {
+          var response = await fetch(
+            'https://filavirtual2.debmedia.com/api/v1/queue/' + FV_AUTH_QUEUE + '/branch/' + FV_BRANCH + '/enqueue',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-token': FV_API_TOKEN
+              },
+              body: JSON.stringify(buildPayloadEnqueue())
+            }
+          );
+
+          var data = {};
+          try { data = await response.json(); } catch (e) { /* vacío */ }
+
+          if (!response.ok) {
+            throw new Error(data.message || ('Error en servidor (' + response.status + ')'));
+          }
+
+          autorizacionEnviada = true;
+          btnSolicitarAutorizacion.classList.remove('visible');
+
+          statusAutorizacion.innerHTML =
+            '<div class="status-badge pending-auth">' +
+              '<i class="bi bi-clock-history"></i> Pendiente autorización' +
+            '</div>';
+
+          authTimeoutId = setTimeout(function() {
+            statusAutorizacion.innerHTML =
+              '<div class="status-badge authorized">' +
+                '<i class="bi bi-check-circle-fill"></i> Autorizado' +
+              '</div>';
+            btnCheckin.classList.add('visible');
+          }, 20000);
+        } catch (err) {
+          console.error('Error al solicitar autorización:', err);
+          btnSolicitarAutorizacion.disabled = false;
+          btnSolicitarAutorizacion.innerHTML = '<i class="bi bi-send me-2"></i>Solicitar autorización';
+          fileUploadArea.style.pointerEvents = '';
+          statusAutorizacion.innerHTML =
+            '<div class="alert-error">No se pudo registrar la solicitud: ' + err.message + '</div>';
+        }
+      });
+
+      btnCheckin.addEventListener('click', async function() {
+        btnCheckin.disabled = true;
+        btnCheckin.innerHTML = '<i class="bi bi-hourglass-split"></i><span>Procesando…</span>';
+
+        try {
+          var response = await fetch(
+            'https://filavirtual2.debmedia.com/api/v1/queue/' + FV_CHECKIN_QUEUE + '/branch/' + FV_BRANCH + '/enqueue',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-token': FV_API_TOKEN
+              },
+              body: JSON.stringify(buildPayloadEnqueue())
+            }
+          );
+
+          if (!response.ok) throw new Error('Error en check-in');
+          var data = await response.json();
+
+          var turn = data.turn || (data.jsonDetails && data.jsonDetails.turn) || '—';
+          var waitSec = data.averageWaitingTime != null
+            ? data.averageWaitingTime
+            : (data.jsonDetails && data.jsonDetails.averageWaitingTime != null
+              ? data.jsonDetails.averageWaitingTime
+              : null);
+          var roomName = (data.waitingRoom && data.waitingRoom.name)
+            ? data.waitingRoom.name
+            : (data.jsonDetails && data.jsonDetails.waitingRoom && data.jsonDetails.waitingRoom.name
+              ? data.jsonDetails.waitingRoom.name
+              : '—');
+
+          var tiempoTexto = 'En breve';
+          if (waitSec != null && isFinite(Number(waitSec))) {
+            var sec = Number(waitSec);
+            var min = Math.floor(sec / 60);
+            var rest = sec % 60;
+            tiempoTexto = min > 0 ? min + ' min ' + rest + ' seg' : rest + ' seg';
+          }
+
+          btnCheckin.innerHTML = '<i class="bi bi-check-circle-fill"></i><span>Check-in realizado</span>';
+          btnCheckin.style.background = '#047857';
+
+          turnInfoCard.innerHTML =
+            '<div class="turn-number">' + turn + '</div>' +
+            '<div class="info-row">' +
+              '<span class="info-label">Sala de espera</span>' +
+              '<span class="info-value">' + roomName + '</span>' +
+            '</div>' +
+            '<div class="info-row">' +
+              '<span class="info-label">Tiempo estimado</span>' +
+              '<span class="info-value">' + tiempoTexto + '</span>' +
+            '</div>';
+          turnInfoCard.classList.add('visible');
+        } catch (err) {
+          console.error('Error en check-in:', err);
+          btnCheckin.disabled = false;
+          btnCheckin.innerHTML = '<i class="bi bi-box-arrow-in-right"></i><span>Check-in</span>';
+          alert('Error al realizar el check-in. Intente nuevamente.');
+        }
+      });
+
+      /* ——— Asesoramiento → sala de espera videollamada ——— */
+      async function iniciarAsesoramientoVideollamada() {
+        showScreen('salaEspera');
+        document.getElementById('cedulaSalaLabel').textContent = cedulaIngresada;
+        document.getElementById('salaEsperaLoading').style.display = 'block';
+        document.getElementById('salaEsperaContenido').style.display = 'none';
+        document.getElementById('salaEsperaError').style.display = 'none';
+        document.getElementById('btnReintentar').style.display = 'none';
+
+        try {
+          var response = await fetch(
+            'https://filavirtual2.debmedia.com/api/v1/queue/' + FV_VIDEO_QUEUE + '/branch/' + FV_BRANCH + '/enqueue',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-token': FV_API_TOKEN
+              },
+              body: JSON.stringify(buildPayloadEnqueue())
+            }
+          );
+
+          var data = {};
+          try { data = await response.json(); } catch (parseErr) { /* vacío */ }
+
+          if (!response.ok) {
+            throw new Error(data.message || ('Error en servidor (' + response.status + ')'));
+          }
+
+          mostrarSalaEspera(data);
+        } catch (err) {
+          console.error('Error sala de espera:', err);
+          document.getElementById('salaEsperaLoading').style.display = 'none';
+          var errEl = document.getElementById('salaEsperaError');
+          errEl.textContent = 'No se pudo conectar con la sala de espera: ' + err.message;
+          errEl.style.display = 'block';
+          document.getElementById('btnReintentar').style.display = 'block';
+        }
+      }
+
+      function mostrarSalaEspera(data) {
+        document.getElementById('salaEsperaLoading').style.display = 'none';
+        document.getElementById('salaEsperaContenido').style.display = 'block';
+
+        var turn = data.turn || (data.jsonDetails && data.jsonDetails.turn) || '—';
+        var waitSec = data.averageWaitingTime != null
+          ? data.averageWaitingTime
+          : (data.jsonDetails && data.jsonDetails.averageWaitingTime != null
+            ? data.jsonDetails.averageWaitingTime
+            : null);
+        var roomName = (data.waitingRoom && data.waitingRoom.name)
+          ? data.waitingRoom.name
+          : (data.jsonDetails && data.jsonDetails.waitingRoom && data.jsonDetails.waitingRoom.name
+            ? data.jsonDetails.waitingRoom.name
+            : 'Videollamada Colsanitas');
+
+        document.getElementById('turnoValor').textContent = turn;
+
+        if (waitSec != null && isFinite(Number(waitSec))) {
+          var sec = Number(waitSec);
+          var min = Math.floor(sec / 60);
+          var rest = sec % 60;
+          document.getElementById('tiempoEsperaValor').textContent =
+            min > 0 ? min + ' min ' + rest + ' seg' : rest + ' seg';
+        } else {
+          document.getElementById('tiempoEsperaValor').textContent = 'En breve';
+        }
+
+        document.getElementById('salaNombre').textContent = roomName;
+
+        var btnVideo = document.getElementById('btnVideoLink');
+        var videoUrl = data.videoCallUrl
+          || (data.jsonDetails && data.jsonDetails.videoCallUrl);
+
+        if (videoUrl) {
+          var url = videoUrl + (videoUrl.indexOf('?') >= 0 ? '&' : '?') + 'videocallUser=mobile';
+          btnVideo.href = url;
+          btnVideo.style.display = 'inline-flex';
+        } else {
+          btnVideo.style.display = 'none';
+        }
+      }
+
+      document.getElementById('btnReintentar').addEventListener('click', function() {
+        iniciarAsesoramientoVideollamada();
+      });
+    });
+  </script>
+</body>
+</html>
