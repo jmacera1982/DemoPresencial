@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -358,9 +358,9 @@
       box-shadow: 0 8px 24px rgba(134, 61, 255, 0.3);
     }
     
-    .opcion-card.opcion-pago-qr {
-      border-color: #0d9488;
-      background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+    .opcion-card.opcion-pago-auth {
+      border-color: var(--numia-success);
+      background: linear-gradient(135deg, #e8f7f3 0%, #d4f0eb 100%);
       cursor: pointer;
     }
     .opcion-card.opcion-pago-caja {
@@ -368,20 +368,102 @@
       background: linear-gradient(135deg, var(--cols-teal-light) 0%, var(--cols-teal-mid) 100%);
       cursor: pointer;
     }
-    
-    .qr-sim-wrap {
-      padding: 1.5rem;
-      background: #fff;
-      border-radius: 16px;
-      display: inline-block;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      margin: 1rem auto;
+
+    .panel-autorizacion {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .qr-sim-wrap img {
-      display: block;
-      width: 220px;
-      height: 220px;
+
+    .panel-autorizacion.visible { display: block; }
+
+    .auth-description-totem {
+      font-size: 0.95rem;
+      color: var(--numia-text);
+      margin-bottom: 1rem;
+      line-height: 1.5;
     }
+
+    .file-upload-area-totem {
+      border: 2px dashed var(--cols-teal-mid, #cce8ec);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      cursor: pointer;
+      background: var(--cols-green-light, #e8f7f3);
+      margin-bottom: 1rem;
+      transition: all 0.2s;
+    }
+
+    .file-upload-area-totem:hover {
+      border-color: var(--numia-azul);
+    }
+
+    .file-upload-area-totem.has-file {
+      border-color: var(--numia-success);
+      background: #f0fdf9;
+      cursor: default;
+    }
+
+    .file-upload-icon-totem {
+      font-size: 2rem;
+      color: var(--numia-azul);
+      margin-bottom: 0.5rem;
+    }
+
+    .file-name-totem {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--numia-success);
+      font-weight: 600;
+    }
+
+    .file-name-totem.visible { display: block; }
+
+    .status-badge-totem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin: 1rem 0;
+    }
+
+    .status-badge-totem.pending-auth {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fcd34d;
+    }
+
+    .status-badge-totem.authorized {
+      background: #e8f7f3;
+      color: #047857;
+      border: 1px solid #86efac;
+    }
+
+    .btn-solicitar-auth-totem {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 0.75rem;
+      display: none;
+    }
+
+    .btn-solicitar-auth-totem.visible { display: block; }
+
+    .btn-checkin-post-auth {
+      width: 100%;
+      max-width: 320px;
+      margin: 0.75rem auto 0;
+      display: none;
+    }
+
+    .btn-checkin-post-auth.visible { display: block; }
     
     .opcion-card.disabled {
       opacity: 0.5;
@@ -766,7 +848,7 @@
       <!-- Pantalla 1: Ingreso de DNI -->
       <div class="screen-dni" id="screenDni" style="display: none;">
         <!-- Mensaje entre logo y teclado -->
-        <div class="instruction" style="margin-bottom: 1rem; font-size: 1rem; color: var(--numia-azul); font-weight: 500;">Bienvenido! Por favor ingrese su dni</div>
+        <div class="instruction" style="margin-bottom: 1rem; font-size: 1rem; color: var(--numia-azul); font-weight: 500;">Bienvenido! Por favor ingrese su cédula</div>
         
         <div class="dni-display empty" id="dniDisplay"></div>
         
@@ -829,31 +911,11 @@
         </div>
       </div>
       
-      <!-- Pantalla: Forma de pago (tras especialidad en demanda o check-in en citas; opciones visibles solo al terminar el análisis simulado) -->
+      <!-- Pantalla: Turno para autorización (tras análisis del agente) -->
       <div class="screen-opciones" id="screenPago" style="display: none;">
-        <h2>Forma de pago</h2>
+        <h2>Turno para autorización</h2>
         <div class="subtitle" id="pagoSubtituloEspera" style="text-align: center; color: var(--numia-text-light);">
-          <i class="bi bi-hourglass-split me-2"></i>Completando análisis del agente… Las opciones de pago se habilitarán al finalizar.
-        </div>
-        <div class="subtitle" id="pagoSubtituloElegir" style="display: none;">Seleccione cómo desea abonar</div>
-        <div class="opciones-grid" id="pagoOpcionesRow" style="display: none; grid-template-columns: 1fr 1fr;">
-          <div class="opcion-card opcion-pago-qr" id="btnPagoQr" role="button" tabindex="0">
-            <div class="opcion-icon" style="color: #0d9488;"><i class="bi bi-qr-code"></i></div>
-            <div class="opcion-title">Pago con QR</div>
-            <div class="opcion-desc">Abone con su billetera o banca móvil</div>
-          </div>
-          <div class="opcion-card opcion-pago-caja" id="btnPagoCaja" role="button" tabindex="0">
-            <div class="opcion-icon" style="color: var(--numia-azul);"><i class="bi bi-cash-coin"></i></div>
-            <div class="opcion-title">Pago en caja</div>
-            <div class="opcion-desc">Encolar turno para abonar en ventanilla</div>
-          </div>
-        </div>
-        <div id="pagoQrSimulacion" style="display: none; text-align: center; margin-top: 1rem;">
-          <p style="font-weight: 600; color: var(--numia-text); margin-bottom: 0.5rem;">Escaneé el código para simular el pago</p>
-          <div class="qr-sim-wrap">
-            <img id="imgQrPagoSimulado" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=NUMIA-SALUD-PAGO-DEMO" width="220" height="220" alt="Código QR de pago (demo)" />
-          </div>
-          <p class="subtitle" style="margin-top: 0.75rem;"><i class="bi bi-hourglass-split me-1"></i>Procesando pago… espere</p>
+          <i class="bi bi-hourglass-split me-2"></i>Completando análisis del agente…
         </div>
       </div>
       
@@ -923,12 +985,12 @@
       // Configuración de la API Journey Builder (para flujos avanzados)
       const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/38223ec2-6123-4e6e-862a-4945161ed221?stream=false';
       const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
-      var CONCLUSIONES_AGENTE_TEXTO = 'De acuerdo a lo analizado se detecta que de acuerdo a la cobertura del paciente, corresponde realizar el pago. De acuerdo a experiencias negativas anteriores y a que no se detectan pacientes en la sala de espera que requieren una atención urgente, el paciente recibirá atención prioritaria';
+      var CONCLUSIONES_AGENTE_TEXTO = 'De acuerdo a lo analizado, la atención solicitada requiere autorización y pago. Se asignará un turno para completar el proceso de autorización en ventanilla. De acuerdo a experiencias negativas anteriores y a que no se detectan pacientes en la sala de espera que requieren una atención urgente, el paciente recibirá atención prioritaria';
       var CONCLUSIONES_AGENTE_FRASE_NEGRITA = 'el paciente recibirá atención prioritaria';
       
       const FV_ENQUEUE_TOTEM_URL = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
       const FV_API_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
-      const DETALLE_EXTRA_FIELDS_TOTEM = 'De acuerdo a la cobertura del paciente, corresponde realizar el pago. De acuerdo a experiencias negativas anteriores y a que no se detectan pacientes en la sala de espera que requieren una atención urgente';
+      const DETALLE_EXTRA_FIELDS_TOTEM = 'La atención requiere autorización y pago. Turno asignado para proceso de autorización en ventanilla.';
       var TIEMPO_ESPERA_CONFIRMACION_TEXTO = '3 min 0 seg';
 
       function buildExtraFieldsTotem() {
@@ -945,12 +1007,14 @@
           extraFields: buildExtraFieldsTotem()
         };
       }
-      
+
       function resetBloquesTurnoYEsperaConfirmacion() {
         var nb = document.getElementById('numeroTurnoBlock');
         var te = document.getElementById('tiempoEspera');
+        var turnLabel = document.querySelector('#numeroTurnoBlock .tiempo-espera-label');
         if (nb) nb.style.display = 'none';
         if (te) te.style.display = 'none';
+        if (turnLabel) turnLabel.textContent = 'Número de turno';
       }
       
       function extraerTurnoYEsperaFilaVirtual(data) {
@@ -1050,23 +1114,33 @@
         }
       }
       
-      function revelarOpcionesPagoTrasAnalisis() {
-        var row = document.getElementById('pagoOpcionesRow');
-        var subEspera = document.getElementById('pagoSubtituloEspera');
-        var subElegir = document.getElementById('pagoSubtituloElegir');
-        if (subEspera) subEspera.style.display = 'none';
-        if (subElegir) subElegir.style.display = 'block';
-        if (row) row.style.display = 'grid';
+      function procesarAutorizacionDirectaTotem() {
         pagoOpcionesRevealTimeoutId = null;
+        var subEspera = document.getElementById('pagoSubtituloEspera');
+        if (subEspera) {
+          subEspera.innerHTML =
+            '<i class="bi bi-info-circle me-2"></i>La atención requiere autorización y pago.<br>' +
+            '<span style="font-size: 0.92rem;">Asignando turno para autorización…</span>';
+        }
+        mostrarConclusionesFinalesAgente(null);
+        enqueueTotemSaludFilaVirtual()
+          .then(function (dataFv) {
+            cerrarPagoYMostrarConfirmacionFinal(dataFv, 'autorizacion');
+          })
+          .catch(function (err) {
+            console.error('Error al asignar turno para autorización:', err);
+            if (subEspera) {
+              subEspera.innerHTML = '<span style="color:#dc2626;">Error: ' + escapeHtml(err.message) + '</span>';
+            }
+          });
       }
       
-      function ocultarOpcionesPagoHastaAnalisis() {
-        var row = document.getElementById('pagoOpcionesRow');
+      function resetSubtituloPagoEspera() {
         var subEspera = document.getElementById('pagoSubtituloEspera');
-        var subElegir = document.getElementById('pagoSubtituloElegir');
-        if (row) row.style.display = 'none';
-        if (subEspera) subEspera.style.display = 'block';
-        if (subElegir) subElegir.style.display = 'none';
+        if (subEspera) {
+          subEspera.style.display = 'block';
+          subEspera.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Completando análisis del agente…';
+        }
       }
       
       /** Simula el análisis del agente (panel derecho): un paso por segundo. */
@@ -1105,30 +1179,18 @@
           }, i * 1000);
           simulacionPasosAgenteTimeouts.push(tid);
         });
-        /* Último paso a los (n-1)s; +600 ms para la animación "completed" → recién ahí se muestran QR / caja */
+        /* Tras el análisis del agente se genera el turno automáticamente */
         var delayReveladoMs = (titulos.length - 1) * 1000 + 600;
         pagoOpcionesRevealTimeoutId = setTimeout(function () {
-          revelarOpcionesPagoTrasAnalisis();
-          mostrarConclusionesFinalesAgente(null);
+          procesarAutorizacionDirectaTotem();
         }, delayReveladoMs);
       }
       
       function resetVistaPago() {
-        const row = document.getElementById('pagoOpcionesRow');
-        const qr = document.getElementById('pagoQrSimulacion');
-        if (row) row.style.display = 'grid';
-        var subEspera = document.getElementById('pagoSubtituloEspera');
-        var subElegir = document.getElementById('pagoSubtituloElegir');
-        if (subEspera) subEspera.style.display = 'none';
-        if (subElegir) subElegir.style.display = 'block';
-        if (qr) qr.style.display = 'none';
-        const bq = document.getElementById('btnPagoQr');
-        const bc = document.getElementById('btnPagoCaja');
-        if (bq) { bq.classList.remove('disabled'); bq.style.pointerEvents = ''; }
-        if (bc) { bc.classList.remove('disabled'); bc.style.pointerEvents = ''; }
+        resetSubtituloPagoEspera();
       }
       
-      function cerrarPagoYMostrarConfirmacionFinalQr(apiData) {
+      function cerrarPagoYMostrarConfirmacionFinal(apiData, tipoConfirmacion) {
         if (pagoQrTimerId) {
           clearTimeout(pagoQrTimerId);
           pagoQrTimerId = null;
@@ -1141,7 +1203,21 @@
         const confirmacionTitle = screenConfirmacion.querySelector('h2');
         const confirmacionMessage = screenConfirmacion.querySelector('.message');
         const nombresEsp = { nutricion: 'Nutrición', laboratorio: 'Laboratorio', clinico: 'Clínico' };
-        if (contextoPagoOrigen === 'cita') {
+        if (tipoConfirmacion === 'autorizacion') {
+          var turnLabel = document.querySelector('#numeroTurnoBlock .tiempo-espera-label');
+          if (turnLabel) turnLabel.textContent = 'Turno para autorización';
+          if (confirmacionTitle) confirmacionTitle.textContent = 'Turno asignado para autorización';
+          if (confirmacionMessage) {
+            if (contextoPagoOrigen === 'cita') {
+              confirmacionMessage.innerHTML = 'Su atención requiere autorización y pago.<br>Presente su turno en ventanilla para completar el proceso.<br>Su cita de Cardiología quedará confirmada una vez autorizada.';
+            } else if (contextoPagoOrigen === 'demanda' && especialidadDemandaSeleccionada) {
+              confirmacionMessage.innerHTML = 'Su atención requiere autorización y pago.<br>Presente su turno en ventanilla para completar el proceso.<br>Se ha registrado su solicitud de <strong>' +
+                nombresEsp[especialidadDemandaSeleccionada] + '</strong>. Espere a ser llamado.';
+            } else {
+              confirmacionMessage.innerHTML = 'Su atención requiere autorización y pago.<br>Presente su turno en ventanilla cuando sea llamado para completar la autorización.';
+            }
+          }
+        } else if (contextoPagoOrigen === 'cita') {
           if (confirmacionTitle) confirmacionTitle.textContent = '¡Pago registrado!';
           if (confirmacionMessage) confirmacionMessage.innerHTML = 'Su pago fue simulado correctamente.<br>Su cita de Cardiología queda lista. Por favor, espere a ser llamado.';
         } else if (contextoPagoOrigen === 'demanda' && especialidadDemandaSeleccionada) {
@@ -1166,7 +1242,7 @@
         resetBloquesTurnoYEsperaConfirmacion();
         resetVistaPago();
         if (screenPago) screenPago.style.display = 'block';
-        ocultarOpcionesPagoHastaAnalisis();
+        resetSubtituloPagoEspera();
         iniciarSimulacionPasosAgente();
       }
       
@@ -1288,49 +1364,18 @@
         }
       });
       
-      // Botón Check-in (Cita Cardiología) → forma de pago
+      // Botón Check-in (Cita Cardiología) → solicitud de autorización
       document.getElementById('btnCheckin').addEventListener('click', () => {
         abrirPantallaPago('cita', null);
       });
       
-      // Opciones Demanda espontánea (Nutrición, Laboratorio, Clínico) → forma de pago
+      // Opciones Demanda espontánea (Nutrición, Laboratorio, Clínico) → solicitud de autorización
       document.querySelectorAll('.opcion-demanda').forEach(card => {
         card.addEventListener('click', () => {
           const especialidad = card.getAttribute('data-especialidad');
           abrirPantallaPago('demanda', especialidad);
         });
       });
-      
-      // Pago con QR: simular QR y a los 5 s ir al paso final
-      const btnPagoQr = document.getElementById('btnPagoQr');
-      const btnPagoCaja = document.getElementById('btnPagoCaja');
-      if (btnPagoQr) {
-        btnPagoQr.addEventListener('click', () => {
-          if (pagoQrTimerId) return;
-          const row = document.getElementById('pagoOpcionesRow');
-          const qr = document.getElementById('pagoQrSimulacion');
-          if (row) row.style.display = 'none';
-          if (qr) qr.style.display = 'block';
-          btnPagoQr.classList.add('disabled');
-          if (btnPagoCaja) btnPagoCaja.classList.add('disabled');
-          pagoQrTimerId = setTimeout(async function () {
-            pagoQrTimerId = null;
-            try {
-              var dataFv = await enqueueTotemSaludFilaVirtual();
-              cerrarPagoYMostrarConfirmacionFinalQr(dataFv);
-            } catch (err) {
-              console.error('Error fila virtual (QR):', err);
-              alert('Error: ' + err.message);
-            }
-          }, 5000);
-        });
-      }
-      if (btnPagoCaja) {
-        btnPagoCaja.addEventListener('click', async () => {
-          if (pagoQrTimerId) return;
-          await solicitarAtencionPresencialDirecta();
-        });
-      }
       
       // Mostrar pantalla de opciones (Educación: Matrícula, Certificados, Becas)
       function mostrarPantallaOpciones() {
