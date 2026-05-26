@@ -10,17 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --cols-teal: #00697B;
-      --cols-teal-dark: #004D5A;
-      --cols-teal-hover: #005566;
-      --cols-green: #00B388;
-      --cols-green-light: #e8f7f3;
+      --cols-teal: #88BC00;
+      --cols-teal-dark: #6B9600;
+      --cols-teal-hover: #769F00;
+      --cols-green: #88BC00;
+      --cols-green-light: #f2f7e6;
       --cols-amber-light: #fef3c7;
       --cols-amber: #b45309;
       --cols-text: #1a2b3c;
       --cols-text-light: #6b7f8e;
-      --cols-border: #d0e8e8;
-      --cols-bg: #f0f7f7;
+      --cols-border: #dce8b8;
+      --cols-bg: #f7faf0;
       --cols-white: #ffffff;
     }
 
@@ -277,7 +277,7 @@
 
     .file-upload-area.has-file {
       border-color: var(--cols-green);
-      background: #f0fdf9;
+      background: #f4f9e8;
       cursor: default;
     }
 
@@ -305,8 +305,8 @@
 
     .status-badge.authorized {
       background: var(--cols-green-light);
-      color: #047857;
-      border: 1px solid #86efac;
+      color: #6B9600;
+      border: 1px solid #c5e086;
     }
 
     .auth-final-message {
@@ -355,7 +355,7 @@
 
     .btn-checkin.visible { display: flex; }
 
-    .btn-checkin:hover:not(:disabled) { background: #009973; }
+    .btn-checkin:hover:not(:disabled) { background: #769F00; }
 
     .btn-checkin:disabled {
       background: #9ca3af;
@@ -443,7 +443,7 @@
     }
 
     .btn-video:hover {
-      background: #009973;
+      background: #769F00;
       color: white;
     }
 
@@ -810,7 +810,7 @@
           }
 
           btnCheckin.innerHTML = '<i class="bi bi-check-circle-fill"></i><span>Check-in realizado</span>';
-          btnCheckin.style.background = '#047857';
+          btnCheckin.style.background = '#6B9600';
 
           turnInfoCard.innerHTML =
             '<div class="turn-number">' + turn + '</div>' +

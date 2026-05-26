@@ -10,14 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --numia-azul: #00697B;
-      --numia-azul-oscuro: #004D5A;
-      --numia-success: #00B388;
+      --numia-azul: #88BC00;
+      --numia-azul-oscuro: #6B9600;
+      --numia-success: #88BC00;
       --numia-text: #1a2b3c;
       --numia-text-light: #6b7f8e;
-      --cols-green-light: #e8f7f3;
-      --cols-teal-light: #e6f4f6;
-      --cols-teal-mid: #cce8ec;
+      --cols-green-light: #f2f7e6;
+      --cols-teal-light: #f4f9e8;
+      --cols-teal-mid: #dceab0;
     }
     
     * {
@@ -28,7 +28,7 @@
     
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f0f7f7;
+      background: #f7faf0;
       color: var(--numia-text);
       min-height: 100vh;
       display: flex;
@@ -331,7 +331,7 @@
     
     .opcion-card.videollamada {
       border-color: var(--numia-success);
-      background: linear-gradient(135deg, var(--cols-green-light) 0%, #d4f0eb 100%);
+      background: linear-gradient(135deg, var(--cols-green-light) 0%, #e4f0c4 100%);
     }
     
     .opcion-card.videollamada:hover {
@@ -360,7 +360,7 @@
     
     .opcion-card.opcion-pago-auth {
       border-color: var(--numia-success);
-      background: linear-gradient(135deg, #e8f7f3 0%, #d4f0eb 100%);
+      background: linear-gradient(135deg, var(--cols-green-light) 0%, #e4f0c4 100%);
       cursor: pointer;
     }
     .opcion-card.opcion-pago-caja {
@@ -388,11 +388,11 @@
     }
 
     .file-upload-area-totem {
-      border: 2px dashed var(--cols-teal-mid, #cce8ec);
+      border: 2px dashed var(--cols-teal-mid, #dceab0);
       border-radius: 12px;
       padding: 1.5rem 1rem;
       cursor: pointer;
-      background: var(--cols-green-light, #e8f7f3);
+      background: var(--cols-green-light, #f2f7e6);
       margin-bottom: 1rem;
       transition: all 0.2s;
     }
@@ -403,7 +403,7 @@
 
     .file-upload-area-totem.has-file {
       border-color: var(--numia-success);
-      background: #f0fdf9;
+      background: #f4f9e8;
       cursor: default;
     }
 
@@ -442,9 +442,9 @@
     }
 
     .status-badge-totem.authorized {
-      background: #e8f7f3;
-      color: #047857;
-      border: 1px solid #86efac;
+      background: var(--cols-green-light);
+      color: #6B9600;
+      border: 1px solid #c5e086;
     }
 
     .btn-solicitar-auth-totem {
@@ -593,7 +593,7 @@
     }
     
     .btn-video:hover {
-      background: #059669;
+      background: #769F00;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
       color: white;
@@ -823,24 +823,31 @@
     
     <!-- Contenido del tótem -->
     <div class="totem-content">
-      <!-- Pantalla 0: Demanda espontánea o Citas -->
+      <!-- Pantalla 0: Tipo de atención -->
       <div class="screen-opciones" id="screenTipoAtencion" style="display: block;">
         <h2>¿Cómo desea ser atendido?</h2>
         <div class="subtitle">Seleccione el tipo de atención</div>
         <div class="opciones-grid" id="tipoAtencionGrid">
-          <div class="opcion-card" data-tipo="demanda" style="cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, #e6f4f6 0%, #cce8ec 100%);">
+          <div class="opcion-card" data-tipo="demanda" style="cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, var(--cols-teal-light) 0%, var(--cols-teal-mid) 100%);">
             <div class="opcion-icon" style="color: var(--numia-azul);">
               <i class="bi bi-person-plus"></i>
             </div>
             <div class="opcion-title">Demanda espontánea</div>
             <div class="opcion-desc">Atención sin cita previa</div>
           </div>
-          <div class="opcion-card" data-tipo="cita" style="cursor: pointer; border-color: var(--numia-success); background: linear-gradient(135deg, #e8f7f3 0%, #d4f0eb 100%);">
+          <div class="opcion-card" data-tipo="cita" style="cursor: pointer; border-color: var(--numia-success); background: linear-gradient(135deg, var(--cols-green-light) 0%, #e4f0c4 100%);">
             <div class="opcion-icon" style="color: var(--numia-success);">
               <i class="bi bi-calendar-check"></i>
             </div>
             <div class="opcion-title">Citas programadas</div>
             <div class="opcion-desc">Ya tiene una cita agendada</div>
+          </div>
+          <div class="opcion-card" data-tipo="planes" style="cursor: pointer; border-color: var(--numia-azul-oscuro); background: linear-gradient(135deg, #f4f9e8 0%, #d4e8a0 100%);">
+            <div class="opcion-icon" style="color: var(--numia-azul-oscuro);">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <div class="opcion-title">Planes de salud</div>
+            <div class="opcion-desc">Consultas sobre su plan médico</div>
           </div>
         </div>
       </div>
@@ -900,7 +907,7 @@
         <h2>Su cita programada</h2>
         <div class="subtitle">DNI: <span id="dniCitaDisplay"></span></div>
         <div class="opciones-grid" style="grid-template-columns: 1fr;">
-          <div class="opcion-card" style="border-color: var(--numia-success); background: linear-gradient(135deg, #e8f7f3 0%, #d4f0eb 100%); padding: 2rem;">
+          <div class="opcion-card" style="border-color: var(--numia-success); background: linear-gradient(135deg, var(--cols-green-light) 0%, #e4f0c4 100%); padding: 2rem;">
             <div class="opcion-icon" style="color: var(--numia-success); font-size: 3rem;"><i class="bi bi-heart-pulse"></i></div>
             <div class="opcion-title" style="font-size: 1.3rem;">Cardiología</div>
             <div class="opcion-desc" style="margin: 1rem 0;">Tiene una cita agendada para mañana</div>
@@ -984,6 +991,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Configuración de la API Journey Builder (para flujos avanzados)
       const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/38223ec2-6123-4e6e-862a-4945161ed221?stream=false';
+      const JOURNEY_AUTORIZACION_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/d9493628-5441-4150-b476-50df0f932409?stream=false';
       const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
       var CONCLUSIONES_AGENTE_TEXTO = 'De acuerdo a lo analizado, la atención solicitada requiere autorización y pago. Se asignará un turno para completar el proceso de autorización en ventanilla. De acuerdo a experiencias negativas anteriores y a que no se detectan pacientes en la sala de espera que requieren una atención urgente, el paciente recibirá atención prioritaria';
       var CONCLUSIONES_AGENTE_FRASE_NEGRITA = 'el paciente recibirá atención prioritaria';
@@ -991,20 +999,21 @@
       const FV_ENQUEUE_TOTEM_URL = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
       const FV_API_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
       const DETALLE_EXTRA_FIELDS_TOTEM = 'La atención requiere autorización y pago. Turno asignado para proceso de autorización en ventanilla.';
+      const DETALLE_EXTRA_FIELDS_PLANES = 'Atención en planes de salud. Turno asignado sin requerir autorización.';
       var TIEMPO_ESPERA_CONFIRMACION_TEXTO = '3 min 0 seg';
 
-      function buildExtraFieldsTotem() {
+      function buildExtraFieldsTotem(detalle) {
         return [{
           showable: [{ in: 'workstation', format: 'both' }],
-          Detalle: DETALLE_EXTRA_FIELDS_TOTEM
+          Detalle: detalle || DETALLE_EXTRA_FIELDS_TOTEM
         }];
       }
 
-      function buildDatosEnqueueTotem(dni) {
+      function buildDatosEnqueueTotem(dni, detalle) {
         return {
           dni: dni,
           email: 'mail@mail.com',
-          extraFields: buildExtraFieldsTotem()
+          extraFields: buildExtraFieldsTotem(detalle)
         };
       }
 
@@ -1050,14 +1059,43 @@
         }
       }
       
-      async function enqueueTotemSaludFilaVirtual() {
+      function invocarJourneyAutorizacionConfirmacion() {
+        return fetch(JOURNEY_AUTORIZACION_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': JOURNEY_API_KEY,
+            'Origin': 'journeybuilder.numia.co'
+          },
+          body: JSON.stringify({
+            input_value: 'hello world!',
+            output_type: 'text',
+            input_type: 'text'
+          })
+        })
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error('Error en servidor (' + response.status + ')');
+            }
+            return response.json();
+          })
+          .then(function (data) {
+            console.log('Respuesta Journey autorización confirmación:', data);
+            return data;
+          })
+          .catch(function (err) {
+            console.error('Error al invocar Journey autorización confirmación:', err);
+          });
+      }
+
+      async function enqueueTotemSaludFilaVirtual(detalleExtra) {
         var response = await fetch(FV_ENQUEUE_TOTEM_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'x-api-token': FV_API_TOKEN
           },
-          body: JSON.stringify(buildDatosEnqueueTotem(dniIngresado))
+          body: JSON.stringify(buildDatosEnqueueTotem(dniIngresado, detalleExtra))
         });
         var data = {};
         try {
@@ -1071,7 +1109,7 @@
       
       // Variables de estado
       let dniIngresado = '';
-      let tipoAtencion = null; // 'demanda' | 'cita'
+      let tipoAtencion = null; // 'demanda' | 'cita' | 'planes'
       /** @type {'demanda'|'cita'|null} */
       let contextoPagoOrigen = null;
       /** @type {string|null} */
@@ -1228,8 +1266,60 @@
           }
         }
         aplicarTurnoYEsperaEnConfirmacion(apiData || {});
+        if (tipoConfirmacion === 'autorizacion') {
+          invocarJourneyAutorizacionConfirmacion();
+        }
       }
       
+      async function procesarTurnoPlanesSalud() {
+        var textoBtnOriginal = btnContinuar ? btnContinuar.textContent : '';
+        try {
+          if (btnContinuar) {
+            btnContinuar.disabled = true;
+            btnContinuar.classList.remove('active');
+            btnContinuar.textContent = 'Asignando turno…';
+          }
+          var data = await enqueueTotemSaludFilaVirtual(DETALLE_EXTRA_FIELDS_PLANES);
+          screenDni.style.display = 'none';
+          screenDemandaOpciones.style.display = 'none';
+          screenCitaCardiologia.style.display = 'none';
+          if (screenPago) screenPago.style.display = 'none';
+          screenOpciones.classList.remove('active');
+          mostrarConfirmacionPlanesSalud(data);
+        } catch (err) {
+          console.error('Error al asignar turno planes de salud:', err);
+          alert('Error: ' + err.message);
+        } finally {
+          if (btnContinuar) {
+            btnContinuar.textContent = textoBtnOriginal || 'Continuar';
+            if (dniIngresado.length > 0) {
+              btnContinuar.disabled = false;
+              btnContinuar.classList.add('active');
+            }
+          }
+        }
+      }
+
+      function mostrarConfirmacionPlanesSalud(apiData) {
+        resetVistaPago();
+        document.getElementById('videoLinkContainer').style.display = 'none';
+        resetBloquesTurnoYEsperaConfirmacion();
+        screenConfirmacion.classList.add('active');
+
+        var confirmacionTitle = screenConfirmacion.querySelector('h2');
+        var confirmacionMessage = screenConfirmacion.querySelector('.message');
+        var turnLabel = document.querySelector('#numeroTurnoBlock .tiempo-espera-label');
+
+        if (turnLabel) turnLabel.textContent = 'Número de turno';
+        if (confirmacionTitle) confirmacionTitle.textContent = 'Turno asignado';
+        if (confirmacionMessage) {
+          confirmacionMessage.innerHTML =
+            'Su turno para <strong>planes de salud</strong> fue registrado.<br>' +
+            'No requiere autorización. Por favor, espere a ser llamado.';
+        }
+        aplicarTurnoYEsperaEnConfirmacion(apiData || {});
+      }
+
       function abrirPantallaPago(origen, especialidadKey) {
         contextoPagoOrigen = origen;
         especialidadDemandaSeleccionada = especialidadKey || null;
@@ -1351,9 +1441,14 @@
       // Botón continuar - según tipo de atención
       btnContinuar.addEventListener('click', () => {
         if (dniIngresado.length === 0) return;
-        
+
+        if (tipoAtencion === 'planes') {
+          procesarTurnoPlanesSalud();
+          return;
+        }
+
         screenDni.style.display = 'none';
-        
+
         if (tipoAtencion === 'cita') {
           // Flujo Citas: mostrar cita de Cardiología con Check-in
           document.getElementById('dniCitaDisplay').textContent = dniIngresado;
@@ -1397,7 +1492,7 @@
         // Opción Matrícula e inscripción
         const cardMatricula = document.createElement('div');
         cardMatricula.className = 'opcion-card';
-        cardMatricula.style.cssText = 'cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, #e6f4f6 0%, #cce8ec 100%);';
+        cardMatricula.style.cssText = 'cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, var(--cols-teal-light) 0%, var(--cols-teal-mid) 100%);';
         cardMatricula.innerHTML = `
           <div class="opcion-icon" style="color: var(--numia-azul);">
             <i class="bi bi-journal-bookmark"></i>
@@ -1412,7 +1507,7 @@
         // Opción Certificados y trámites
         const cardCertificados = document.createElement('div');
         cardCertificados.className = 'opcion-card';
-        cardCertificados.style.cssText = 'cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, #e6f4f6 0%, #cce8ec 100%);';
+        cardCertificados.style.cssText = 'cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, var(--cols-teal-light) 0%, var(--cols-teal-mid) 100%);';
         cardCertificados.innerHTML = `
           <div class="opcion-icon" style="color: var(--numia-azul);">
             <i class="bi bi-file-earmark-text"></i>
@@ -1427,7 +1522,7 @@
         // Opción Becas y financiamiento
         const cardBecas = document.createElement('div');
         cardBecas.className = 'opcion-card';
-        cardBecas.style.cssText = 'cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, #e6f4f6 0%, #cce8ec 100%);';
+        cardBecas.style.cssText = 'cursor: pointer; border-color: var(--numia-azul); background: linear-gradient(135deg, var(--cols-teal-light) 0%, var(--cols-teal-mid) 100%);';
         cardBecas.innerHTML = `
           <div class="opcion-icon" style="color: var(--numia-azul);">
             <i class="bi bi-cash-stack"></i>
