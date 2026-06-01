@@ -3,26 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Banco Popular - Mi Banca</title>
-  <link rel="icon" type="image/png" href="images/logo-popular.png" />
+  <title>Banregio - Mi Banca</title>
+  <link rel="icon" type="image/png" href="images/logo-banregio.png" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,600;0,700;1,700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      /* Banco Popular Dominicano — https://www.popularenlinea.com */
-      --bp-primary: #013E7C;
-      --bp-primary-dark: #012a56;
-      --bp-teal: #00B5E2;
-      --bp-teal-dark: #0096C0;
-      --bp-dark: #333333;
-      --bp-mint: #E8F4FA;
-      --bp-accent-light: #C5DCE8;
-      --bp-mint-light: #F0F9FC;
-      --numia-azul: var(--bp-primary);
-      --numia-accent: var(--bp-teal);
-      --numia-azul-claro: #E8F6FC;
-      --numia-azul-muy-claro: #F5FAFD;
+      /* Paleta Banregio — https://www.banregio.com */
+      --br-orange: #FF5000;
+      --br-orange-dark: #E85C1E;
+      --br-dark: #333333;
+      --br-mint: #E0EBE8;
+      --br-olive: #A7B191;
+      --br-mint-light: #D7E7E5;
+      --numia-azul: var(--br-orange);
+      --numia-azul-claro: #FFF0E8;
+      --numia-azul-muy-claro: #FFF8F4;
       --numia-success: #00A651;
       --numia-text: #333333;
       --numia-text-light: #6b6b6b;
@@ -65,10 +62,9 @@
     }
     
     .mobile-app-header {
-      background: #ffffff;
+      background: var(--br-orange);
       padding: 1rem 1.25rem;
-      color: var(--bp-primary);
-      border-bottom: 2px solid #e8ecf0;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -76,14 +72,10 @@
     }
 
     .mobile-app-header .header-logo {
-      height: 38px;
+      height: 34px;
       width: auto;
       display: block;
       object-fit: contain;
-    }
-
-    .mobile-app-header .bi {
-      color: var(--bp-primary);
     }
     
     .mobile-app-header button:hover {
@@ -345,12 +337,12 @@
     }
     
     .welcome-section {
-      background: var(--bp-primary);
+      background: var(--br-dark);
       border-radius: 16px;
       padding: 2rem;
       color: #ffffff;
       margin-bottom: 2rem;
-      box-shadow: 0 4px 16px rgba(1, 62, 124, 0.25);
+      box-shadow: 0 4px 16px rgba(51, 51, 51, 0.2);
     }
     
     .welcome-section h1 {
@@ -389,7 +381,7 @@
     }
     
     .welcome-section select option {
-      background: var(--bp-primary);
+      background: var(--br-dark);
       color: #ffffff;
     }
     
@@ -434,7 +426,7 @@
     }
     
     .product-card {
-      background: var(--bp-mint);
+      background: var(--br-mint);
       border-radius: 16px;
       padding: 1.5rem;
       margin-bottom: 1rem;
@@ -444,12 +436,12 @@
       border-left: none;
     }
 
-    .product-card.product-card--accent {
-      background: var(--bp-accent-light);
+    .product-card.product-card--olive {
+      background: var(--br-olive);
     }
 
     .product-card.product-card--mint-light {
-      background: var(--bp-mint-light);
+      background: var(--br-mint-light);
     }
     
     .product-card:hover {
@@ -472,13 +464,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--bp-primary);
+      color: var(--br-dark);
       font-size: 1.5rem;
     }
 
-    .product-card.product-card--accent .product-icon,
+    .product-card.product-card--olive .product-icon,
     .product-card.product-card--mint-light .product-icon {
-      color: var(--bp-primary-dark);
+      color: var(--br-orange-dark);
     }
     
     .product-type {
@@ -541,13 +533,13 @@
       font-size: 1.1rem;
       width: 100%;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(1, 62, 124, 0.35);
+      box-shadow: 0 4px 12px rgba(255, 80, 0, 0.35);
     }
     
     .btn-atencion:hover {
-      background: var(--bp-primary-dark);
+      background: var(--br-orange-dark);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(1, 62, 124, 0.45);
+      box-shadow: 0 6px 20px rgba(255, 80, 0, 0.45);
     }
     
     .btn-atencion i {
@@ -577,8 +569,8 @@
     }
     
     .quick-action-btn:hover {
-      border-color: var(--numia-accent);
-      color: var(--numia-accent);
+      border-color: var(--br-orange);
+      color: var(--br-orange);
       background: var(--numia-azul-claro);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -834,7 +826,7 @@
     <!-- Header de la app móvil -->
     <div class="mobile-app-header">
       <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <img src="images/logo-popular.png" alt="Banco Popular Dominicano" class="header-logo">
+        <img src="images/logo-banregio.png" alt="Banregio" class="header-logo">
       </div>
       <div style="display: flex; gap: 1rem; align-items: center;">
         <i class="bi bi-bell" style="font-size: 1.2rem; opacity: 0.9;"></i>
@@ -1118,7 +1110,6 @@
           lastName: usuarioActual.apellido,
           dni: usuarioActual.dni,
           email: 'mail@mail.com',
-          phone: '12345678',
           extraFields: buildExtraFields(ultimoDetalleExtraFields || DETALLE_EXTRA_FIELDS_DEFAULT)
         };
       }
