@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hierro Matt S.A.C.I – Comercialización de Acero</title>
+  <meta name="description" content="Hierro Matt S.A.C.I. Comercialización de acero en Paraguay. Productos, servicios, sucursales y agendamiento de retiro o despacho de pedidos." />
+  <link rel="icon" type="image/png" href="images/logo-hierromatt.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --hm-red: #E30613;
+      --hm-red-dark: #B8050F;
+      --hm-red-light: #FDF0F0;
+      --hm-black: #1A1A1A;
+      --hm-gray: #555555;
+      --hm-muted: #888888;
+      --hm-bg: #F5F5F5;
+      --hm-border: #E0E0E0;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--hm-black);
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top bar */
+    .top-bar {
+      background: var(--hm-black);
+      color: rgba(255,255,255,.85);
+      font-size: 0.8rem;
+      padding: 0.4rem 0;
+    }
+    .top-bar a {
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+    }
+    .top-bar a:hover { color: #fff; }
+
+    /* Header */
+    .site-header {
+      background: #fff;
+      border-bottom: 1px solid var(--hm-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .site-header .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      gap: 1rem;
+    }
+    .brand img {
+      height: 48px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+    @media (max-width: 768px) {
+      .brand img { height: 38px; }
+    }
+    .main-nav {
+      display: none;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 28px;
+    }
+    @media (min-width: 992px) {
+      .main-nav { display: flex; align-items: center; }
+    }
+    .main-nav a {
+      color: var(--hm-black);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .main-nav a:hover { color: var(--hm-red); }
+    .btn-hm {
+      background: var(--hm-red);
+      color: #fff !important;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.25rem;
+      border: none;
+      border-radius: 0;
+      text-decoration: none;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-hm:hover { background: var(--hm-red-dark); color: #fff; }
+    .btn-hm-outline {
+      background: transparent;
+      color: var(--hm-red) !important;
+      border: 2px solid var(--hm-red);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.25rem;
+      border-radius: 0;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-hm-outline:hover {
+      background: var(--hm-red);
+      color: #fff !important;
+    }
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--hm-black);
+      padding: 0.25rem;
+    }
+    @media (min-width: 992px) {
+      .menu-toggle { display: none; }
+    }
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      padding: 1rem 0;
+      border-top: 1px solid var(--hm-border);
+      gap: 0.75rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      color: var(--hm-black);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.5rem 0;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
+        url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1400&q=80') center/cover no-repeat;
+      color: #fff;
+    }
+    @media (max-width: 768px) {
+      .hero { min-height: 320px; }
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      opacity: 0.92;
+      max-width: 540px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Section common */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--hm-muted);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.25rem;
+      color: var(--hm-black);
+    }
+    .section-block {
+      padding: 4rem 0;
+    }
+    .section-block.alt { background: var(--hm-bg); }
+
+    /* About */
+    .about-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--hm-gray);
+      max-width: 720px;
+    }
+
+    /* Services */
+    .service-card {
+      background: #fff;
+      border: 1px solid var(--hm-border);
+      padding: 2rem 1.5rem;
+      height: 100%;
+      transition: box-shadow 0.25s, border-color 0.25s;
+    }
+    .service-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+      border-color: var(--hm-red);
+    }
+    .service-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--hm-red);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .service-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .service-card p {
+      font-size: 0.9rem;
+      color: var(--hm-gray);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* Products */
+    .product-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--hm-bg);
+    }
+    .product-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .product-item:hover img { transform: scale(1.05); }
+    .product-item .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 40%, rgba(0,0,0,.75));
+      display: flex;
+      align-items: flex-end;
+      padding: 1.25rem;
+    }
+    .product-item h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+
+    /* Branches CTA */
+    .branches-cta {
+      background: var(--hm-black);
+      color: #fff;
+      padding: 3rem 0;
+      text-align: center;
+    }
+    .branches-cta .phone {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--hm-red);
+      margin-top: 0.5rem;
+    }
+
+    /* ===== APPOINTMENT WIZARD ===== */
+    #citas {
+      scroll-margin-top: 80px;
+    }
+    .wizard-card {
+      background: #fff;
+      border: 1px solid var(--hm-border);
+      box-shadow: 0 12px 40px rgba(0,0,0,.08);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .wizard-header {
+      background: var(--hm-black);
+      color: #fff;
+      padding: 1.5rem 2rem;
+    }
+    .wizard-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 0 0 0.25rem;
+    }
+    .wizard-header p {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin: 0;
+    }
+
+    /* Step indicator */
+    .step-indicator {
+      display: flex;
+      padding: 1.25rem 2rem;
+      background: var(--hm-bg);
+      border-bottom: 1px solid var(--hm-border);
+      gap: 0;
+    }
+    .step-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      text-align: center;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 60%;
+      width: 80%;
+      height: 2px;
+      background: var(--hm-border);
+      z-index: 0;
+    }
+    .step-item.done:not(:last-child)::after,
+    .step-item.active:not(:last-child)::after {
+      background: var(--hm-red);
+    }
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid var(--hm-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--hm-muted);
+      position: relative;
+      z-index: 1;
+      transition: all 0.25s;
+    }
+    .step-item.active .step-circle,
+    .step-item.done .step-circle {
+      background: var(--hm-red);
+      border-color: var(--hm-red);
+      color: #fff;
+    }
+    .step-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--hm-muted);
+      margin-top: 0.4rem;
+    }
+    .step-item.active .step-label { color: var(--hm-red); }
+
+    .wizard-body { padding: 2rem; }
+    .wizard-step { display: none; }
+    .wizard-step.active { display: block; }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--hm-black);
+      margin-bottom: 0.35rem;
+    }
+    .form-control, .form-select {
+      border-radius: 0;
+      border: 1px solid var(--hm-border);
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--hm-red);
+      box-shadow: 0 0 0 3px rgba(227,6,19,.12);
+    }
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--hm-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Date picker grid */
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .date-btn {
+      background: #fff;
+      border: 1px solid var(--hm-border);
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .date-btn:hover { border-color: var(--hm-red); background: var(--hm-red-light); }
+    .date-btn.selected {
+      background: var(--hm-red);
+      border-color: var(--hm-red);
+      color: #fff;
+    }
+    .date-btn .day-name {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
+    }
+    .date-btn .day-num {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .date-btn .month-name {
+      font-size: 0.65rem;
+      font-weight: 500;
+      opacity: 0.7;
+    }
+    .date-btn.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Time slots */
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.5rem;
+    }
+    .time-btn {
+      background: #fff;
+      border: 1px solid var(--hm-border);
+      padding: 0.6rem 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .time-btn:hover { border-color: var(--hm-red); background: var(--hm-red-light); }
+    .time-btn.selected {
+      background: var(--hm-red);
+      border-color: var(--hm-red);
+      color: #fff;
+    }
+    .time-btn.taken {
+      opacity: 0.35;
+      cursor: not-allowed;
+      text-decoration: line-through;
+      pointer-events: none;
+    }
+
+    .wizard-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-top: 1px solid var(--hm-border);
+      background: var(--hm-bg);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-wizard-back {
+      background: transparent;
+      border: 1px solid var(--hm-border);
+      color: var(--hm-gray);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.65rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-wizard-back:hover { border-color: var(--hm-black); color: var(--hm-black); }
+    .btn-wizard-next {
+      background: var(--hm-red);
+      border: none;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.65rem 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-wizard-next:hover { background: var(--hm-red-dark); }
+    .btn-wizard-next:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* Confirmation */
+    .confirm-box {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .confirm-icon {
+      width: 72px;
+      height: 72px;
+      background: #E8F5E9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 2rem;
+      color: #2E7D32;
+    }
+    .confirm-ref {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--hm-red);
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .summary-table {
+      text-align: left;
+      width: 100%;
+      margin-top: 1.5rem;
+      border: 1px solid var(--hm-border);
+    }
+    .summary-table tr:not(:last-child) { border-bottom: 1px solid var(--hm-border); }
+    .summary-table td {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+    .summary-table td:first-child {
+      font-weight: 600;
+      color: var(--hm-muted);
+      width: 40%;
+      background: var(--hm-bg);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--hm-black);
+      color: rgba(255,255,255,.75);
+      padding: 3rem 0 1.5rem;
+      font-size: 0.85rem;
+    }
+    .site-footer h5 {
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .site-footer a {
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+    }
+    .site-footer a:hover { color: var(--hm-red); }
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .social-links a {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .social-links a:hover {
+      background: var(--hm-red);
+      border-color: var(--hm-red);
+      color: #fff;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,.45);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <span><i class="bi bi-telephone-fill me-1"></i> Atención: <a href="tel:+595983300656">+595 983 300 656</a></span>
+      <span><i class="bi bi-whatsapp me-1"></i> WhatsApp disponible</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="inner">
+        <a href="#inicio" class="brand">
+          <img src="images/logo-hierromatt.png" alt="Hierro Matt S.A.C.I" />
+        </a>
+        <nav>
+          <ul class="main-nav">
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#nosotros">Nosotros</a></li>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#productos">Productos</a></li>
+            <li><a href="#sucursales">Sucursales</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+          </ul>
+        </nav>
+        <div class="d-flex align-items-center gap-2">
+          <a href="#citas" class="btn-hm d-none d-md-inline-flex">Agendar retiro</a>
+          <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+      </div>
+      <nav class="mobile-nav" id="mobileNav">
+        <a href="#inicio">Inicio</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#productos">Productos</a>
+        <a href="#sucursales">Sucursales</a>
+        <a href="#contacto">Contacto</a>
+        <a href="#citas" class="btn-hm text-center mt-2">Agendar retiro / despacho</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <h1>Comercialización de Acero</h1>
+      <p>Amplia gama de productos de acero con entrega en todo el territorio nacional. Infraestructura y logística para su proyecto.</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="#productos" class="btn-hm">Ver productos</a>
+        <a href="#citas" class="btn-hm-outline" style="color:#fff!important;border-color:#fff;">Agendar retiro o despacho</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nosotros -->
+  <section class="section-block" id="nosotros">
+    <div class="container">
+      <p class="section-label">¿Quiénes somos?</p>
+      <h2 class="section-title">Sobre Hierro Matt</h2>
+      <p class="about-text">
+        Ofrecemos una amplia gama de productos de diferentes medidas, espesores y terminaciones. Contamos con la infraestructura adecuada que garantiza la entrega en todo el territorio nacional.
+      </p>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="section-block alt" id="servicios">
+    <div class="container">
+      <p class="section-label">¿Qué hacemos?</p>
+      <h2 class="section-title">Nuestros servicios</h2>
+      <div class="row g-4 mt-2">
+        <div class="col-md-4">
+          <div class="service-card">
+            <div class="service-num">— 01</div>
+            <h3>Variedad</h3>
+            <p>Ofrecemos una amplia gama de productos de acero de medidas, formas y espesores diferentes.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="service-card">
+            <div class="service-num">— 02</div>
+            <h3>Alcance</h3>
+            <p>Contamos con una red de distribución que garantiza la entrega de nuestros productos en todo el territorio nacional.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="service-card">
+            <div class="service-num">— 03</div>
+            <h3>Infraestructura</h3>
+            <p>Contamos con una flota de más de 40 camiones para garantizar las entregas de los pedidos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Productos -->
+  <section class="section-block" id="productos">
+    <div class="container">
+      <p class="section-label">¿Qué vendemos?</p>
+      <h2 class="section-title">Productos</h2>
+      <p class="text-muted mb-4">Contamos con una gran variedad de productos.</p>
+      <div class="row g-3">
+        <div class="col-6 col-md-4">
+          <div class="product-item">
+            <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80" alt="Chapas" loading="lazy" />
+            <div class="overlay"><h4>Chapas</h4></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="product-item">
+            <img src="https://images.unsplash.com/photo-1581094794329-cd2a0832c4f2?w=600&q=80" alt="Caños" loading="lazy" />
+            <div class="overlay"><h4>Caños</h4></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="product-item">
+            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80" alt="Ángulos" loading="lazy" />
+            <div class="overlay"><h4>Ángulos</h4></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="product-item">
+            <img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=600&q=80" alt="Perfiles" loading="lazy" />
+            <div class="overlay"><h4>Perfiles</h4></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="product-item">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Planchuelas" loading="lazy" />
+            <div class="overlay"><h4>Planchuelas</h4></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="product-item">
+            <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&q=80" alt="Varillas" loading="lazy" />
+            <div class="overlay"><h4>Varillas</h4></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Citas / Agendamiento -->
+  <section class="section-block alt" id="citas">
+    <div class="container">
+      <p class="section-label">Empresas</p>
+      <h2 class="section-title">Agendar retiro o despacho</h2>
+      <p class="text-muted mb-4" style="max-width:600px;">
+        Complete los datos de su pedido y del conductor para reservar un turno de retiro o despacho en nuestras instalaciones.
+      </p>
+
+      <div class="wizard-card" id="wizardCard">
+        <div class="wizard-header">
+          <h2>Reserva de turno</h2>
+          <p>Retiro o despacho de pedidos — Planta central</p>
+        </div>
+
+        <div class="step-indicator" id="stepIndicator">
+          <div class="step-item active" data-step="1">
+            <div class="step-circle">1</div>
+            <span class="step-label">Datos</span>
+          </div>
+          <div class="step-item" data-step="2">
+            <div class="step-circle">2</div>
+            <span class="step-label">Fecha</span>
+          </div>
+          <div class="step-item" data-step="3">
+            <div class="step-circle">3</div>
+            <span class="step-label">Horario</span>
+          </div>
+          <div class="step-item" data-step="4">
+            <div class="step-circle">4</div>
+            <span class="step-label">Confirmación</span>
+          </div>
+        </div>
+
+        <div class="wizard-body">
+          <!-- Step 1: Form data -->
+          <div class="wizard-step active" id="step1">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="numOrden">Número de orden *</label>
+                <input type="text" class="form-control" id="numOrden" placeholder="Ej: HM-2026-004521" maxlength="30" />
+                <div class="form-hint">Número de pedido indicado en su factura o remito.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="dniConductor">DNI / CI del conductor *</label>
+                <input type="text" class="form-control" id="dniConductor" placeholder="Ej: 3.456.789" maxlength="20" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="celular">Celular *</label>
+                <input type="tel" class="form-control" id="celular" placeholder="Ej: 0981 123 456" maxlength="20" />
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="patente">Patente del vehículo *</label>
+                <input type="text" class="form-control" id="patente" placeholder="Ej: ABC 123" maxlength="12" style="text-transform:uppercase;" />
+                <div class="form-hint">Ingrese la chapa del camión o vehículo que retirará el pedido.</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="tipoOperacion">Tipo de operación *</label>
+                <select class="form-select" id="tipoOperacion">
+                  <option value="">Seleccione...</option>
+                  <option value="retiro">Retiro en planta</option>
+                  <option value="despacho">Despacho / carga</option>
+                </select>
+              </div>
+            </div>
+            <div id="step1Error" class="alert alert-danger mt-3 d-none" role="alert"></div>
+          </div>
+
+          <!-- Step 2: Date -->
+          <div class="wizard-step" id="step2">
+            <p class="mb-3" style="font-size:0.9rem;color:var(--hm-gray);">Seleccione el día para su turno. Horarios de lunes a viernes.</p>
+            <div class="date-grid" id="dateGrid"></div>
+            <div id="step2Error" class="alert alert-danger d-none" role="alert">Seleccione una fecha disponible.</div>
+          </div>
+
+          <!-- Step 3: Time -->
+          <div class="wizard-step" id="step3">
+            <p class="mb-1" style="font-size:0.9rem;color:var(--hm-gray);">
+              Fecha seleccionada: <strong id="selectedDateLabel">—</strong>
+            </p>
+            <p class="mb-3" style="font-size:0.85rem;color:var(--hm-muted);">Elija un horario disponible (cada turno dura 30 minutos).</p>
+            <div class="time-grid" id="timeGrid"></div>
+            <div id="step3Error" class="alert alert-danger mt-3 d-none" role="alert">Seleccione un horario disponible.</div>
+          </div>
+
+          <!-- Step 4: Confirmation -->
+          <div class="wizard-step" id="step4">
+            <div class="confirm-box" id="confirmPending">
+              <p style="font-size:0.9rem;color:var(--hm-gray);margin-bottom:1rem;">Revise los datos antes de confirmar su turno.</p>
+              <table class="summary-table">
+                <tr><td>Número de orden</td><td id="sumOrden">—</td></tr>
+                <tr><td>DNI conductor</td><td id="sumDni">—</td></tr>
+                <tr><td>Celular</td><td id="sumCelular">—</td></tr>
+                <tr><td>Patente</td><td id="sumPatente">—</td></tr>
+                <tr><td>Operación</td><td id="sumTipo">—</td></tr>
+                <tr><td>Fecha</td><td id="sumFecha">—</td></tr>
+                <tr><td>Horario</td><td id="sumHorario">—</td></tr>
+              </table>
+            </div>
+            <div class="confirm-box d-none" id="confirmDone">
+              <div class="confirm-icon"><i class="bi bi-check-lg"></i></div>
+              <h3 style="font-weight:800;text-transform:uppercase;font-size:1.1rem;">Turno confirmado</h3>
+              <p class="confirm-ref" id="confirmRef">HM-T-000000</p>
+              <p style="font-size:0.9rem;color:var(--hm-gray);">
+                Recibirá un SMS de confirmación al número indicado. Presente este código y su DNI al ingresar a planta.
+              </p>
+              <table class="summary-table mt-3">
+                <tr><td>Número de orden</td><td id="finalOrden">—</td></tr>
+                <tr><td>Fecha y hora</td><td id="finalFechaHora">—</td></tr>
+                <tr><td>Patente</td><td id="finalPatente">—</td></tr>
+              </table>
+              <button type="button" class="btn-hm mt-4" id="btnNuevaCita">Agendar otro turno</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-footer" id="wizardFooter">
+          <button type="button" class="btn-wizard-back d-none" id="btnBack">← Anterior</button>
+          <span></span>
+          <button type="button" class="btn-wizard-next" id="btnNext">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sucursales -->
+  <section class="branches-cta" id="sucursales">
+    <div class="container">
+      <p class="section-label" style="color:rgba(255,255,255,.5);">¿Dónde encontrarnos?</p>
+      <h2 class="section-title" style="color:#fff;">Sucursales</h2>
+      <p style="opacity:.85;max-width:520px;margin:0 auto 1rem;">
+        Contamos con una red de distribución HM para que vengas a comprar tus materiales.
+      </p>
+      <a href="#contacto" class="btn-hm-outline" style="color:#fff!important;border-color:#fff;margin-bottom:1.5rem;display:inline-block;">
+        Conocé nuestras sucursales
+      </a>
+      <p style="font-size:0.8rem;opacity:.6;text-transform:uppercase;letter-spacing:.08em;">O llamanos al</p>
+      <div class="phone"><a href="tel:+59521584857" style="color:var(--hm-red);text-decoration:none;">+595 21 584 857</a></div>
+    </div>
+  </section>
+
+  <!-- Contacto / Footer -->
+  <footer class="site-footer" id="contacto">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <img src="images/logo-hierromatt.png" alt="Hierro Matt" style="height:40px;background:#fff;padding:8px 12px;margin-bottom:1rem;display:inline-block;" />
+          <p>Comercialización de acero en Paraguay. Variedad, alcance e infraestructura para su proyecto.</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Contacto</h5>
+          <p class="mb-1"><i class="bi bi-telephone me-2"></i><a href="tel:+59521584857">+595 21 584 857</a></p>
+          <p class="mb-1"><i class="bi bi-phone me-2"></i><a href="tel:+595983300656">+595 983 300 656</a></p>
+          <p class="mb-0 mt-2" style="font-size:0.8rem;">Atención personalizada por WhatsApp y Facebook.</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Redes sociales</h5>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+          </div>
+          <p class="mt-3 mb-1" style="font-size:0.8rem;">Una empresa del grupo:</p>
+          <p class="mb-0">
+            <a href="https://hierromatt.com.py/" target="_blank" rel="noopener">hierromatt.com.py</a><br />
+            <a href="https://www.schussmuller.com.py/" target="_blank" rel="noopener">schussmuller.com.py</a>
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        2026 © Todos los derechos reservados. Hierro Matt S.A.C.I — Demo portal.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (function () {
+      /* Mobile menu */
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileNav = document.getElementById('mobileNav');
+      menuToggle.addEventListener('click', () => mobileNav.classList.toggle('open'));
+      mobileNav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => mobileNav.classList.remove('open'));
+      });
+
+      /* Wizard state */
+      let currentStep = 1;
+      const totalSteps = 4;
+      const formData = {
+        numOrden: '',
+        dniConductor: '',
+        celular: '',
+        patente: '',
+        tipoOperacion: '',
+        fecha: null,
+        horario: null
+      };
+
+      const HOURS = ['07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'];
+      const DAYS_ES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+      /* Simulate some taken slots */
+      function getTakenSlots(dateStr) {
+        const seed = dateStr.split('-').reduce((a, b) => a + parseInt(b, 10), 0);
+        const taken = [];
+        for (let i = 0; i < 3; i++) {
+          taken.push(HOURS[(seed + i * 3) % HOURS.length]);
+        }
+        return taken;
+      }
+
+      function getAvailableDates() {
+        const dates = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let added = 0;
+        let d = new Date(today);
+        d.setDate(d.getDate() + 1);
+        while (added < 14) {
+          const day = d.getDay();
+          if (day !== 0 && day !== 6) {
+            dates.push(new Date(d));
+            added++;
+          }
+          d.setDate(d.getDate() + 1);
+        }
+        return dates;
+      }
+
+      function formatDateISO(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function formatDateLong(date) {
+        return `${DAYS_ES[date.getDay()]} ${date.getDate()} de ${MONTHS_ES[date.getMonth()]} ${date.getFullYear()}`;
+      }
+
+      function updateStepIndicator() {
+        document.querySelectorAll('.step-item').forEach(item => {
+          const step = parseInt(item.dataset.step, 10);
+          item.classList.remove('active', 'done');
+          if (step < currentStep) item.classList.add('done');
+          if (step === currentStep) item.classList.add('active');
+        });
+      }
+
+      function showStep(step) {
+        currentStep = step;
+        document.querySelectorAll('.wizard-step').forEach((el, i) => {
+          el.classList.toggle('active', i + 1 === step);
+        });
+        updateStepIndicator();
+
+        const btnBack = document.getElementById('btnBack');
+        const btnNext = document.getElementById('btnNext');
+        const footer = document.getElementById('wizardFooter');
+
+        btnBack.classList.toggle('d-none', step === 1 || step === 4 && document.getElementById('confirmDone').classList.contains('d-none') === false);
+
+        if (step === 4) {
+          if (document.getElementById('confirmDone').classList.contains('d-none')) {
+            btnNext.textContent = 'Confirmar turno';
+          } else {
+            footer.classList.add('d-none');
+          }
+        } else {
+          footer.classList.remove('d-none');
+          btnNext.textContent = step === 3 ? 'Revisar →' : 'Siguiente →';
+        }
+
+        if (step === 2) renderDates();
+        if (step === 3) renderTimes();
+        if (step === 4 && document.getElementById('confirmPending').classList.contains('d-none') === false) fillSummary();
+      }
+
+      function renderDates() {
+        const grid = document.getElementById('dateGrid');
+        grid.innerHTML = '';
+        getAvailableDates().forEach(date => {
+          const iso = formatDateISO(date);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'date-btn' + (formData.fecha === iso ? ' selected' : '');
+          btn.innerHTML = `
+            <div class="day-name">${DAYS_ES[date.getDay()]}</div>
+            <div class="day-num">${date.getDate()}</div>
+            <div class="month-name">${MONTHS_ES[date.getMonth()]}</div>
+          `;
+          btn.addEventListener('click', () => {
+            formData.fecha = iso;
+            formData.horario = null;
+            grid.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('step2Error').classList.add('d-none');
+          });
+          grid.appendChild(btn);
+        });
+      }
+
+      function renderTimes() {
+        const grid = document.getElementById('timeGrid');
+        const label = document.getElementById('selectedDateLabel');
+        const dateObj = formData.fecha ? new Date(formData.fecha + 'T12:00:00') : null;
+        label.textContent = dateObj ? formatDateLong(dateObj) : '—';
+
+        grid.innerHTML = '';
+        if (!formData.fecha) return;
+
+        const taken = getTakenSlots(formData.fecha);
+        HOURS.forEach(hour => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          const isTaken = taken.includes(hour);
+          btn.className = 'time-btn' +
+            (isTaken ? ' taken' : '') +
+            (formData.horario === hour ? ' selected' : '');
+          btn.textContent = hour;
+          if (!isTaken) {
+            btn.addEventListener('click', () => {
+              formData.horario = hour;
+              grid.querySelectorAll('.time-btn:not(.taken)').forEach(b => b.classList.remove('selected'));
+              btn.classList.add('selected');
+              document.getElementById('step3Error').classList.add('d-none');
+            });
+          }
+          grid.appendChild(btn);
+        });
+      }
+
+      function validateStep1() {
+        const numOrden = document.getElementById('numOrden').value.trim();
+        const dni = document.getElementById('dniConductor').value.trim();
+        const celular = document.getElementById('celular').value.trim();
+        const patente = document.getElementById('patente').value.trim().toUpperCase();
+        const tipo = document.getElementById('tipoOperacion').value;
+        const err = document.getElementById('step1Error');
+
+        if (!numOrden || !dni || !celular || !patente || !tipo) {
+          err.textContent = 'Complete todos los campos obligatorios.';
+          err.classList.remove('d-none');
+          return false;
+        }
+        if (celular.replace(/\D/g, '').length < 8) {
+          err.textContent = 'Ingrese un número de celular válido.';
+          err.classList.remove('d-none');
+          return false;
+        }
+        err.classList.add('d-none');
+        formData.numOrden = numOrden;
+        formData.dniConductor = dni;
+        formData.celular = celular;
+        formData.patente = patente;
+        formData.tipoOperacion = tipo;
+        return true;
+      }
+
+      function fillSummary() {
+        const dateObj = formData.fecha ? new Date(formData.fecha + 'T12:00:00') : null;
+        const tipoLabel = formData.tipoOperacion === 'retiro' ? 'Retiro en planta' : 'Despacho / carga';
+        document.getElementById('sumOrden').textContent = formData.numOrden;
+        document.getElementById('sumDni').textContent = formData.dniConductor;
+        document.getElementById('sumCelular').textContent = formData.celular;
+        document.getElementById('sumPatente').textContent = formData.patente;
+        document.getElementById('sumTipo').textContent = tipoLabel;
+        document.getElementById('sumFecha').textContent = dateObj ? formatDateLong(dateObj) : '—';
+        document.getElementById('sumHorario').textContent = formData.horario || '—';
+      }
+
+      function confirmAppointment() {
+        const ref = 'HM-T-' + String(Math.floor(100000 + Math.random() * 900000));
+        const dateObj = new Date(formData.fecha + 'T12:00:00');
+        document.getElementById('confirmRef').textContent = ref;
+        document.getElementById('finalOrden').textContent = formData.numOrden;
+        document.getElementById('finalFechaHora').textContent = formatDateLong(dateObj) + ' — ' + formData.horario;
+        document.getElementById('finalPatente').textContent = formData.patente;
+        document.getElementById('confirmPending').classList.add('d-none');
+        document.getElementById('confirmDone').classList.remove('d-none');
+        document.getElementById('wizardFooter').classList.add('d-none');
+      }
+
+      function resetWizard() {
+        formData.numOrden = '';
+        formData.dniConductor = '';
+        formData.celular = '';
+        formData.patente = '';
+        formData.tipoOperacion = '';
+        formData.fecha = null;
+        formData.horario = null;
+        document.getElementById('numOrden').value = '';
+        document.getElementById('dniConductor').value = '';
+        document.getElementById('celular').value = '';
+        document.getElementById('patente').value = '';
+        document.getElementById('tipoOperacion').value = '';
+        document.getElementById('confirmPending').classList.remove('d-none');
+        document.getElementById('confirmDone').classList.add('d-none');
+        document.getElementById('wizardFooter').classList.remove('d-none');
+        showStep(1);
+      }
+
+      document.getElementById('btnNext').addEventListener('click', () => {
+        if (currentStep === 1) {
+          if (!validateStep1()) return;
+          showStep(2);
+        } else if (currentStep === 2) {
+          if (!formData.fecha) {
+            document.getElementById('step2Error').classList.remove('d-none');
+            return;
+          }
+          showStep(3);
+        } else if (currentStep === 3) {
+          if (!formData.horario) {
+            document.getElementById('step3Error').classList.remove('d-none');
+            return;
+          }
+          fillSummary();
+          showStep(4);
+        } else if (currentStep === 4) {
+          confirmAppointment();
+        }
+      });
+
+      document.getElementById('btnBack').addEventListener('click', () => {
+        if (currentStep > 1) showStep(currentStep - 1);
+      });
+
+      document.getElementById('btnNuevaCita').addEventListener('click', resetWizard);
+
+      document.getElementById('patente').addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+      });
+    })();
+  </script>
+</body>
+</html>
