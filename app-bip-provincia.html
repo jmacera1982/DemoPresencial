@@ -1,0 +1,3588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BIP — Banco Provincia (demo)</title>
+  <link rel="icon" type="image/png" href="images/logo-banco-provincia.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bdb-navy: #00853F;
+      --bdb-navy-mid: #006B32;
+      --bdb-link: #00853F;
+      --bdb-bg: #f2f5f3;
+      --bdb-card: #ffffff;
+      --bdb-text: #1a1a1a;
+      --bdb-muted: #6b7280;
+      --bdb-border: #dde8e0;
+      --bdb-orange-bg: #fff8e8;
+      --bdb-orange-icon: #c2410c;
+      --bdb-green: #00853F;
+      --bdb-green-pill: #7BC143;
+      --bdb-lime: #7BC143;
+      --bdb-royal: #006B32;
+      --bdb-royal-dark: #004d25;
+      --bip-green: #00853F;
+      --bip-green-dark: #006B32;
+      --bip-green-bright: #33A853;
+      --bip-card-green: #a8d5a2;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+      background: var(--bdb-bg);
+      color: var(--bdb-text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .mobile-app-container {
+      max-width: 414px;
+      width: 100%;
+      background: #f5f7fa;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      position: relative;
+      height: calc(100vh - 3rem);
+      max-height: 820px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-app-content {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      position: relative;
+    }
+
+    .mobile-app-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .mobile-app-content::-webkit-scrollbar-thumb {
+      background: #c4c4c4;
+      border-radius: 3px;
+    }
+
+    .bdb-hero {
+      background: var(--bdb-navy);
+      padding: 1rem 1.25rem 1.5rem;
+      color: #fff;
+    }
+
+    .bdb-kicker {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 0.5rem;
+    }
+
+    .bdb-hero h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .bdb-portfolio-wrap {
+      margin-top: 0.25rem;
+    }
+
+    .bdb-portfolio-card {
+      background: linear-gradient(145deg, var(--bdb-navy-mid) 0%, #001f45 100%);
+      border-radius: 14px;
+      padding: 1.1rem 1.15rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .bdb-portfolio-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .bdb-portfolio-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .bdb-portfolio-balance {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 0.2rem;
+    }
+
+    .bdb-portfolio-meta {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 0.35rem;
+    }
+
+    .bdb-portfolio-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .bdb-portfolio-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .bdb-portfolio-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .bdb-dots {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      margin-top: 0.75rem;
+    }
+
+    .bdb-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .bdb-dots span.active {
+      background: #fff;
+      width: 18px;
+      border-radius: 4px;
+    }
+
+    .bdb-link-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .bdb-link-row:hover {
+      text-decoration: underline;
+    }
+
+    .bdb-white-section {
+      background: var(--bdb-bg);
+      border-radius: 18px 18px 0 0;
+      margin-top: -12px;
+      position: relative;
+      padding: 1.25rem 1rem 1.5rem;
+      flex: 1;
+    }
+
+    .bdb-intro {
+      font-size: 0.85rem;
+      color: var(--bdb-muted);
+      line-height: 1.45;
+      margin-bottom: 1rem;
+      padding: 0 0.25rem;
+    }
+
+    .bdb-alert {
+      background: var(--bdb-orange-bg);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(194, 65, 12, 0.15);
+    }
+
+    .bdb-alert i {
+      color: var(--bdb-orange-icon);
+      font-size: 1.15rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .bdb-alert strong {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+      color: #7c2d12;
+    }
+
+    .bdb-alert p {
+      font-size: 0.75rem;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    .bdb-section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bdb-muted);
+      margin: 0 0.25rem 0.65rem;
+    }
+
+    .bdb-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .bdb-menu-item {
+      background: var(--bdb-card);
+      border-radius: 12px;
+      padding: 1rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      border: 1px solid var(--bdb-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .bdb-menu-item:hover {
+      border-color: rgba(0, 114, 206, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 42, 92, 0.08);
+    }
+
+    .bdb-menu-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bdb-navy);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .bdb-menu-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bdb-menu-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--bdb-text);
+      margin-bottom: 0.2rem;
+    }
+
+    .bdb-menu-text span {
+      font-size: 0.78rem;
+      color: var(--bdb-muted);
+      line-height: 1.35;
+    }
+
+    .bdb-menu-item .chev {
+      color: var(--bdb-link);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .bdb-pill {
+      display: inline-block;
+      background: var(--bdb-green-pill);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      margin-left: 0.35rem;
+      vertical-align: middle;
+    }
+
+    .bdb-footer-note {
+      margin-top: 1.25rem;
+      padding: 0 0.35rem;
+      font-size: 0.72rem;
+      color: var(--bdb-muted);
+      line-height: 1.5;
+    }
+
+    .bdb-footer-note a {
+      color: var(--bdb-link);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .bdb-footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    /* Pantalla detalle */
+    .bdb-screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100%;
+      background: var(--bdb-bg);
+      position: relative;
+    }
+
+    .bdb-screen.active {
+      display: flex;
+    }
+
+    .bdb-detail-header {
+      background: var(--bdb-navy);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .bdb-back {
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bdb-back:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .bdb-detail-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      flex: 1;
+      line-height: 1.25;
+    }
+
+    .bdb-detail-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      padding-bottom: 2rem;
+      min-height: 0;
+    }
+
+    #screen-detail {
+      position: relative;
+    }
+
+    #screen-detail .bdb-detail-scroll {
+      padding-bottom: 4rem;
+    }
+
+    .bdb-fab-wrap {
+      position: absolute;
+      right: 0.65rem;
+      bottom: calc(0.65rem + env(safe-area-inset-bottom, 0px));
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .bdb-fab-atencion {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      max-width: min(240px, calc(100% - 1.5rem));
+      padding: 0.62rem 0.95rem;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--bip-green) 0%, var(--bip-green-dark) 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(0, 82, 163, 0.45);
+    }
+
+    .bdb-fab-atencion:hover {
+      filter: brightness(1.07);
+      box-shadow: 0 10px 32px rgba(0, 82, 163, 0.5);
+    }
+
+    .bdb-fab-atencion i {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .bdb-fab-atencion span {
+      hyphens: auto;
+    }
+
+    .bdb-intro-compact {
+      font-size: 0.8rem;
+      color: var(--bdb-muted);
+      margin-bottom: 0.75rem;
+      padding: 0 0.2rem;
+      line-height: 1.4;
+    }
+
+    .bloque-asesoria {
+      scroll-margin-bottom: 6rem;
+    }
+
+    details.bdb-accordion {
+      margin-bottom: 0.85rem;
+      background: var(--bdb-card);
+      border-radius: 12px;
+      border: 1px solid var(--bdb-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+    }
+
+    details.bdb-accordion > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1rem 1.1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--bdb-navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      user-select: none;
+    }
+
+    details.bdb-accordion > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.bdb-accordion > summary::after {
+      content: '';
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 2px solid var(--bdb-link);
+      border-bottom: 2px solid var(--bdb-link);
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      margin-top: -0.2rem;
+    }
+
+    details.bdb-accordion[open] > summary::after {
+      transform: rotate(-135deg);
+      margin-top: 0.15rem;
+    }
+
+    details.bdb-accordion > summary.bdb-acc-question {
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    details.bdb-accordion .bdb-accordion-body {
+      padding: 0 1.1rem 1.1rem;
+      border-top: 1px solid var(--bdb-border);
+    }
+
+    details.bdb-accordion .bdb-accordion-body p:first-child {
+      margin-top: 0.75rem;
+    }
+
+    .bdb-detail-card {
+      background: var(--bdb-card);
+      border-radius: 12px;
+      padding: 1.1rem;
+      border: 1px solid var(--bdb-border);
+      margin-bottom: 0.85rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .bdb-detail-card p {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: #374151;
+      margin-bottom: 0.65rem;
+    }
+
+    .bdb-detail-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bdb-detail-card h3 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--bdb-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .bdb-detail-rows {
+      margin-top: 0.5rem;
+    }
+
+    .bdb-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--bdb-border);
+      font-size: 0.8rem;
+    }
+
+    .bdb-row:last-child {
+      border-bottom: none;
+    }
+
+    .bdb-row span:first-child {
+      color: var(--bdb-muted);
+    }
+
+    .bdb-row span:last-child {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .bdb-list-dots {
+      margin: 0.5rem 0 0;
+      padding-left: 1.1rem;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: #374151;
+    }
+
+    .bdb-list-dots li {
+      margin-bottom: 0.35rem;
+    }
+
+    .bdb-cta-box {
+      background: linear-gradient(135deg, var(--bdb-navy-mid), var(--bdb-navy));
+      color: #fff;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .bdb-cta-box h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+      margin-bottom: 0.35rem;
+    }
+
+    .bdb-cta-box p {
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.92);
+      margin: 0;
+    }
+
+    .bdb-diagonal {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 45%;
+      height: 35%;
+      background: var(--bdb-navy);
+      clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Vista CDT (referencia landing personas/cdt) */
+    .bdc-cdt-hero {
+      text-align: center;
+      padding: 0.25rem 0 0.75rem;
+    }
+
+    .bdc-pill-digital {
+      display: inline-block;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bdb-link);
+      border: 1px solid rgba(0, 114, 206, 0.35);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.65rem;
+    }
+
+    .bdc-cdt-hero h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--bdb-navy);
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+    }
+
+    .bdc-cdt-hero .bdc-lead {
+      font-size: 0.85rem;
+      color: #374151;
+      line-height: 1.45;
+      margin-bottom: 0.5rem;
+    }
+
+    .bdc-rate-note {
+      font-size: 0.68rem;
+      color: var(--bdb-muted);
+      line-height: 1.4;
+      margin-top: 0.35rem;
+    }
+
+    .bdc-chips {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.85rem 0 0;
+    }
+
+    .bdc-chip {
+      flex: 1;
+      background: #f0f4f8;
+      border-radius: 12px;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+      border: 1px solid var(--bdb-border);
+    }
+
+    .bdc-chip small {
+      display: block;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--bdb-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .bdc-chip strong {
+      font-size: 0.95rem;
+      color: var(--bdb-navy);
+    }
+
+    .bdc-ben-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .bdc-ben-item {
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+      padding: 0.75rem;
+      background: #fafafa;
+      border-radius: 10px;
+      border: 1px solid var(--bdb-border);
+    }
+
+    .bdc-ben-item i {
+      color: var(--bdb-link);
+      font-size: 1.15rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .bdc-ben-item strong {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--bdb-text);
+      margin-bottom: 0.15rem;
+    }
+
+    .bdc-ben-item span {
+      font-size: 0.74rem;
+      color: #4b5563;
+      line-height: 1.4;
+    }
+
+    .bdc-step {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+      align-items: flex-start;
+    }
+
+    .bdc-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .bdc-step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bdb-navy);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bdc-step-body strong {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--bdb-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .bdc-step-body p {
+      font-size: 0.8rem;
+      color: #374151;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .bdc-btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .bdc-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      border: none;
+      background: var(--bdb-link);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .bdc-btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .bdc-btn-outline {
+      background: #fff;
+      color: var(--bdb-navy);
+      border: 2px solid var(--bdb-navy);
+    }
+
+    .bdc-form-wrap {
+      margin-top: 0.25rem;
+    }
+
+    .bdc-form-wrap label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--bdb-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .bdc-input {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--bdb-border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .bdc-input:focus {
+      outline: none;
+      border-color: var(--bdb-link);
+      box-shadow: 0 0 0 2px rgba(0, 114, 206, 0.15);
+    }
+
+    .bdc-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: #4b5563;
+      line-height: 1.4;
+      margin: 0.35rem 0 0.75rem;
+    }
+
+    .bdc-check input {
+      margin-top: 3px;
+    }
+
+    .bdc-check a {
+      color: var(--bdb-link);
+      font-weight: 600;
+    }
+
+    .bdc-form-msg {
+      display: none;
+      font-size: 0.8rem;
+      padding: 0.65rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .bdc-form-msg.ok {
+      display: block;
+      background: #ecfdf5;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .bdc-btn-primary.bdc-btn-outline {
+      background: #fff !important;
+      color: var(--bdb-navy) !important;
+      border: 2px solid var(--bdb-navy) !important;
+    }
+
+    /* —— Home bancaria (mockup app personas) —— */
+    .bdb-screen-home {
+      flex-direction: column;
+      min-height: 100%;
+      background: var(--bdb-bg);
+      position: relative;
+    }
+
+    .bdb-screen-home.active {
+      display: flex;
+    }
+
+    .home-header {
+      background: var(--bip-green);
+      color: #fff;
+      padding: 0.85rem 1rem 1.1rem;
+      border-radius: 0;
+      flex-shrink: 0;
+    }
+
+    .home-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .home-brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .home-cliente {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0.35rem 0 0.5rem;
+    }
+
+    .home-btn-gerente {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.35rem 0.75rem;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      background: transparent;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .home-header-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.65rem;
+    }
+
+    .home-header-actions button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      font-family: inherit;
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 0;
+    }
+
+    .home-header-actions button i {
+      font-size: 1.35rem;
+    }
+
+    .home-banner-gerente {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      position: relative;
+    }
+
+    .home-banner-close {
+      position: absolute;
+      top: 0.55rem;
+      right: 0.55rem;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.2rem;
+    }
+
+    .home-banner-title {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      padding-right: 1.25rem;
+    }
+
+    .home-banner-title i {
+      color: #5eb8ff;
+      font-size: 1rem;
+    }
+
+    .home-banner-text {
+      font-size: 0.72rem;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 0.75rem;
+    }
+
+    .home-btn-continuar {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.45rem 1rem;
+      border: none;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--bdb-link);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .home-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1rem 5.5rem;
+      min-height: 0;
+    }
+
+    .home-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+    }
+
+    .home-section-head h2,
+    .home-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--bdb-text);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .home-badge-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 0.35rem;
+      border-radius: 999px;
+      background: var(--bdb-lime);
+      color: var(--bdb-navy);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .home-link-ver {
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--bdb-link);
+      cursor: pointer;
+    }
+
+    .home-accounts-scroll {
+      display: flex;
+      gap: 0.65rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      margin-bottom: 1rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .home-accounts-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .home-account-card {
+      flex: 0 0 88%;
+      scroll-snap-align: start;
+      background: #fff;
+      border: 1px solid var(--bdb-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(11, 33, 49, 0.06);
+    }
+
+    .home-account-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.85rem 0.9rem 0.5rem;
+    }
+
+    .home-account-card-head strong {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--bdb-text);
+      line-height: 1.3;
+      max-width: 85%;
+    }
+
+    .home-account-card-body {
+      padding: 0 0.9rem 0.85rem;
+    }
+
+    .home-account-card-body small {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--bdb-muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .home-account-balance {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--bdb-text);
+      letter-spacing: -0.02em;
+    }
+
+    .home-account-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0.9rem;
+      background: #f5ebe0;
+      font-size: 0.68rem;
+    }
+
+    .home-account-footer a {
+      color: var(--bdb-link);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .home-promo-breb {
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      background: linear-gradient(105deg, #0b2131 0%, #1a6bb5 55%, #5eb8ff 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .home-promo-breb p {
+      font-size: 0.78rem;
+      line-height: 1.35;
+      max-width: 72%;
+      margin-bottom: 0.35rem;
+    }
+
+    .home-promo-breb .home-promo-amount {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--bdb-lime);
+      line-height: 1.1;
+    }
+
+    .home-promo-keys {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .home-promo-key-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--bdb-lime);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bdb-navy);
+      font-size: 1.1rem;
+    }
+
+    .home-promo-cta {
+      display: inline-block;
+      margin-top: 0.65rem;
+      padding: 0.4rem 0.75rem;
+      background: var(--bdb-lime);
+      color: var(--bdb-navy);
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .home-cdt-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--bdb-border);
+      border-radius: 16px;
+      background: linear-gradient(135deg, #fff 0%, #f4f8fc 100%);
+      box-shadow: 0 4px 14px rgba(11, 33, 49, 0.08);
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .home-cdt-card:hover {
+      border-color: rgba(0, 114, 206, 0.35);
+      box-shadow: 0 6px 18px rgba(11, 33, 49, 0.12);
+    }
+
+    .home-cdt-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--bdb-navy);
+      color: var(--bdb-lime);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .home-cdt-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .home-cdt-text strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--bdb-text);
+      margin-bottom: 0.2rem;
+    }
+
+    .home-cdt-text span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--bdb-muted);
+      line-height: 1.35;
+    }
+
+    .home-cdt-badge {
+      display: inline-block;
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--bdb-lime);
+      color: var(--bdb-navy);
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      margin-bottom: 0.35rem;
+    }
+
+    .home-cdt-card > .bi-chevron-right {
+      color: var(--bdb-link);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* —— Detalle CDT (estética app nueva) —— */
+    .bdb-screen-cdt {
+      flex-direction: column;
+      min-height: 100%;
+      background: var(--bdb-bg);
+    }
+
+    .bdb-screen-cdt.active {
+      display: flex;
+    }
+
+    .cdt-header {
+      background: var(--bdb-navy);
+      color: #fff;
+      padding: 0.75rem 1rem 1.35rem;
+      border-radius: 0 0 24px 24px;
+      flex-shrink: 0;
+    }
+
+    .cdt-header-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .cdt-header-bar button {
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .cdt-kicker {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 0.25rem;
+    }
+
+    .cdt-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .cdt-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.15rem 1rem 1.5rem;
+      min-height: 0;
+    }
+
+    .cdt-rate-card {
+      background: linear-gradient(105deg, var(--bip-green) 0%, var(--bip-green-dark) 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 1.1rem 1.15rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .cdt-rate-card small {
+      display: block;
+      font-size: 0.68rem;
+      opacity: 0.85;
+      margin-bottom: 0.35rem;
+    }
+
+    .cdt-rate-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--bdb-lime);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .cdt-rate-card p {
+      font-size: 0.72rem;
+      opacity: 0.9;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .cdt-chips {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cdt-chip {
+      flex: 1;
+      background: #fff;
+      border: 1px solid var(--bdb-border);
+      border-radius: 12px;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+    }
+
+    .cdt-chip small {
+      display: block;
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--bdb-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .cdt-chip strong {
+      font-size: 0.82rem;
+      color: var(--bdb-text);
+    }
+
+    .cdt-info-card {
+      background: #fff;
+      border: 1px solid var(--bdb-border);
+      border-radius: 14px;
+      padding: 1rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .cdt-info-card h3 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bdb-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .cdt-info-card p {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: #374151;
+      margin: 0;
+    }
+
+    .cdt-list {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .cdt-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .cdt-btn-videollamada {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.85rem 1rem;
+      border: none;
+      border-radius: 14px;
+      background: var(--bdb-navy);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(11, 33, 49, 0.25);
+    }
+
+    .cdt-btn-videollamada i {
+      font-size: 1.15rem;
+    }
+
+    .cdt-btn-videollamada:hover {
+      filter: brightness(1.08);
+    }
+
+    .cdt-link-oficial {
+      display: block;
+      text-align: center;
+      margin-top: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--bdb-link);
+      text-decoration: none;
+    }
+
+    .home-bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid var(--bdb-border);
+      border-radius: 0;
+      padding: 0.5rem 1.5rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 10;
+    }
+
+    .home-bottom-nav button {
+      background: transparent;
+      border: none;
+      color: var(--bdb-muted);
+      font-family: inherit;
+      font-size: 0.58rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+      padding: 0.2rem 0.35rem;
+    }
+
+    .home-bottom-nav button.active {
+      color: var(--bip-green);
+    }
+
+    .home-bottom-nav button i {
+      font-size: 1.25rem;
+    }
+
+    .bip-fab-center {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bip-green);
+      border: 4px solid #fff;
+      box-shadow: 0 4px 16px rgba(0, 133, 63, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: -28px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .bip-fab-center img {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* BIP home */
+    .bip-header {
+      background: var(--bip-green);
+      padding: 0.85rem 1rem 1rem;
+      border-radius: 0;
+    }
+
+    .bip-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bip-header-top img,
+    .bip-header-logo-wrap img {
+      height: 32px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .bip-header-logo-wrap {
+      background: #fff;
+      padding: 7px 14px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Popup publicitario → videollamada */
+    .bip-promo-popup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .bip-promo-popup.active {
+      display: flex;
+    }
+
+    .bip-promo-popup-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .bip-promo-popup-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 340px;
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      animation: bipPopupIn 0.35s ease-out;
+    }
+
+    @keyframes bipPopupIn {
+      from { opacity: 0; transform: scale(0.92) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .bip-promo-popup-hero {
+      background: linear-gradient(135deg, var(--bip-green) 0%, #00a3c4 100%);
+      padding: 1.5rem 1.25rem 1.25rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .bip-promo-popup-close {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bip-promo-popup-hero .bip-promo-popup-logo {
+      display: inline-flex;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      margin-bottom: 0.85rem;
+    }
+
+    .bip-promo-popup-hero .bip-promo-popup-logo img {
+      height: 28px;
+      width: auto;
+      filter: none;
+      margin: 0;
+    }
+
+    .bip-promo-popup-hero h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 0.35rem;
+    }
+
+    .bip-promo-popup-hero p {
+      font-size: 0.78rem;
+      opacity: 0.92;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .bip-promo-popup-body {
+      padding: 1.15rem 1.25rem 1.35rem;
+    }
+
+    .bip-promo-popup-badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: var(--bip-green);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.65rem;
+    }
+
+    .bip-promo-popup-highlight {
+      background: linear-gradient(135deg, #f0faf0 0%, #e0f7fa 100%);
+      border: 1px solid #c8e6c9;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .bip-promo-popup-highlight strong {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--bip-green);
+      line-height: 1.2;
+    }
+
+    .bip-promo-popup-highlight span {
+      font-size: 0.72rem;
+      color: var(--bdb-muted);
+    }
+
+    .bip-promo-popup-features {
+      list-style: none;
+      margin: 0 0 1rem;
+      padding: 0;
+    }
+
+    .bip-promo-popup-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: #374151;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+
+    .bip-promo-popup-features li i {
+      color: var(--bip-green);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .bip-promo-popup-cta {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: none;
+      border-radius: 12px;
+      background: var(--bip-green);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-bottom: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .bip-promo-popup-cta:hover {
+      background: var(--bip-green-dark);
+    }
+
+    .bip-promo-popup-dismiss {
+      width: 100%;
+      padding: 0.55rem;
+      border: none;
+      background: transparent;
+      color: var(--bdb-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .bip-promo-loan {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .bip-promo-loan:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 133, 63, 0.2);
+    }
+
+    .bip-header-profile {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    .home-account-card {
+      flex: 0 0 88%;
+      scroll-snap-align: start;
+      background: #fff;
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    .home-account-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 8px;
+      height: 100%;
+      background: var(--bip-green);
+    }
+
+    .home-account-card-head {
+      padding: 0.85rem 1rem 0.35rem;
+    }
+
+    .home-account-card-head strong {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--bdb-muted);
+    }
+
+    .home-account-balance {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .home-account-actions {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0 1rem 0.85rem;
+    }
+
+    .home-account-actions button {
+      background: none;
+      border: none;
+      color: var(--bip-green);
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.2rem;
+    }
+
+    .home-account-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0 1rem 0.75rem;
+    }
+
+    .home-account-nav button {
+      background: none;
+      border: none;
+      color: var(--bip-green);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .home-account-footer {
+      background: transparent;
+      padding: 0 1rem 0.85rem;
+      font-size: 0.72rem;
+    }
+
+    .home-account-footer a {
+      color: var(--bip-green);
+      font-weight: 600;
+    }
+
+    .bip-quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .bip-quick-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .bip-quick-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: var(--bip-green);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+    }
+
+    .bip-quick-btn span {
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--bdb-text);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .bip-cards-scroll {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .bip-cards-scroll::-webkit-scrollbar { display: none; }
+
+    .bip-card-item {
+      flex: 0 0 78%;
+      scroll-snap-align: center;
+      height: 110px;
+      border-radius: 14px;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .bip-card-item.visa {
+      background: linear-gradient(135deg, #7bc576 0%, #5aab55 100%);
+    }
+
+    .bip-card-item.master {
+      background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+
+    .bip-card-brand {
+      font-size: 1.1rem;
+      font-weight: 800;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .bip-card-number {
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      opacity: 0.9;
+    }
+
+    .bip-promo-loan {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      position: relative;
+      min-height: 72px;
+    }
+
+    .bip-promo-loan-text {
+      flex: 1;
+      background: #3d3d3d;
+      color: #fff;
+      padding: 0.75rem 0.85rem;
+      font-size: 0.68rem;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+    }
+
+    .bip-promo-loan-amount {
+      background: var(--bip-green-bright);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      line-height: 1.25;
+      min-width: 38%;
+    }
+
+    .bip-promo-close {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.35rem;
+      background: rgba(0,0,0,0.3);
+      border: none;
+      color: #fff;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1rem 5.75rem;
+      min-height: 0;
+      background: var(--bdb-bg);
+    }
+
+    .bip-screen-home .home-header {
+      background: var(--bip-green);
+      padding: 0;
+      border-radius: 0;
+    }
+
+    /* —— Centro de Ayuda —— */
+    .bdb-screen-ayuda {
+      flex-direction: column;
+      min-height: 100%;
+      background: var(--bdb-bg);
+    }
+
+    .bdb-screen-ayuda.active {
+      display: flex;
+    }
+
+    .ayuda-header {
+      background: var(--bdb-navy);
+      color: #fff;
+      padding: 0.75rem 1rem 1.75rem;
+      border-radius: 0 0 28px 28px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .ayuda-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .ayuda-header-bar button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .ayuda-kicker {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 0.35rem;
+    }
+
+    .ayuda-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .ayuda-search {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--bdb-muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .ayuda-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.15rem 1rem 1.5rem;
+      min-height: 0;
+    }
+
+    .ayuda-section-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--bdb-text);
+      margin-bottom: 0.65rem;
+    }
+
+    .ayuda-gerente-card {
+      background: var(--bdb-navy);
+      border-radius: 16px;
+      padding: 1rem;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+
+    .ayuda-gerente-top {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .ayuda-gerente-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #3d6a8a, #1a4a6e);
+    }
+
+    .ayuda-gerente-top strong {
+      display: block;
+      font-size: 0.92rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .ayuda-gerente-top span {
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .ayuda-contact-row {
+      display: flex;
+      justify-content: space-around;
+      gap: 0.5rem;
+    }
+
+    .ayuda-contact-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.65rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      padding: 0.35rem 0.5rem;
+      border-radius: 12px;
+      flex: 1;
+    }
+
+    .ayuda-contact-btn i {
+      font-size: 1.35rem;
+    }
+
+    .ayuda-contact-btn.active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .ayuda-list-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background: #fff;
+      border: 1px solid var(--bdb-border);
+      border-radius: 14px;
+      margin-bottom: 0.65rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .ayuda-list-card i:first-child {
+      font-size: 1.35rem;
+      color: var(--bdb-navy);
+      flex-shrink: 0;
+    }
+
+    .ayuda-list-card span {
+      flex: 1;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--bdb-text);
+      line-height: 1.35;
+    }
+
+    .ayuda-list-card .chev {
+      color: var(--bdb-navy);
+      font-size: 1rem;
+    }
+
+    .bdb-fv-form-hidden {
+      display: none !important;
+    }
+
+    .bdb-fv-loading {
+      text-align: center;
+      padding: 1.5rem 0.5rem;
+    }
+
+    .bdb-fv-loading p {
+      font-size: 0.85rem;
+      color: var(--bdb-muted);
+      margin-top: 0.75rem;
+    }
+
+    .bdb-inv-appbar {
+      flex-shrink: 0;
+      background: var(--bdb-navy);
+      padding: 0.65rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #fff;
+    }
+
+    .bdb-inv-appbar .bdb-back-hub {
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bdb-inv-appbar .bdb-back-hub:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .bdb-inv-appbar-title {
+      flex: 1;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .bdb-inv-appbar-actions {
+      display: flex;
+      gap: 0.2rem;
+    }
+
+    .bdb-inv-appbar-actions button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 0.35rem;
+      cursor: pointer;
+      border-radius: 8px;
+      opacity: 0.92;
+    }
+
+    .bdb-inv-appbar-actions button:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    #screen-inversiones {
+      flex-direction: column;
+    }
+
+    #screen-inversiones .bdb-hero {
+      flex-shrink: 0;
+    }
+
+    #screen-inversiones .bdb-white-section {
+      flex: 1;
+      margin-top: -12px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+      }
+
+      .mobile-app-container {
+        border-radius: 0;
+        height: 100vh;
+        max-height: none;
+      }
+    }
+
+    /* Modal atención / videollamada (misma API que iniciar-videollamada.html) */
+    .bdb-modal-atencion {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .bdb-modal-atencion.active {
+      display: flex;
+    }
+
+    .bdb-modal-atencion-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 26, 61, 0.55);
+    }
+
+    .bdb-modal-atencion-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 414px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 1.1rem 1.15rem 1.5rem;
+      box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.18);
+      font-family: 'Montserrat', system-ui, sans-serif;
+    }
+
+    .bdb-modal-atencion-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .bdb-modal-atencion-head h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--bdb-navy);
+      margin: 0 0 0.25rem;
+    }
+
+    .bdb-modal-atencion-head p {
+      font-size: 0.78rem;
+      color: var(--bdb-muted);
+      margin: 0;
+    }
+
+    .bdb-modal-close {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      border-radius: 50%;
+      background: #f3f4f6;
+      color: var(--bdb-navy);
+      font-size: 1.1rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .bdb-fv-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+    }
+
+    .bdb-fv-form-grid .bdb-fv-field-full {
+      grid-column: 1 / -1;
+    }
+
+    .bdb-fv-field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--bdb-navy);
+      margin-bottom: 0.3rem;
+    }
+
+    .bdb-fv-field input {
+      width: 100%;
+      border: 1px solid var(--bdb-border);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem;
+      font-size: 0.85rem;
+      font-family: inherit;
+    }
+
+    .bdb-fv-field input:focus {
+      outline: none;
+      border-color: var(--bdb-link);
+      box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
+    }
+
+    .bdb-fv-alert {
+      display: none;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .bdb-fv-alert.danger {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .bdb-fv-info-text {
+      background: #eef5fc;
+      border-left: 4px solid var(--bdb-link);
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-top: 0.85rem;
+      font-size: 0.78rem;
+      color: #4b5563;
+      line-height: 1.45;
+    }
+
+    .bdb-fv-btn-generar {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--bip-green) 0%, var(--bip-green-dark) 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .bdb-fv-btn-generar:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .bdb-fv-spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: bdb-fv-spin 0.65s linear infinite;
+      vertical-align: -0.15em;
+      margin-right: 0.45rem;
+    }
+
+    @keyframes bdb-fv-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .bdb-fv-turn-info {
+      display: none;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 2px solid var(--bdb-border);
+    }
+
+    .bdb-fv-turn-info.active {
+      display: block;
+    }
+
+    .bdb-fv-success-badge {
+      display: inline-block;
+      background: var(--bdb-green);
+      color: #fff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .bdb-fv-info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--bdb-border);
+      border-radius: 8px;
+      background: #f9fafb;
+      margin-bottom: 0.45rem;
+      font-size: 0.78rem;
+    }
+
+    .bdb-fv-info-label {
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .bdb-fv-info-value {
+      font-weight: 700;
+      color: var(--bdb-navy);
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .bdb-fv-status-warn { color: #d97706 !important; }
+    .bdb-fv-status-ok { color: var(--bdb-green) !important; }
+    .bdb-fv-status-done { color: var(--bdb-link) !important; }
+    .bdb-fv-status-err { color: #dc2626 !important; }
+
+    .bdb-fv-btn-video {
+      width: 100%;
+      margin-top: 0.85rem;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--bip-green) 0%, var(--bip-green-dark) 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .bdb-fv-btn-video:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .bdb-fv-hint {
+      font-size: 0.72rem;
+      color: var(--bdb-muted);
+      text-align: center;
+      margin-top: 0.45rem;
+    }
+
+    .bdb-video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    .bdb-video-modal.active {
+      display: flex;
+    }
+
+    .bdb-video-container {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem;
+      width: 100%;
+      max-width: 414px;
+      height: min(80vh, 640px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bdb-video-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+    }
+
+    .bdb-video-head h6 {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--bdb-navy);
+    }
+
+    .bdb-video-close {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--bdb-muted);
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .bdb-video-iframe {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      min-height: 0;
+    }
+  </style>
+</head>
+<body>
+  <script src="auth-portal.js"></script>
+  <script>AuthPortal.require();</script>
+
+  <div class="mobile-app-container">
+    <div class="mobile-app-content">
+      <!-- Home — BIP Banco Provincia -->
+      <div id="screen-home" class="bdb-screen bdb-screen-home bip-screen-home active">
+        <header class="home-header bip-header">
+          <div class="bip-header-top">
+            <div class="bip-header-logo-wrap">
+              <img src="images/logo-banco-provincia.png" alt="Banco Provincia" />
+            </div>
+            <button type="button" class="bip-header-profile" aria-label="Perfil"><i class="bi bi-person-circle"></i></button>
+          </div>
+        </header>
+        <div class="home-body">
+          <div class="home-accounts-scroll" id="accountsScroll">
+            <article class="home-account-card">
+              <div class="home-account-card-head">
+                <strong>CA $ 020 0001234567890</strong>
+              </div>
+              <div class="home-account-card-body">
+                <div class="home-account-balance">$ 1.000.000,00</div>
+              </div>
+              <div class="home-account-actions">
+                <button type="button" aria-label="Ocultar saldo"><i class="bi bi-eye"></i></button>
+                <button type="button" aria-label="Compartir CBU"><i class="bi bi-share"></i></button>
+                <button type="button" aria-label="Actualizar"><i class="bi bi-arrow-clockwise"></i></button>
+              </div>
+              <div class="home-account-nav">
+                <button type="button" aria-label="Cuenta anterior"><i class="bi bi-chevron-left"></i></button>
+                <button type="button" aria-label="Siguiente cuenta"><i class="bi bi-chevron-right"></i></button>
+              </div>
+              <div class="home-account-footer">
+                <a href="#" onclick="return false;">CBU <i class="bi bi-chevron-right"></i></a>
+              </div>
+            </article>
+            <article class="home-account-card">
+              <div class="home-account-card-head">
+                <strong>CA U$S 020 0009876543210</strong>
+              </div>
+              <div class="home-account-card-body">
+                <div class="home-account-balance">U$S 12.450,00</div>
+              </div>
+              <div class="home-account-actions">
+                <button type="button" aria-label="Ocultar saldo"><i class="bi bi-eye"></i></button>
+                <button type="button" aria-label="Compartir CBU"><i class="bi bi-share"></i></button>
+                <button type="button" aria-label="Actualizar"><i class="bi bi-arrow-clockwise"></i></button>
+              </div>
+              <div class="home-account-nav">
+                <button type="button" aria-label="Cuenta anterior"><i class="bi bi-chevron-left"></i></button>
+                <button type="button" aria-label="Siguiente cuenta"><i class="bi bi-chevron-right"></i></button>
+              </div>
+              <div class="home-account-footer">
+                <a href="#" onclick="return false;">CBU <i class="bi bi-chevron-right"></i></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="bip-quick-actions">
+            <button type="button" class="bip-quick-btn" data-bip-demo="prestamos">
+              <span class="bip-quick-icon"><i class="bi bi-cash-stack"></i></span>
+              <span>Préstamos</span>
+            </button>
+            <button type="button" class="bip-quick-btn" id="btnQuickInversiones">
+              <span class="bip-quick-icon"><i class="bi bi-graph-up-arrow"></i></span>
+              <span>Inversiones</span>
+            </button>
+            <button type="button" class="bip-quick-btn" data-bip-demo="transferencias">
+              <span class="bip-quick-icon"><i class="bi bi-arrow-left-right"></i></span>
+              <span>Transferencias</span>
+            </button>
+            <button type="button" class="bip-quick-btn" data-bip-demo="pagos">
+              <span class="bip-quick-icon"><i class="bi bi-receipt"></i></span>
+              <span>Pagos</span>
+            </button>
+          </div>
+
+          <div class="bip-cards-scroll">
+            <div class="bip-card-item visa">
+              <div class="bip-card-brand">VISA</div>
+              <div class="bip-card-number">**** **** **** 5671</div>
+            </div>
+            <div class="bip-card-item master">
+              <div class="bip-card-brand">Mastercard</div>
+              <div class="bip-card-number">**** **** **** 3421</div>
+            </div>
+          </div>
+
+          <div class="bip-promo-loan" id="bipPromoLoan" role="button" tabindex="0" aria-label="Préstamo preaprobado — solicitar asesoría">
+            <button type="button" class="bip-promo-close" id="btnCerrarPromo" aria-label="Cerrar"><i class="bi bi-x"></i></button>
+            <div class="bip-promo-loan-text">Tenés un préstamo aprobado a tasa preferencial</div>
+            <div class="bip-promo-loan-amount">$1.000.000 en 36 cuotas</div>
+          </div>
+        </div>
+        <nav class="home-bottom-nav" aria-label="Navegación principal">
+          <button type="button" class="active"><i class="bi bi-house-door-fill"></i> Inicio</button>
+          <button type="button" class="bip-fab-center" id="btnBipFab" aria-label="BIP">
+            <img src="images/logo-bip-icon.svg" alt="" width="28" height="28" />
+          </button>
+          <button type="button" id="btnMenuHome"><i class="bi bi-list"></i> Menú</button>
+        </nav>
+      </div>
+
+      <!-- Detalle plazo fijo -->
+      <div id="screen-cdt" class="bdb-screen bdb-screen-cdt">
+        <header class="cdt-header">
+          <div class="cdt-header-bar">
+            <button type="button" id="btnCdtBack" aria-label="Volver al inicio"><i class="bi bi-arrow-left"></i></button>
+          </div>
+          <p class="cdt-kicker">Inversiones</p>
+          <h1 class="cdt-title">Plazo fijo UVA</h1>
+        </header>
+        <div class="cdt-body">
+          <div class="cdt-rate-card">
+            <small>Tasa de referencia hasta</small>
+            <div class="cdt-rate-value">12% E.A.</div>
+            <p>Plazo fijo digital en pesos o UVA. Tasa fija durante la vigencia, con cobertura del sistema financiero argentino.</p>
+          </div>
+          <div class="cdt-chips">
+            <div class="cdt-chip">
+              <small>Monto mínimo</small>
+              <strong>$100.000</strong>
+            </div>
+            <div class="cdt-chip">
+              <small>Plazo desde</small>
+              <strong>30 días</strong>
+            </div>
+            <div class="cdt-chip">
+              <small>Canal</small>
+              <strong>100% digital</strong>
+            </div>
+          </div>
+          <div class="cdt-info-card">
+            <h3>Descripción</h3>
+            <p>El plazo fijo UVA podés abrirlo y administrarlo desde BIP, con rentabilidad conocida desde el inicio y distintas opciones de plazo.</p>
+          </div>
+          <div class="cdt-info-card">
+            <h3>Beneficios</h3>
+            <ul class="cdt-list">
+              <li>Tasa fija conocida al contratar.</li>
+              <li>Trámite y seguimiento por canales digitales.</li>
+              <li>Distintas opciones de plazo según producto.</li>
+              <li>Entidad supervisada y marco de seguro de depósitos.</li>
+            </ul>
+          </div>
+          <div class="cdt-info-card">
+            <h3>¿Necesitás asesoría?</h3>
+            <p>Un asesor puede orientarte sobre montos, plazos y condiciones vigentes antes de invertir.</p>
+          </div>
+          <button type="button" class="cdt-btn-videollamada" id="btnCdtVideollamada" data-action="asesoramiento">
+            <i class="bi bi-camera-video"></i> Solicitar videollamada con asesor
+          </button>
+          <a class="cdt-link-oficial" href="https://www.bancoprovincia.com.ar/" target="_blank" rel="noopener noreferrer">Ver condiciones en bancoprovincia.com.ar ›</a>
+        </div>
+      </div>
+
+      <!-- Centro de Ayuda — antes de recibir asesoramiento -->
+      <div id="screen-ayuda" class="bdb-screen bdb-screen-ayuda">
+        <header class="ayuda-header">
+          <div class="ayuda-header-bar">
+            <button type="button" id="btnAyudaBack" aria-label="Volver"><i class="bi bi-arrow-left"></i></button>
+            <button type="button" id="btnAyudaClose" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+          </div>
+          <p class="ayuda-kicker">Centro de ayuda</p>
+          <h1 class="ayuda-title">¿En qué te podemos ayudar?</h1>
+          <button type="button" class="ayuda-search">Realiza tu consulta</button>
+        </header>
+        <div class="ayuda-body">
+          <h2 class="ayuda-section-title">Tu Gerente asignado</h2>
+          <div class="ayuda-gerente-card">
+            <div class="ayuda-gerente-top">
+              <img class="ayuda-gerente-avatar" src="https://i.pravatar.cc/112?img=33" width="56" height="56" alt="Camilo Restrepo" />
+              <div>
+                <strong>Soy Camilo Restrepo</strong>
+                <span>Contáctame por</span>
+              </div>
+            </div>
+            <div class="ayuda-contact-row">
+              <button type="button" class="ayuda-contact-btn active" id="btnAyudaVideollamada" data-action="asesoramiento">
+                <i class="bi bi-camera-video"></i> Videollamada
+              </button>
+              <button type="button" class="ayuda-contact-btn" data-ayuda-demo="llamada">
+                <i class="bi bi-telephone"></i> Llamada
+              </button>
+              <button type="button" class="ayuda-contact-btn" data-ayuda-demo="whatsapp">
+                <i class="bi bi-whatsapp"></i> Whatsapp
+              </button>
+            </div>
+          </div>
+          <h2 class="ayuda-section-title">Seguimiento de PQRS</h2>
+          <button type="button" class="ayuda-list-card" data-ayuda-demo="pqrs">
+            <i class="bi bi-files"></i>
+            <span>Consulta tus peticiones, quejas, reclamos y solicitudes</span>
+            <i class="bi bi-chevron-right chev"></i>
+          </button>
+          <h2 class="ayuda-section-title">Temas de interés</h2>
+          <button type="button" class="ayuda-list-card" data-ayuda-demo="faq">
+            <i class="bi bi-question-circle"></i>
+            <span>Preguntas frecuentes</span>
+            <i class="bi bi-chevron-right chev"></i>
+          </button>
+          <h2 class="ayuda-section-title">Comunícate con el Banco</h2>
+          <button type="button" class="ayuda-list-card" data-ayuda-demo="banco">
+            <i class="bi bi-headset"></i>
+            <span>Líneas de atención y sucursales</span>
+            <i class="bi bi-chevron-right chev"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Vista inversiones (contenido anterior de la app) -->
+      <div id="screen-inversiones" class="bdb-screen">
+        <div class="bdb-inv-appbar">
+          <button type="button" class="bdb-back-hub" id="btnBackHub" aria-label="Volver al inicio">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <span class="bdb-inv-appbar-title">Inversiones</span>
+          <div class="bdb-inv-appbar-actions">
+            <button type="button" aria-label="Notificaciones"><i class="bi bi-bell"></i></button>
+            <button type="button" aria-label="Perfil"><i class="bi bi-person-circle" style="font-size:1.35rem;"></i></button>
+          </div>
+        </div>
+        <div class="bdb-hero">
+          <p class="bdb-kicker">BIP · Inversiones</p>
+          <h1>¿En qué querés invertir hoy?</h1>
+          <div class="bdb-portfolio-wrap">
+            <div class="bdb-portfolio-card">
+              <div class="bdb-portfolio-top">
+                <div>
+                  <div class="bdb-portfolio-label">Valor total portafolio</div>
+                  <div class="bdb-portfolio-balance">$ 48.250.000</div>
+                  <div class="bdb-portfolio-meta">Cuenta comitente ···· 4321</div>
+                </div>
+              </div>
+              <div class="bdb-portfolio-bottom">
+                <div>
+                  <div class="bdb-portfolio-name">Jorge M.</div>
+                  <div class="bdb-portfolio-badge">DEMO</div>
+                </div>
+              </div>
+            </div>
+            <div class="bdb-dots" aria-hidden="true">
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+            </div>
+            <button type="button" class="bdb-link-row" id="btnVerDesempeno">
+              <i class="bi bi-eye"></i> Ver desempeño
+            </button>
+          </div>
+        </div>
+
+        <div class="bdb-white-section">
+          <p class="bdb-intro-compact">Elegí una opción para ver detalle y solicitar asesoría.</p>
+
+          <p class="bdb-section-title">Opciones para invertir</p>
+          <div class="bdb-menu" id="menuTipos">
+            <button type="button" class="bdb-menu-item" data-id="cdt">
+              <div class="bdb-menu-icon"><i class="bi bi-safe2"></i></div>
+              <div class="bdb-menu-text">
+                <strong>Plazo fijo UVA <span class="bdb-pill">Recomendada</span></strong>
+                <span>Desde $10.000 y plazo desde 30 días. Apertura 100% digital en BIP.</span>
+              </div>
+              <i class="bi bi-chevron-right chev"></i>
+            </button>
+            <button type="button" class="bdb-menu-item" data-id="bienes">
+              <div class="bdb-menu-icon"><i class="bi bi-building"></i></div>
+              <div class="bdb-menu-text">
+                <strong>Bienes raíces</strong>
+                <span>Inmuebles, valorización y rentas por arriendo o venta.</span>
+              </div>
+              <i class="bi bi-chevron-right chev"></i>
+            </button>
+            <button type="button" class="bdb-menu-item" data-id="empresarial">
+              <div class="bdb-menu-icon"><i class="bi bi-briefcase"></i></div>
+              <div class="bdb-menu-text">
+                <strong>Proyectos empresariales</strong>
+                <span>Capital en empresa u operación productiva.</span>
+              </div>
+              <i class="bi bi-chevron-right chev"></i>
+            </button>
+            <button type="button" class="bdb-menu-item" data-id="obligaciones">
+              <div class="bdb-menu-icon"><i class="bi bi-piggy-bank"></i></div>
+              <div class="bdb-menu-text">
+                <strong>Ahorro para obligaciones <span class="bdb-pill">Metas</span></strong>
+                <span>Universidad, pensión u otros gastos futuros planeados.</span>
+              </div>
+              <i class="bi bi-chevron-right chev"></i>
+            </button>
+            <button type="button" class="bdb-menu-item" data-id="financieras">
+              <div class="bdb-menu-icon"><i class="bi bi-graph-up-arrow"></i></div>
+              <div class="bdb-menu-text">
+                <strong>Inversiones financieras</strong>
+                <span>Mercado de capitales, plazo y renta en el tiempo.</span>
+              </div>
+              <i class="bi bi-chevron-right chev"></i>
+            </button>
+          </div>
+
+          <p class="bdb-footer-note">
+            <a href="https://www.bancoprovincia.com.ar/" target="_blank" rel="noopener noreferrer">Educación financiera</a>
+            ·
+            <a href="https://www.bancoprovincia.com.ar/" target="_blank" rel="noopener noreferrer">Plazo fijo oficial</a>
+          </p>
+        </div>
+        <div class="bdb-diagonal" aria-hidden="true"></div>
+      </div>
+
+      <!-- Detalle -->
+      <div id="screen-detail" class="bdb-screen">
+        <div class="bdb-detail-header">
+          <button type="button" class="bdb-back" id="btnBack" aria-label="Volver">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <h2 id="detailTitle">Detalle</h2>
+        </div>
+        <div class="bdb-detail-scroll" id="detailBody"></div>
+        <div class="bdb-fab-wrap">
+          <button type="button" class="bdb-fab-atencion" id="btnRecibirAsesoramiento">
+            <i class="bi bi-stars"></i>
+            <span>Recibir asesoramiento</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup publicitario → videollamada -->
+  <div id="bipPromoPopup" class="bip-promo-popup" aria-hidden="true" role="dialog" aria-labelledby="bipPromoPopupTitle">
+    <div class="bip-promo-popup-backdrop" id="bipPromoPopupBackdrop"></div>
+    <div class="bip-promo-popup-panel">
+      <div class="bip-promo-popup-hero">
+        <button type="button" class="bip-promo-popup-close" id="btnPromoPopupClose" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+        <div class="bip-promo-popup-logo">
+          <img src="images/logo-banco-provincia.png" alt="Banco Provincia" />
+        </div>
+        <h3 id="bipPromoPopupTitle">¡Tu plazo fijo con tasa preferencial!</h3>
+        <p>Un asesor de Banco Provincia te explica las mejores opciones de inversión.</p>
+      </div>
+      <div class="bip-promo-popup-body">
+        <span class="bip-promo-popup-badge">Oferta exclusiva BIP</span>
+        <div class="bip-promo-popup-highlight">
+          <strong>Hasta 12% nominal anual</strong>
+          <span>Plazo fijo UVA · 100% digital</span>
+        </div>
+        <ul class="bip-promo-popup-features">
+          <li><i class="bi bi-check-circle-fill"></i> Asesoría personalizada por videollamada</li>
+          <li><i class="bi bi-check-circle-fill"></i> Apertura desde $10.000 sin ir a la sucursal</li>
+          <li><i class="bi bi-check-circle-fill"></i> Respuesta inmediata en horario bancario</li>
+        </ul>
+        <button type="button" class="bip-promo-popup-cta" id="btnPromoVideollamada">
+          <i class="bi bi-camera-video-fill"></i> Solicitar videollamada con asesor
+        </button>
+        <button type="button" class="bip-promo-popup-dismiss" id="btnPromoPopupDismiss">Ahora no</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Atención por videollamada — misma API que iniciar-videollamada.html -->
+  <div id="bdbModalAtencion" class="bdb-modal-atencion" aria-hidden="true" role="dialog" aria-labelledby="bdbModalAtencionTitle">
+    <div class="bdb-modal-atencion-backdrop" id="bdbModalAtencionBackdrop"></div>
+    <div class="bdb-modal-atencion-panel">
+      <div class="bdb-modal-atencion-head">
+        <div>
+          <h3 id="bdbModalAtencionTitle"><i class="bi bi-camera-video"></i> Recibir asesoramiento</h3>
+          <p id="bdbModalAtencionSubtitle">Generando tu atención en el sistema…</p>
+        </div>
+        <button type="button" class="bdb-modal-close" id="bdbModalAtencionClose" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div id="bdbFvFormAlert" class="bdb-fv-alert" role="alert"></div>
+      
+      <div id="bdbFvLoading" class="bdb-fv-loading">
+        <span class="bdb-fv-spinner"></span>
+        <p>Conectando con tu gerente…</p>
+      </div>
+      <form id="bdbFvGuardiaForm" class="bdb-fv-form-grid bdb-fv-form-hidden" aria-hidden="true">
+        <div class="bdb-fv-field">
+          <label for="bdbFvFirstName">Nombre</label>
+          <input type="text" id="bdbFvFirstName" name="firstName" required autocomplete="given-name" />
+        </div>
+        <div class="bdb-fv-field">
+          <label for="bdbFvLastName">Apellido</label>
+          <input type="text" id="bdbFvLastName" name="lastName" required autocomplete="family-name" />
+        </div>
+        <div class="bdb-fv-field">
+          <label for="bdbFvRut">DNI</label>
+          <input type="text" id="bdbFvRut" name="rut" required autocomplete="off" />
+        </div>
+        <div class="bdb-fv-field">
+          <label for="bdbFvPhone">Teléfono</label>
+          <input type="tel" id="bdbFvPhone" name="phone" required autocomplete="tel" />
+        </div>
+        <div class="bdb-fv-field bdb-fv-field-full">
+          <label for="bdbFvEmail">Email</label>
+          <input type="email" id="bdbFvEmail" name="email" required autocomplete="email" />
+        </div>
+      </form>
+      <div class="bdb-fv-info-text">
+        <i class="bi bi-info-circle"></i> Al continuar, te asignaremos una atención y verás una sala de espera. Cuando el agente esté listo, podrás iniciar una videollamada.
+      </div>
+      <button type="button" id="bdbFvBtnEnviarTurno" class="bdb-fv-btn-generar" style="display:none" aria-hidden="true">
+        <i class="bi bi-check2-circle"></i> Generar atención
+      </button>
+      <div id="bdbFvTurnInfoSection" class="bdb-fv-turn-info">
+        <div style="text-align:center;margin-bottom:0.85rem;">
+          <span class="bdb-fv-success-badge"><i class="bi bi-check2-circle"></i> Atención reservada</span>
+          <div style="font-size:0.82rem;font-weight:600;color:var(--bdb-green);">¡Tu atención ha sido generada en el sistema!</div>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Código de la atención</span>
+          <span class="bdb-fv-info-value" id="bdbFvTurnCodeDisplay">—</span>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Número de atención</span>
+          <span class="bdb-fv-info-value" id="bdbFvTurnNumber">—</span>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Estado</span>
+          <span class="bdb-fv-info-value bdb-fv-status-warn" id="bdbFvTurnStatus">Consultando...</span>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Tiempo de espera actual</span>
+          <span class="bdb-fv-info-value" id="bdbFvCurrentWaitingTime">N/A</span>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Tiempo promedio</span>
+          <span class="bdb-fv-info-value" id="bdbFvAvgWaitingTime">N/A</span>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Cola / servicio</span>
+          <span class="bdb-fv-info-value" id="bdbFvQueueName">—</span>
+        </div>
+        <div class="bdb-fv-info-item">
+          <span class="bdb-fv-info-label">Sala de espera</span>
+          <span class="bdb-fv-info-value" id="bdbFvWaitingRoomName">—</span>
+        </div>
+        <button type="button" id="bdbFvBtnAbrirVideo" class="bdb-fv-btn-video" disabled>
+          <i class="bi bi-camera-video"></i> Conectarme a videollamada
+        </button>
+        <p class="bdb-fv-hint">El botón se habilitará cuando el agente te llame.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="bdbVideoModal" class="bdb-video-modal" aria-hidden="true">
+    <div class="bdb-video-container">
+      <div class="bdb-video-head">
+        <h6><i class="bi bi-camera-video"></i> Videollamada</h6>
+        <button type="button" class="bdb-video-close" id="bdbBtnCloseVideo" aria-label="Cerrar videollamada"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <iframe id="bdbVideoFrame" class="bdb-video-iframe" src="about:blank" title="Videollamada"
+        allow="camera; microphone; autoplay; fullscreen; clipboard-write; display-capture"
+        referrerpolicy="no-referrer" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var contenido = {
+        bienes: {
+          title: 'Bienes raíces',
+          html: '\n            <div class="bdb-detail-card">\n              <h3>Descripción</h3>\n              <p>Inversión en inmuebles para obtener renta por arriendo o ganancia por revalorización al vender. Suele ser un activo de mediano a largo plazo.</p>\n            </div>\n            <div class="bdb-detail-card">\n              <h3>Beneficios</h3>\n              <ul class="bdb-list-dots">\n                <li>Ingresos recurrentes posibles con canon de arriendo.</li>\n                <li>Potencial de protección frente a inflación en zonas con demanda.</li>\n                <li>Diversificación del patrimonio.</li>\n              </ul>\n            </div>\n            <div id="bloqueAsesoria" class="bloque-asesoria" tabindex="-1">\n              <button type="button" class="bdc-btn-primary" data-action="asesoramiento" style="width:100%">Recibir asesoramiento</button>\n            </div>\n          '
+        },
+        empresarial: {
+          title: 'Proyectos empresariales o productivos',
+          html: '\n            <div class="bdb-detail-card">\n              <h3>Descripción</h3>\n              <p>Aportás capital a una empresa o proyecto productivo a cambio de participación en utilidades, dividendos o revalorización de tu participación.</p>\n            </div>\n            <div class="bdb-detail-card">\n              <h3>Beneficios</h3>\n              <ul class="bdb-list-dots">\n                <li>Posibilidad de retornos superiores a instrumentos muy conservadores.</li>\n                <li>Alineación con sectores o causas que te interesen.</li>\n                <li>Flexibilidad de tamaño de ticket según la oportunidad.</li>\n              </ul>\n            </div>\n            <div id="bloqueAsesoria" class="bloque-asesoria" tabindex="-1">\n              <button type="button" class="bdc-btn-primary" data-action="asesoramiento" style="width:100%">Recibir asesoramiento</button>\n            </div>\n          '
+        },
+        obligaciones: {
+          title: 'Ahorro para el pago de obligaciones',
+          html: '\n            <div class="bdb-detail-card">\n              <h3>Descripción</h3>\n              <p>Ahorrá de forma disciplinada para cubrir un gasto futuro conocido (educación, vivienda, pensión complementaria, etc.), alineando monto, fecha y aportes.</p>\n            </div>\n            <div class="bdb-detail-card">\n              <h3>Beneficios</h3>\n              <ul class="bdb-list-dots">\n                <li>Mayor tiempo disponible suele reducir la cuota periódica necesaria.</li>\n                <li>Te ayuda a separar la meta del gasto corriente.</li>\n                <li>Podés combinar instrumentos según plazo y perfil de riesgo.</li>\n              </ul>\n            </div>\n            <div id="bloqueAsesoria" class="bloque-asesoria" tabindex="-1">\n              <button type="button" class="bdc-btn-primary" data-action="asesoramiento" style="width:100%">Recibir asesoramiento</button>\n            </div>\n          '
+        },
+        financieras: {
+          title: 'Inversiones financieras',
+          html: '\n            <div class="bdb-detail-card">\n              <h3>Descripción</h3>\n              <p>Inversión en instrumentos del sistema financiero y del mercado de capitales (CDT, bonos, acciones, fondos, etc.) con distintas combinaciones de riesgo, plazo y liquidez.</p>\n            </div>\n            <div class="bdb-detail-card">\n              <h3>Beneficios</h3>\n              <ul class="bdb-list-dots">\n                <li>Amplia oferta para armar un portafolio acorde a tu perfil.</li>\n                <li>Posibilidad de diversificar por activo y horizonte.</li>\n                <li>Acceso a mercados regulados (p. ej. Bolsa de Valores de Colombia).</li>\n              </ul>\n            </div>\n            <div id="bloqueAsesoria" class="bloque-asesoria" tabindex="-1">\n              <button type="button" class="bdc-btn-primary" data-action="asesoramiento" style="width:100%">Recibir asesoramiento</button>\n            </div>\n          '
+        },
+        cdt: {
+          title: 'Plazo fijo UVA',
+          html: ''
+        }
+      };
+
+      function buildCdtHtml() {
+        return (
+          '<div class="bdb-detail-card">' +
+            '<h3>Descripción</h3>' +
+            '<p>Plazo fijo digital en pesos o UVA con tasa de referencia de hasta 12% nominal anual (verificá condiciones vigentes en el sitio oficial). Apertura desde $10.000, plazos desde 30 días.</p>' +
+          '</div>' +
+          '<div class="bdb-detail-card">' +
+            '<h3>Beneficios</h3>' +
+            '<ul class="bdb-list-dots">' +
+              '<li>Tasa fija conocida al contratar.</li>' +
+              '<li>Trámite y seguimiento por canales digitales.</li>' +
+              '<li>Distintas opciones de plazo según producto.</li>' +
+              '<li>Entidad supervisada y marco de seguro de depósitos.</li>' +
+            '</ul>' +
+          '</div>' +
+          '<div id="bloqueAsesoria" class="bloque-asesoria" tabindex="-1">' +
+            '<button type="button" class="bdc-btn-primary" data-action="asesoramiento" style="width:100%">Recibir asesoramiento</button>' +
+          '</div>'
+        );
+      }
+
+      var screenHome = document.getElementById('screen-home');
+      var screenAyuda = document.getElementById('screen-ayuda');
+      var screenCdt = document.getElementById('screen-cdt');
+      var screenInv = document.getElementById('screen-inversiones');
+      var detail = document.getElementById('screen-detail');
+      var detailTitle = document.getElementById('detailTitle');
+      var detailBody = document.getElementById('detailBody');
+      var btnBack = document.getElementById('btnBack');
+
+      function setUrlHash(h) {
+        try {
+          history.replaceState(null, '', h || (location.pathname + (location.search || '')));
+        } catch (e) {}
+      }
+
+      function hideAllScreens() {
+        [screenHome, screenAyuda, screenCdt, screenInv, detail].forEach(function (s) {
+          if (s) s.classList.remove('active');
+        });
+      }
+
+      function showCdt() {
+        hideAllScreens();
+        if (screenCdt) {
+          screenCdt.classList.add('active');
+          var body = screenCdt.querySelector('.cdt-body');
+          if (body) body.scrollTop = 0;
+        }
+        setUrlHash('#cdt');
+      }
+
+      function showHome() {
+        hideAllScreens();
+        if (screenHome) screenHome.classList.add('active');
+        setUrlHash(location.pathname + (location.search || ''));
+      }
+
+      function showAyuda() {
+        hideAllScreens();
+        if (screenAyuda) screenAyuda.classList.add('active');
+        setUrlHash('#ayuda');
+      }
+
+      function showInversiones() {
+        hideAllScreens();
+        if (screenInv) screenInv.classList.add('active');
+        setUrlHash('#inversiones');
+      }
+
+      function showDetail(id) {
+        if (id === 'cdt') {
+          showCdt();
+          return;
+        }
+        var c = contenido[id];
+        if (!c) return;
+        detailTitle.textContent = c.title;
+        detailBody.innerHTML = c.html;
+        hideAllScreens();
+        detail.classList.add('active');
+        detailBody.scrollTop = 0;
+        try {
+          history.replaceState(null, '', location.pathname + (location.search || '') + '#inversiones');
+        } catch (e2) {}
+      }
+
+      var btnContactarGerente = document.getElementById('btnContactarGerente');
+      if (btnContactarGerente) btnContactarGerente.addEventListener('click', showAyuda);
+      var btnBannerContinuar = document.getElementById('btnBannerContinuar');
+      if (btnBannerContinuar) btnBannerContinuar.addEventListener('click', showAyuda);
+      var btnHomeCdt = document.getElementById('btnHomeCdt');
+      if (btnHomeCdt) btnHomeCdt.addEventListener('click', showCdt);
+      document.getElementById('btnQuickInversiones').addEventListener('click', showInversiones);
+      document.getElementById('btnCdtBack').addEventListener('click', showHome);
+      document.getElementById('btnCdtVideollamada').addEventListener('click', function (e) {
+        e.preventDefault();
+        activarAsesoramiento();
+      });
+      document.getElementById('btnAyudaBack').addEventListener('click', showHome);
+      document.getElementById('btnAyudaClose').addEventListener('click', showHome);
+      document.getElementById('btnMenuHome').addEventListener('click', showInversiones);
+      document.getElementById('btnBipFab').addEventListener('click', showAyuda);
+      var btnCerrarPromo = document.getElementById('btnCerrarPromo');
+      if (btnCerrarPromo) {
+        btnCerrarPromo.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var p = document.getElementById('bipPromoLoan');
+          if (p) p.style.display = 'none';
+        });
+      }
+      var btnCerrarBanner = document.getElementById('btnCerrarBanner');
+      if (btnCerrarBanner) {
+        btnCerrarBanner.addEventListener('click', function () {
+          var b = document.getElementById('homeBannerGerente');
+          if (b) b.style.display = 'none';
+        });
+      }
+
+      document.querySelectorAll('[data-bip-demo]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          window.alert('Opción demo BIP: en la app real se abriría ' + btn.getAttribute('data-bip-demo') + '.');
+        });
+      });
+
+      var accountsScroll = document.getElementById('accountsScroll');
+      if (accountsScroll) {
+        document.querySelectorAll('.home-account-nav button').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var card = btn.closest('.home-account-card');
+            if (!card) return;
+            var cards = Array.prototype.slice.call(accountsScroll.querySelectorAll('.home-account-card'));
+            var idx = cards.indexOf(card);
+            var next = btn.querySelector('.bi-chevron-right') ? idx + 1 : idx - 1;
+            if (next >= 0 && next < cards.length) {
+              cards[next].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+            }
+          });
+        });
+      }
+
+      document.getElementById('screen-ayuda').addEventListener('click', function (e) {
+        var videollamada = e.target.closest('#btnAyudaVideollamada, [data-action="asesoramiento"]');
+        if (videollamada) {
+          e.preventDefault();
+          e.stopPropagation();
+          activarAsesoramiento();
+          return;
+        }
+        var demo = e.target.closest('[data-ayuda-demo]');
+        if (demo) {
+          e.preventDefault();
+          window.alert('Opción demo: en la app real se abriría este canal de contacto.');
+        }
+      });
+
+      document.getElementById('btnBackHub').addEventListener('click', showHome);
+
+      document.getElementById('menuTipos').addEventListener('click', function (e) {
+        var btn = e.target.closest('.bdb-menu-item');
+        if (!btn) return;
+        var id = btn.getAttribute('data-id');
+        showDetail(id);
+      });
+
+      detailBody.addEventListener('click', function (e) {
+        var as = e.target.closest('[data-action="asesoramiento"]');
+        if (as) {
+          e.preventDefault();
+          activarAsesoramiento();
+        }
+      });
+
+      btnBack.addEventListener('click', function () {
+        showInversiones();
+      });
+
+      document.getElementById('btnVerDesempeno').addEventListener('click', showCdt);
+
+      function activarAsesoramiento() {
+        if (typeof window.abrirModalAtencion === 'function') {
+          window.abrirModalAtencion();
+        }
+      }
+
+      window.activarAsesoramiento = activarAsesoramiento;
+
+      document.getElementById('btnRecibirAsesoramiento').addEventListener('click', activarAsesoramiento);
+
+      /* Popup publicitario → videollamada */
+      var promoPopup = document.getElementById('bipPromoPopup');
+      var PROMO_DISMISS_KEY = 'bipPromoDismissed';
+
+      function cerrarPromoPopup(remember) {
+        if (!promoPopup) return;
+        promoPopup.classList.remove('active');
+        promoPopup.setAttribute('aria-hidden', 'true');
+        if (remember) {
+          try { sessionStorage.setItem(PROMO_DISMISS_KEY, '1'); } catch (e) { /* ignore */ }
+        }
+      }
+
+      function abrirPromoPopup() {
+        if (!promoPopup) return;
+        promoPopup.classList.add('active');
+        promoPopup.setAttribute('aria-hidden', 'false');
+      }
+
+      function irAVideollamadaDesdePromo() {
+        cerrarPromoPopup(true);
+        activarAsesoramiento();
+      }
+
+      var btnPromoVideollamada = document.getElementById('btnPromoVideollamada');
+      if (btnPromoVideollamada) btnPromoVideollamada.addEventListener('click', irAVideollamadaDesdePromo);
+
+      var btnPromoPopupClose = document.getElementById('btnPromoPopupClose');
+      if (btnPromoPopupClose) btnPromoPopupClose.addEventListener('click', function () { cerrarPromoPopup(true); });
+
+      var btnPromoPopupDismiss = document.getElementById('btnPromoPopupDismiss');
+      if (btnPromoPopupDismiss) btnPromoPopupDismiss.addEventListener('click', function () { cerrarPromoPopup(true); });
+
+      var promoBackdrop = document.getElementById('bipPromoPopupBackdrop');
+      if (promoBackdrop) promoBackdrop.addEventListener('click', function () { cerrarPromoPopup(true); });
+
+      var bipPromoLoan = document.getElementById('bipPromoLoan');
+      if (bipPromoLoan) {
+        bipPromoLoan.addEventListener('click', function (e) {
+          if (e.target.closest('#btnCerrarPromo')) return;
+          irAVideollamadaDesdePromo();
+        });
+        bipPromoLoan.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            irAVideollamadaDesdePromo();
+          }
+        });
+      }
+
+      var dismissed = false;
+      try { dismissed = sessionStorage.getItem(PROMO_DISMISS_KEY) === '1'; } catch (e2) { /* ignore */ }
+      if (!dismissed) {
+        setTimeout(function () {
+          if (screenHome && screenHome.classList.contains('active')) {
+            abrirPromoPopup();
+          }
+        }, 1200);
+      }
+
+      function applyHash() {
+        var h = (location.hash || '').replace(/^#/, '');
+        if (h === 'ayuda') {
+          showAyuda();
+        } else if (h === 'cdt') {
+          showCdt();
+        } else if (h === 'inversiones') {
+          showInversiones();
+        } else if (!h) {
+          showHome();
+        }
+      }
+      applyHash();
+      window.addEventListener('hashchange', applyHash);
+    })();
+
+    // Fila Virtual — misma API que iniciar-videollamada.html
+    (function () {
+      var FV_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+      var FV_QUEUE = 16223;
+      var FV_BRANCH = 10750;
+      var FV_BASE = 'https://filavirtual2.debmedia.com/api/v1';
+
+      var fvPollingInterval = null;
+      window.bdbCurrentVideoCallUrl = 'about:blank';
+
+      var modalEl = document.getElementById('bdbModalAtencion');
+      var modalBackdrop = document.getElementById('bdbModalAtencionBackdrop');
+      var modalClose = document.getElementById('bdbModalAtencionClose');
+      var fvFormEl = document.getElementById('bdbFvGuardiaForm');
+      var fvFormAlert = document.getElementById('bdbFvFormAlert');
+      var fvBtnEnviarTurno = document.getElementById('bdbFvBtnEnviarTurno');
+      var fvTurnInfoSection = document.getElementById('bdbFvTurnInfoSection');
+      var fvLoadingEl = document.getElementById('bdbFvLoading');
+      var fv$ = function (id) { return document.getElementById(id); };
+      var FV_DEMO_USER = {
+        firstName: 'Jorge',
+        lastName: 'Macera',
+        dni: '29328703',
+        email: 'jmacera@gmail.com'
+      };
+
+      function fvSetFormAlert(type, msg) {
+        fvFormAlert.className = 'bdb-fv-alert ' + type;
+        fvFormAlert.textContent = msg;
+      }
+
+      function fvClearFormAlert() {
+        fvFormAlert.className = 'bdb-fv-alert';
+        fvFormAlert.textContent = '';
+      }
+
+      function fvStopPolling() {
+        if (fvPollingInterval) {
+          clearInterval(fvPollingInterval);
+          fvPollingInterval = null;
+        }
+      }
+
+      function fvResetModal() {
+        fvStopPolling();
+        if (fvFormEl) {
+          fvFormEl.reset();
+          fvFormEl.querySelectorAll('input').forEach(function (input) {
+            input.disabled = false;
+          });
+        }
+        fvClearFormAlert();
+        if (fvTurnInfoSection) fvTurnInfoSection.classList.remove('active');
+        if (fvLoadingEl) fvLoadingEl.style.display = '';
+        if (fvBtnEnviarTurno) {
+          fvBtnEnviarTurno.disabled = false;
+          fvBtnEnviarTurno.style.display = 'none';
+          fvBtnEnviarTurno.innerHTML = '<i class="bi bi-check2-circle"></i> Generar atención';
+        }
+        var vf = document.getElementById('bdbVideoFrame');
+        if (vf) vf.src = 'about:blank';
+        window.bdbCurrentVideoCallUrl = 'about:blank';
+        var vm = document.getElementById('bdbVideoModal');
+        if (vm) {
+          vm.classList.remove('active');
+          vm.setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      function cerrarModalAtencion() {
+        if (!modalEl) return;
+        modalEl.classList.remove('active');
+        modalEl.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        fvResetModal();
+      }
+
+      async function fvEnviarAtencion() {
+        fvClearFormAlert();
+        if (fvLoadingEl) fvLoadingEl.style.display = '';
+        if (fvTurnInfoSection) fvTurnInfoSection.classList.remove('active');
+
+        try {
+          var enqueueUrl = FV_BASE + '/queue/' + FV_QUEUE + '/branch/' + FV_BRANCH + '/enqueue';
+          var res = await fetch(enqueueUrl, {
+            method: 'POST',
+            headers: {
+              'x-api-token': FV_TOKEN,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              firstName: FV_DEMO_USER.firstName,
+              lastName: FV_DEMO_USER.lastName,
+              dni: FV_DEMO_USER.dni,
+              email: FV_DEMO_USER.email,
+              phone: FV_DEMO_USER.phone
+            })
+          });
+
+          var out = await res.json().catch(function () { return {}; });
+          if (!res.ok) {
+            throw new Error((out && out.message) || ('Error en servidor (' + res.status + ')'));
+          }
+
+          var turnCode = out.code || '—';
+          try { localStorage.setItem('turnCode', turnCode); } catch (e) { /* ignore */ }
+
+          var turnNumber = (out.jsonDetails && (out.jsonDetails.turn || out.jsonDetails.actualTurn)) || '—';
+          var avgWait = (out.jsonDetails && (out.jsonDetails.averageWaitingTime != null ? out.jsonDetails.averageWaitingTime : out.jsonDetails.serviceTime)) || 'N/A';
+          var queueName = (out.jsonDetails && out.jsonDetails.queue && out.jsonDetails.queue.name) || '—';
+          var wrName = (out.jsonDetails && out.jsonDetails.waitingRoom && out.jsonDetails.waitingRoom.name) || '—';
+          var videoCallUrl = (out.jsonDetails && out.jsonDetails.videoCallUrl) || 'about:blank';
+          window.bdbCurrentVideoCallUrl = videoCallUrl;
+
+          var urlWithParam = videoCallUrl.indexOf('?') >= 0
+            ? videoCallUrl + '&videocallUser=mobile'
+            : videoCallUrl + '?videocallUser=mobile';
+          var vf = document.getElementById('bdbVideoFrame');
+          if (vf) vf.src = urlWithParam;
+
+          if (fvLoadingEl) fvLoadingEl.style.display = 'none';
+          fvFillWaitInfo({
+            code: turnCode,
+            number: turnNumber,
+            avgWait: isFinite(avgWait) ? Math.floor(parseFloat(avgWait)) + ' min' : 'N/A',
+            queueName: queueName,
+            waitingRoom: wrName
+          });
+
+          if (fvTurnInfoSection) fvTurnInfoSection.classList.add('active');
+          fvStartPolling(turnCode);
+        } catch (err) {
+          if (fvLoadingEl) fvLoadingEl.style.display = 'none';
+          fvSetFormAlert('danger', err.message);
+        }
+      }
+
+      window.abrirModalAtencion = function () {
+        if (!modalEl) return;
+        fvResetModal();
+        modalEl.classList.add('active');
+        modalEl.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        fvEnviarAtencion();
+      };
+
+      if (modalBackdrop) modalBackdrop.addEventListener('click', cerrarModalAtencion);
+      if (modalClose) modalClose.addEventListener('click', cerrarModalAtencion);
+
+      function fvFillWaitInfo(info) {
+        fv$('bdbFvTurnCodeDisplay').textContent = info.code;
+        fv$('bdbFvTurnNumber').textContent = info.number;
+        fv$('bdbFvAvgWaitingTime').textContent = info.avgWait;
+        fv$('bdbFvQueueName').textContent = info.queueName;
+        fv$('bdbFvWaitingRoomName').textContent = info.waitingRoom;
+        fv$('bdbFvTurnStatus').textContent = 'Consultando...';
+        fv$('bdbFvTurnStatus').className = 'bdb-fv-info-value bdb-fv-status-warn';
+        fv$('bdbFvCurrentWaitingTime').textContent = 'N/A';
+        fv$('bdbFvBtnAbrirVideo').disabled = true;
+      }
+
+      function fvStartPolling(turnCode) {
+        fvStopPolling();
+        var url = FV_BASE + '/turn/code/' + encodeURIComponent(turnCode);
+        var mapStatus = function (s) {
+          if (s === 'ANNOUNCED') return { text: 'Lo estamos llamando', cls: 'bdb-fv-status-ok' };
+          if (s === 'WAITING_TO_BE_CALLED') return { text: 'En breve lo llamaremos', cls: 'bdb-fv-status-warn' };
+          if (s === 'FINALIZED') return { text: 'Atención finalizada', cls: 'bdb-fv-status-done' };
+          return { text: s || 'Desconocido', cls: 'bdb-fv-status-warn' };
+        };
+
+        var tick = async function () {
+          try {
+            var res = await fetch(url, {
+              headers: {
+                'x-api-token': FV_TOKEN,
+                'Content-Type': 'text/plain'
+              }
+            });
+            if (!res.ok) throw new Error('Estado no disponible (' + res.status + ')');
+            var data = await res.json();
+            var m = mapStatus(data.status);
+            fv$('bdbFvTurnStatus').textContent = m.text;
+            fv$('bdbFvTurnStatus').className = 'bdb-fv-info-value ' + m.cls;
+            var avg = (data.averageWaitingTime != null ? data.averageWaitingTime : data.serviceTime);
+            if (avg !== undefined && avg !== null && !isNaN(avg)) {
+              fv$('bdbFvCurrentWaitingTime').textContent = Math.floor(parseFloat(avg)) + ' min';
+            }
+            if (data.status === 'ANNOUNCED') {
+              fv$('bdbFvBtnAbrirVideo').disabled = false;
+            }
+          } catch (e) {
+            fv$('bdbFvTurnStatus').textContent = 'Error al consultar';
+            fv$('bdbFvTurnStatus').className = 'bdb-fv-info-value bdb-fv-status-err';
+          }
+        };
+
+        tick();
+        fvPollingInterval = setInterval(tick, 5000);
+      }
+
+      if (fvBtnEnviarTurno) {
+        fvBtnEnviarTurno.addEventListener('click', fvEnviarAtencion);
+      }
+
+      var fvBtnAbrirVideo = document.getElementById('bdbFvBtnAbrirVideo');
+      var bdbVideoModal = document.getElementById('bdbVideoModal');
+      if (fvBtnAbrirVideo) {
+        fvBtnAbrirVideo.addEventListener('click', function () {
+          var videoUrl = window.bdbCurrentVideoCallUrl || 'about:blank';
+          var urlWithParam = videoUrl.indexOf('?') >= 0
+            ? videoUrl + '&videocallUser=mobile'
+            : videoUrl + '?videocallUser=mobile';
+          var vf = document.getElementById('bdbVideoFrame');
+          if (vf) vf.src = urlWithParam;
+          if (bdbVideoModal) {
+            bdbVideoModal.classList.add('active');
+            bdbVideoModal.setAttribute('aria-hidden', 'false');
+          }
+          document.body.style.overflow = 'hidden';
+        });
+      }
+
+      var bdbBtnCloseVideo = document.getElementById('bdbBtnCloseVideo');
+      if (bdbBtnCloseVideo && bdbVideoModal) {
+        bdbBtnCloseVideo.addEventListener('click', function () {
+          bdbVideoModal.classList.remove('active');
+          bdbVideoModal.setAttribute('aria-hidden', 'true');
+          if (modalEl && modalEl.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+          } else {
+            document.body.style.overflow = '';
+          }
+        });
+        bdbVideoModal.addEventListener('click', function (e) {
+          if (e.target === bdbVideoModal) {
+            bdbVideoModal.classList.remove('active');
+            bdbVideoModal.setAttribute('aria-hidden', 'true');
+            if (modalEl && modalEl.classList.contains('active')) {
+              document.body.style.overflow = 'hidden';
+            } else {
+              document.body.style.overflow = '';
+            }
+          }
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (bdbVideoModal && bdbVideoModal.classList.contains('active')) {
+          bdbVideoModal.classList.remove('active');
+          bdbVideoModal.setAttribute('aria-hidden', 'true');
+          if (modalEl && modalEl.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+          } else {
+            document.body.style.overflow = '';
+          }
+        } else if (modalEl && modalEl.classList.contains('active')) {
+          cerrarModalAtencion();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
