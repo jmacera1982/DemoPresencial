@@ -28,7 +28,7 @@
     
     body {
       font-family: 'Open Sans', Arial, sans-serif;
-      background: linear-gradient(145deg, #d8d8d8 0%, #f0f0f0 50%, #c8c8c8 100%);
+      background: #f5f5f5;
       color: var(--numia-text);
       min-height: 100vh;
       display: flex;
@@ -38,71 +38,17 @@
       justify-content: center;
       margin: 0;
     }
-
-    /* Recuadro de celular */
-    .phone-shell {
-      position: relative;
-      flex-shrink: 0;
-      padding: 12px 10px 16px;
-      background: #111;
-      border-radius: 42px;
-      box-shadow:
-        0 0 0 2px #333,
-        0 0 0 4px #1a1a1a,
-        0 24px 64px rgba(0, 0, 0, 0.35),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-    }
-
-    .phone-shell::before {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      height: 24px;
-      background: #111;
-      border-radius: 0 0 16px 16px;
-      z-index: 30;
-      pointer-events: none;
-    }
-
-    .phone-shell::after {
-      content: '';
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 110px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 4px;
-      z-index: 30;
-      pointer-events: none;
-    }
-
-    .phone-side-btn {
-      position: absolute;
-      background: #2a2a2a;
-      border-radius: 2px;
-      z-index: 5;
-    }
-
-    .phone-side-btn.vol-up { right: -3px; top: 120px; width: 3px; height: 36px; }
-    .phone-side-btn.vol-down { right: -3px; top: 168px; width: 3px; height: 36px; }
-    .phone-side-btn.power { left: -3px; top: 140px; width: 3px; height: 52px; }
     
     /* Contenedor del tótem */
     .totem-container {
-      max-width: 390px;
-      width: 390px;
+      max-width: 600px;
+      width: 100%;
       background: white;
-      border-radius: 32px;
-      box-shadow: none;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       position: relative;
-      height: calc(100vh - 5rem);
-      max-height: 780px;
+      height: calc(100vh - 4rem);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -111,7 +57,7 @@
     /* Header del tótem */
     .totem-header {
       background: var(--san-red);
-      padding: 1rem 1.25rem;
+      padding: 1.25rem 2rem;
       color: white;
       display: flex;
       align-items: center;
@@ -120,7 +66,7 @@
     }
 
     .totem-header .header-logo {
-      height: 34px;
+      height: 40px;
       width: auto;
       display: block;
       object-fit: contain;
@@ -791,16 +737,10 @@
         flex-direction: column;
         padding: 1rem;
       }
-
-      .phone-shell {
-        width: 100%;
-        max-width: 410px;
-      }
       
       .totem-container {
-        width: 100%;
         max-width: 100%;
-        height: 70vh;
+        height: 50vh;
       }
       
       .log-container {
@@ -814,11 +754,7 @@
 <body>
   <script src="auth-portal.js"></script>
   <script>AuthPortal.require();</script>
-  <!-- Recuadro de celular + tótem -->
-  <div class="phone-shell">
-    <span class="phone-side-btn vol-up" aria-hidden="true"></span>
-    <span class="phone-side-btn vol-down" aria-hidden="true"></span>
-    <span class="phone-side-btn power" aria-hidden="true"></span>
+  <!-- Contenedor del tótem -->
   <div class="totem-container">
     <!-- Header -->
     <div class="totem-header">
@@ -917,7 +853,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
   
   <!-- Botón Volver al menú - Siempre visible -->
