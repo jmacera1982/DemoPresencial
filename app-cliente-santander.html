@@ -46,7 +46,7 @@
     .phone-shell {
       position: relative;
       flex-shrink: 0;
-      padding: 12px 10px 16px;
+      padding: 14px 22px 18px;
       background: #111;
       border-radius: 42px;
       box-shadow:
@@ -97,8 +97,8 @@
     
     /* Contenedor tipo app móvil */
     .mobile-app-container {
-      max-width: 390px;
-      width: 390px;
+      max-width: 360px;
+      width: 360px;
       background: #fff;
       border-radius: 32px;
       box-shadow: none;
@@ -112,26 +112,36 @@
     }
     
     .mobile-app-header {
-      background: var(--san-red);
-      padding: 0.75rem 1rem;
-      color: #fff;
-      display: flex;
+      background: #fff;
+      padding: 0.85rem 1.25rem;
+      color: var(--numia-text);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
       flex-shrink: 0;
-      border-bottom: none;
+      border-bottom: 1px solid #ececec;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+    }
+
+    .mobile-app-header > .san-header-btn:first-of-type {
+      justify-self: start;
     }
 
     .san-header-btn {
       background: none;
       border: none;
-      color: #fff;
+      color: var(--san-red);
       font-size: 1.25rem;
       cursor: pointer;
       padding: 0.35rem;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .san-header-logo {
+      justify-self: center;
+      grid-column: 2;
     }
 
     .san-header-logo img {
@@ -145,6 +155,8 @@
       display: flex;
       align-items: center;
       gap: 0.65rem;
+      justify-self: end;
+      grid-column: 3;
     }
     
     .mobile-app-header button:hover {
@@ -152,11 +164,29 @@
     }
     
     .mobile-app-content {
-      background: #fff;
+      background: #f4f4f4;
       padding: 0;
       flex: 1;
+      overflow: hidden;
+      min-height: 0;
+      position: relative;
+    }
+
+    .san-screen {
+      display: none;
+      height: 100%;
       overflow-y: auto;
       min-height: 0;
+    }
+
+    .san-screen.active {
+      display: block;
+    }
+
+    .san-screen-ayuda.active {
+      display: flex;
+      flex-direction: column;
+      background: #f4f4f4;
     }
     
     .mobile-app-content::-webkit-scrollbar {
@@ -373,7 +403,7 @@
 
       .phone-shell {
         width: 100%;
-        max-width: 410px;
+        max-width: 430px;
       }
       
       .mobile-app-container {
@@ -415,30 +445,57 @@
     }
 
     .san-home {
-      padding: 0 1rem 1.5rem;
+      padding: 1rem 1.25rem 1.75rem;
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .san-home-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .san-home-greeting {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .san-home-greeting span {
+      color: var(--san-red);
     }
 
     .san-user-select {
-      margin: 0.75rem 0 0.5rem;
+      margin: 0;
+      flex-shrink: 0;
     }
 
     .san-user-select select {
-      width: 100%;
-      padding: 0.45rem 0.65rem;
-      border: 1px solid var(--numia-border);
-      border-radius: 8px;
-      font-size: 0.75rem;
+      width: auto;
+      max-width: 118px;
+      padding: 0.32rem 1.4rem 0.32rem 0.55rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 999px;
+      font-size: 0.62rem;
+      font-weight: 600;
       color: var(--numia-text-light);
-      background: #fafafa;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23767676' d='M1 1l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 0.45rem center;
+      appearance: none;
+      cursor: pointer;
     }
 
     .san-balance-card {
       background: #fff;
-      border-radius: 12px;
-      padding: 1rem 1rem 0.85rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-      border: 1px solid var(--numia-border);
+      border-radius: 16px;
+      padding: 1.1rem 1.15rem 1rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      border: none;
     }
 
     .san-balance-top {
@@ -464,29 +521,22 @@
     }
 
     .san-balance-amount {
-      font-size: 2rem;
+      font-size: 2.15rem;
       font-weight: 700;
       color: var(--numia-text);
-      letter-spacing: -0.02em;
-      margin-bottom: 0.15rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.2rem;
+      line-height: 1.1;
     }
 
     .san-balance-usd {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--numia-text-light);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0;
     }
 
     .san-greeting {
-      font-size: 0.78rem;
-      color: var(--san-red);
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .san-greeting span {
-      color: var(--numia-text);
-      font-weight: 400;
+      display: none;
     }
     
     .balance-card {
@@ -496,85 +546,106 @@
     .quick-actions {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 0.35rem;
+      margin-bottom: 1.25rem;
     }
     
     .quick-action-btn {
       background: transparent;
       border: none;
-      border-radius: 0;
-      padding: 0.5rem 0.25rem;
+      padding: 0.35rem 0.15rem;
       text-align: center;
-      text-decoration: none;
       color: var(--numia-text);
       transition: opacity 0.2s;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       cursor: pointer;
       font-family: inherit;
     }
     
     .quick-action-btn:hover {
-      opacity: 0.75;
-      color: var(--numia-text);
-      transform: none;
-      box-shadow: none;
+      opacity: 0.85;
     }
     
     .quick-action-btn i {
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      border: 1.5px solid var(--san-red);
-      color: var(--san-red);
+      background: var(--san-red);
+      border: none;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
+      box-shadow: 0 3px 10px rgba(236, 0, 0, 0.22);
     }
 
     .quick-action-btn span {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 600;
       line-height: 1.2;
+      color: #444;
     }
 
     .san-visa-banner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--san-red);
-      color: #fff;
-      border-radius: 10px;
-      padding: 0.85rem 1rem;
-      margin-bottom: 1rem;
+      background: #fff;
+      color: var(--numia-text);
+      border-radius: 16px;
+      padding: 0.95rem 1.1rem;
+      margin-bottom: 1.25rem;
       cursor: pointer;
       border: none;
       width: 100%;
       font-family: inherit;
       text-align: left;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      border-left: 4px solid var(--san-red);
     }
 
     .san-visa-banner strong {
       display: block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--san-red);
+      font-style: italic;
     }
 
     .san-visa-banner span {
-      font-size: 0.68rem;
-      opacity: 0.9;
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+    }
+
+    .san-visa-banner > i {
+      color: var(--san-red);
+      font-size: 1rem;
+    }
+
+    .san-para-vos {
+      margin-bottom: 1.25rem;
+    }
+
+    .san-para-vos-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin: 0 0 0.65rem;
     }
 
     .san-secondary-actions {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.35rem;
-      margin-bottom: 1.25rem;
+      gap: 0.25rem;
+      background: #fff;
+      border-radius: 16px;
+      padding: 0.85rem 0.35rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
     }
 
     .san-secondary-btn {
@@ -583,16 +654,23 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem;
+      gap: 0.4rem;
+      padding: 0.35rem 0.2rem;
       cursor: pointer;
       font-family: inherit;
       color: var(--numia-text);
     }
 
     .san-secondary-btn i {
-      font-size: 1.15rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--san-red-light);
       color: var(--san-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
     }
 
     .san-secondary-btn span {
@@ -619,7 +697,7 @@
     .san-promos-head a {
       font-size: 0.72rem;
       font-weight: 700;
-      color: #00847a;
+      color: var(--san-red);
       text-decoration: none;
     }
 
@@ -657,75 +735,58 @@
       color: var(--numia-text);
     }
 
+    .san-sucursal-wrap {
+      margin: 0 0 1.25rem;
+    }
+
     .san-sucursal-btn {
       width: 100%;
-      margin: 0.5rem 0 1rem;
-      padding: 0.95rem 1.15rem;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--san-red) 0%, var(--san-red-dark) 100%);
-      color: #fff;
+      margin: 0;
+      padding: 0.85rem 1rem;
+      border: 2px solid var(--san-red);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--san-red);
       font-family: inherit;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.55rem;
-      box-shadow: 0 6px 20px rgba(236, 0, 0, 0.35);
-      position: relative;
-      overflow: hidden;
-      letter-spacing: 0.02em;
-      animation: sanSucursalPulse 2.5s ease-in-out infinite;
-    }
-
-    .san-sucursal-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
-      transform: translateX(-100%);
-      animation: sanSucursalShine 3s ease-in-out infinite;
+      gap: 0.5rem;
+      box-shadow: none;
+      letter-spacing: 0.01em;
+      transition: background 0.2s, color 0.2s;
     }
 
     .san-sucursal-btn i {
-      font-size: 1.2rem;
+      font-size: 1.05rem;
     }
 
     .san-sucursal-btn:hover {
-      background: linear-gradient(135deg, var(--san-red-dark) 0%, #a80000 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(236, 0, 0, 0.45);
+      background: var(--san-red-light);
+      transform: none;
+      box-shadow: none;
     }
 
     .san-sucursal-btn:active {
-      transform: translateY(0);
-    }
-
-    @keyframes sanSucursalPulse {
-      0%, 100% { box-shadow: 0 6px 20px rgba(236, 0, 0, 0.35); }
-      50% { box-shadow: 0 8px 28px rgba(236, 0, 0, 0.5); }
-    }
-
-    @keyframes sanSucursalShine {
-      0%, 70%, 100% { transform: translateX(-100%); }
-      85% { transform: translateX(100%); }
+      background: #ffe0e0;
     }
 
     .san-sucursal-hint {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       color: var(--numia-text-light);
       text-align: center;
-      margin: -0.65rem 0 0.85rem;
+      margin: 0.45rem 0 0;
       line-height: 1.35;
     }
 
     .products-section {
-      margin-bottom: 1rem;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--numia-border);
+      margin-bottom: 0.5rem;
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
     }
 
     .section-title {
@@ -736,18 +797,18 @@
     }
 
     .product-card {
-      background: #fafafa;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 0.65rem;
-      box-shadow: none;
-      transition: all 0.2s ease;
-      border-left: 3px solid var(--san-red);
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem 1.05rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: box-shadow 0.2s ease;
+      border-left: none;
     }
     
     .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transform: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
     
     .product-header {
@@ -1054,6 +1115,638 @@
     .dni-input-group .form-control {
       flex: 1;
     }
+
+    /* Préstamo + ejecutivo + videollamada */
+    .san-promo-loan {
+      display: flex;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      position: relative;
+      min-height: 68px;
+      cursor: pointer;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .san-promo-loan:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(236, 0, 0, 0.12);
+    }
+
+    .san-promo-loan-text {
+      flex: 1;
+      color: var(--numia-text);
+      padding: 0.85rem 0.95rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      border-left: 4px solid var(--san-red);
+    }
+
+    .san-promo-loan-amount {
+      background: var(--san-red);
+      color: #fff;
+      padding: 0.75rem 0.85rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      line-height: 1.25;
+      min-width: 36%;
+    }
+
+    .san-promo-close {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.35rem;
+      background: rgba(0,0,0,0.06);
+      border: none;
+      color: var(--numia-text-light);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .san-ejecutivo-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .san-ejecutivo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.55rem;
+    }
+
+    .san-ejecutivo-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin: 0;
+    }
+
+    .san-ejecutivo-head button {
+      border: none;
+      background: none;
+      color: var(--san-red);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .san-ejecutivo-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .san-ejecutivo-top {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .san-ejecutivo-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--san-red-light);
+      flex-shrink: 0;
+    }
+
+    .san-ejecutivo-top strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--numia-text);
+      margin-bottom: 0.15rem;
+    }
+
+    .san-ejecutivo-top span {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+    }
+
+    .san-ejecutivo-contact {
+      display: flex;
+      justify-content: space-around;
+      gap: 0.5rem;
+    }
+
+    .san-ejecutivo-contact button {
+      background: transparent;
+      border: none;
+      color: var(--numia-text);
+      font-family: inherit;
+      font-size: 0.62rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+      border-radius: 12px;
+      flex: 1;
+    }
+
+    .san-ejecutivo-contact button i {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--san-red);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .san-ejecutivo-contact button:not([data-action="asesoramiento"]) i {
+      background: var(--san-red-light);
+      color: var(--san-red);
+    }
+
+    .san-ayuda-header {
+      background: #fff;
+      color: var(--numia-text);
+      padding: 0.75rem 1.25rem 1.5rem;
+      border-radius: 0 0 24px 24px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .san-ayuda-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .san-ayuda-header-bar button {
+      background: transparent;
+      border: none;
+      color: var(--san-red);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .san-ayuda-kicker {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--san-red);
+      margin-bottom: 0.35rem;
+    }
+
+    .san-ayuda-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 0.85rem;
+      color: var(--numia-text);
+    }
+
+    .san-ayuda-search {
+      display: flex;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--numia-border);
+      border-radius: 14px;
+      background: #f9f9f9;
+      color: var(--numia-text-light);
+      font-family: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .san-ayuda-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.15rem 1.25rem 1.5rem;
+    }
+
+    .san-ayuda-section-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 0.65rem;
+    }
+
+    .san-ayuda-list-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background: #fff;
+      border: none;
+      border-radius: 16px;
+      margin-bottom: 0.65rem;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: var(--numia-text);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .san-ayuda-list-card .chev {
+      margin-left: auto;
+      color: var(--numia-text-light);
+    }
+
+    .san-promo-popup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .san-promo-popup.active { display: flex; }
+
+    .san-promo-popup-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .san-promo-popup-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 340px;
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    .san-promo-popup-hero {
+      background: linear-gradient(135deg, var(--san-red) 0%, var(--san-red-dark) 100%);
+      padding: 1.5rem 1.25rem 1.25rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .san-promo-popup-close {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .san-promo-popup-logo {
+      display: inline-flex;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      margin-bottom: 0.85rem;
+    }
+
+    .san-promo-popup-logo img { height: 26px; width: auto; }
+
+    .san-promo-popup-hero h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 0.35rem;
+    }
+
+    .san-promo-popup-hero p {
+      font-size: 0.78rem;
+      opacity: 0.92;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .san-promo-popup-body { padding: 1.15rem 1.25rem 1.35rem; }
+
+    .san-promo-popup-badge {
+      display: inline-block;
+      background: var(--san-red-light);
+      color: var(--san-red);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.65rem;
+    }
+
+    .san-promo-popup-highlight {
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .san-promo-popup-highlight strong {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--san-red);
+    }
+
+    .san-promo-popup-highlight span {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+    }
+
+    .san-promo-popup-features {
+      list-style: none;
+      margin: 0 0 1rem;
+      padding: 0;
+    }
+
+    .san-promo-popup-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: #374151;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+
+    .san-promo-popup-features li i {
+      color: var(--san-red);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .san-promo-popup-cta {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: none;
+      border-radius: 12px;
+      background: var(--san-red);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .san-promo-popup-dismiss {
+      width: 100%;
+      padding: 0.55rem;
+      border: none;
+      background: transparent;
+      color: var(--numia-text-light);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .san-modal-atencion {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .san-modal-atencion.active { display: flex; }
+
+    .san-modal-atencion-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .san-modal-atencion-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 414px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 1.1rem 1.15rem 1.5rem;
+      box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .san-modal-atencion-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .san-modal-atencion-head h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin: 0 0 0.25rem;
+    }
+
+    .san-modal-atencion-head p {
+      font-size: 0.78rem;
+      color: var(--numia-text-light);
+      margin: 0;
+    }
+
+    .san-modal-close {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      border-radius: 50%;
+      background: #f3f4f6;
+      color: var(--numia-text);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .san-fv-loading { text-align: center; padding: 1.5rem 0.5rem; }
+    .san-fv-loading p { font-size: 0.85rem; color: var(--numia-text-light); margin-top: 0.75rem; }
+
+    .san-fv-spinner {
+      display: inline-block;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid #e5e7eb;
+      border-top-color: var(--san-red);
+      border-radius: 50%;
+      animation: sanFvSpin 0.65s linear infinite;
+    }
+
+    @keyframes sanFvSpin { to { transform: rotate(360deg); } }
+
+    .san-fv-alert { display: none; padding: 0.65rem 0.75rem; border-radius: 8px; font-size: 0.8rem; margin-bottom: 0.75rem; }
+    .san-fv-alert.danger { display: block; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    .san-fv-info-text {
+      background: #fff5f5;
+      border-left: 4px solid var(--san-red);
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-top: 0.85rem;
+      font-size: 0.78rem;
+      color: #4b5563;
+      line-height: 1.45;
+    }
+
+    .san-fv-turn-info {
+      display: none;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 2px solid var(--numia-border);
+    }
+
+    .san-fv-turn-info.active { display: block; }
+
+    .san-fv-success-badge {
+      display: inline-block;
+      background: var(--numia-success);
+      color: #fff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .san-fv-info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--numia-border);
+      border-radius: 8px;
+      background: #f9fafb;
+      margin-bottom: 0.45rem;
+      font-size: 0.78rem;
+    }
+
+    .san-fv-info-label { font-weight: 600; color: #4b5563; }
+    .san-fv-info-value { font-weight: 700; color: var(--numia-text); text-align: right; }
+    .san-fv-status-warn { color: #d97706 !important; }
+    .san-fv-status-ok { color: var(--numia-success) !important; }
+    .san-fv-status-done { color: #2563eb !important; }
+    .san-fv-status-err { color: #dc2626 !important; }
+
+    .san-fv-btn-video {
+      width: 100%;
+      margin-top: 0.85rem;
+      padding: 0.7rem 1rem;
+      border: none;
+      border-radius: 12px;
+      background: var(--san-red);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .san-fv-btn-video:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .san-fv-hint {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+      text-align: center;
+      margin-top: 0.45rem;
+    }
+
+    .san-video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    .san-video-modal.active { display: flex; }
+
+    .san-video-container {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem;
+      width: 100%;
+      max-width: 414px;
+      height: min(80vh, 640px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .san-video-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+    }
+
+    .san-video-head h6 {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--numia-text);
+    }
+
+    .san-video-close {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--numia-text-light);
+      cursor: pointer;
+    }
+
+    .san-video-iframe {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      min-height: 0;
+    }
     
     @media (max-width: 768px) {
       .main-container {
@@ -1087,7 +1780,7 @@
     <div class="mobile-app-header">
       <button type="button" class="san-header-btn" aria-label="Menú"><i class="bi bi-list"></i></button>
       <div class="san-header-logo">
-        <img src="images/LogoSantanderBlanco.png" alt="Santander" />
+        <img src="images/logo-santander.svg" alt="Santander" />
       </div>
       <div class="san-header-actions">
         <button type="button" class="san-header-btn" aria-label="Buscar"><i class="bi bi-search"></i></button>
@@ -1097,7 +1790,8 @@
     
     <!-- Contenido de la app móvil -->
     <div class="mobile-app-content">
-      <div class="main-container san-home" style="padding: 0; margin: 0;">
+      <div id="sanScreenHome" class="san-screen active">
+      <div class="main-container san-home">
 
     <!-- Elementos legacy para JS -->
     <div class="welcome-section" aria-hidden="true">
@@ -1105,32 +1799,29 @@
       <button id="btnSolicitarAtencion" type="button" class="btn"><i class="bi bi-geo-alt"></i><span>Estoy en la sucursal</span></button>
     </div>
 
-    <div class="san-user-select">
-      <select id="nombreSelector" aria-label="Usuario demo">
-        <option value="Jorge" selected>Jorge — demo</option>
-        <option value="Joaquin">Joaquin</option>
-        <option value="Gustavo">Gustavo</option>
-        <option value="Martin">Martin</option>
-        <option value="Juanma S">Juanma S</option>
-        <option value="Juanma L">Juanma L</option>
-        <option value="Andrea">Andrea</option>
-        <option value="Natalia">Natalia</option>
-        <option value="Juanca">Juanca</option>
-        <option value="Aldo">Aldo</option>
-        <option value="Eduardo">Eduardo</option>
-        <option value="Manuel">Manuel</option>
-        <option value="Alberto">Alberto</option>
-        <option value="demo">Romy / demo</option>
-      </select>
+    <div class="san-home-top">
+      <p class="san-home-greeting">Hola, <span id="saludoNombreVisible">Jorge</span></p>
+      <div class="san-user-select">
+        <select id="nombreSelector" aria-label="Usuario demo">
+          <option value="Jorge" selected>Jorge — demo</option>
+          <option value="Joaquin">Joaquin</option>
+          <option value="Gustavo">Gustavo</option>
+          <option value="Martin">Martin</option>
+          <option value="Juanma S">Juanma S</option>
+          <option value="Juanma L">Juanma L</option>
+          <option value="Andrea">Andrea</option>
+          <option value="Natalia">Natalia</option>
+          <option value="Juanca">Juanca</option>
+          <option value="Aldo">Aldo</option>
+          <option value="Eduardo">Eduardo</option>
+          <option value="Manuel">Manuel</option>
+          <option value="Alberto">Alberto</option>
+          <option value="demo">Romy / demo</option>
+        </select>
+      </div>
     </div>
 
-    <button type="button" class="san-sucursal-btn" id="btnSolicitarAtencionVisible">
-      <i class="bi bi-geo-alt-fill"></i> Estoy en la sucursal
-    </button>
-    <p class="san-sucursal-hint">Tocá acá para iniciar atención presencial con un asesor</p>
-
     <div class="san-balance-card">
-      <p class="san-greeting">Hola, <span id="saludoNombreVisible">Jorge</span></p>
       <div class="san-balance-top">
         <div class="san-balance-cbu">CA $ 020 0001234567890<br/>CBU 007 0123 4 0123456789012</div>
         <button type="button" class="san-balance-eye" id="btnToggleBalance" aria-label="Ocultar saldo"><i class="bi bi-eye"></i></button>
@@ -1167,11 +1858,54 @@
       <i class="bi bi-chevron-right"></i>
     </button>
 
-    <div class="san-secondary-actions">
-      <button type="button" class="san-secondary-btn"><i class="bi bi-cart3"></i><span>Supermercados</span></button>
-      <button type="button" class="san-secondary-btn"><i class="bi bi-bag"></i><span>Compra Online</span></button>
-      <button type="button" class="san-secondary-btn"><i class="bi bi-cash-stack"></i><span>Préstamos</span></button>
-      <button type="button" class="san-secondary-btn"><i class="bi bi-percent"></i><span>Beneficios</span></button>
+    <div class="san-sucursal-wrap">
+      <button type="button" class="san-sucursal-btn" id="btnSolicitarAtencionVisible">
+        <i class="bi bi-geo-alt-fill"></i> Estoy en la sucursal
+      </button>
+      <p class="san-sucursal-hint">Iniciar atención presencial con un asesor</p>
+    </div>
+
+    <div class="san-para-vos">
+      <h2 class="san-para-vos-title">Para vos</h2>
+      <div class="san-secondary-actions">
+        <button type="button" class="san-secondary-btn"><i class="bi bi-cart3"></i><span>Supermercados</span></button>
+        <button type="button" class="san-secondary-btn"><i class="bi bi-bag"></i><span>Compra Online</span></button>
+        <button type="button" class="san-secondary-btn"><i class="bi bi-cash-stack"></i><span>Préstamos</span></button>
+        <button type="button" class="san-secondary-btn"><i class="bi bi-percent"></i><span>Beneficios</span></button>
+      </div>
+    </div>
+
+    <div class="san-promo-loan" id="sanPromoLoan" role="button" tabindex="0" aria-label="Préstamo preaprobado — solicitar asesoría">
+      <button type="button" class="san-promo-close" id="btnCerrarPromoLoan" aria-label="Cerrar"><i class="bi bi-x"></i></button>
+      <div class="san-promo-loan-text">Tenés un préstamo aprobado a tasa preferencial</div>
+      <div class="san-promo-loan-amount">$1.000.000 en 36 cuotas</div>
+    </div>
+
+    <div class="san-ejecutivo-section">
+      <div class="san-ejecutivo-head">
+        <h2>Hablar con mi ejecutivo</h2>
+        <button type="button" id="btnVerCentroAyuda">Ver todo</button>
+      </div>
+      <div class="san-ejecutivo-card">
+        <div class="san-ejecutivo-top">
+          <img class="san-ejecutivo-avatar" src="https://i.pravatar.cc/112?img=33" width="52" height="52" alt="Ejecutivo Santander" />
+          <div>
+            <strong>Soy Martín Restrepo</strong>
+            <span>Tu ejecutivo Santander · Contáctame por</span>
+          </div>
+        </div>
+        <div class="san-ejecutivo-contact">
+          <button type="button" id="btnEjecutivoVideollamada" data-action="asesoramiento">
+            <i class="bi bi-camera-video"></i> Videollamada
+          </button>
+          <button type="button" data-san-demo="llamada">
+            <i class="bi bi-telephone"></i> Llamada
+          </button>
+          <button type="button" data-san-demo="whatsapp">
+            <i class="bi bi-whatsapp"></i> Whatsapp
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="san-promos-head">
@@ -1293,9 +2027,167 @@
       </div>
     </div>
 
+      </div><!-- /main-container -->
+      </div><!-- /sanScreenHome -->
+
+      <div id="sanScreenAyuda" class="san-screen san-screen-ayuda">
+        <header class="san-ayuda-header">
+          <div class="san-ayuda-header-bar">
+            <button type="button" id="btnAyudaBack" aria-label="Volver"><i class="bi bi-arrow-left"></i></button>
+            <button type="button" id="btnAyudaClose" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+          </div>
+          <p class="san-ayuda-kicker">Centro de ayuda</p>
+          <h1 class="san-ayuda-title">¿En qué te podemos ayudar?</h1>
+          <button type="button" class="san-ayuda-search">Realiza tu consulta</button>
+        </header>
+        <div class="san-ayuda-body">
+          <h2 class="san-ayuda-section-title">Tu ejecutivo asignado</h2>
+          <div class="san-ejecutivo-card">
+            <div class="san-ejecutivo-top">
+              <img class="san-ejecutivo-avatar" src="https://i.pravatar.cc/112?img=33" width="52" height="52" alt="Martín Restrepo" />
+              <div>
+                <strong>Soy Martín Restrepo</strong>
+                <span>Contáctame por</span>
+              </div>
+            </div>
+            <div class="san-ejecutivo-contact">
+              <button type="button" id="btnAyudaVideollamada" data-action="asesoramiento">
+                <i class="bi bi-camera-video"></i> Videollamada
+              </button>
+              <button type="button" data-san-demo="llamada">
+                <i class="bi bi-telephone"></i> Llamada
+              </button>
+              <button type="button" data-san-demo="whatsapp">
+                <i class="bi bi-whatsapp"></i> Whatsapp
+              </button>
+            </div>
+          </div>
+          <h2 class="san-ayuda-section-title">Seguimiento de PQRS</h2>
+          <button type="button" class="san-ayuda-list-card" data-san-demo="pqrs">
+            <i class="bi bi-files"></i>
+            <span>Consulta tus peticiones, quejas, reclamos y solicitudes</span>
+            <i class="bi bi-chevron-right chev"></i>
+          </button>
+          <h2 class="san-ayuda-section-title">Temas de interés</h2>
+          <button type="button" class="san-ayuda-list-card" data-san-demo="faq">
+            <i class="bi bi-question-circle"></i>
+            <span>Preguntas frecuentes</span>
+            <i class="bi bi-chevron-right chev"></i>
+          </button>
+          <h2 class="san-ayuda-section-title">Comunícate con el Banco</h2>
+          <button type="button" class="san-ayuda-list-card" data-san-demo="banco">
+            <i class="bi bi-headset"></i>
+            <span>Líneas de atención y sucursales</span>
+            <i class="bi bi-chevron-right chev"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+  <!-- Popup préstamo → videollamada -->
+  <div id="sanPromoPopup" class="san-promo-popup" aria-hidden="true" role="dialog" aria-labelledby="sanPromoPopupTitle">
+    <div class="san-promo-popup-backdrop" id="sanPromoPopupBackdrop"></div>
+    <div class="san-promo-popup-panel">
+      <div class="san-promo-popup-hero">
+        <button type="button" class="san-promo-popup-close" id="btnPromoPopupClose" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+        <div class="san-promo-popup-logo">
+          <img src="images/logo-santander.svg" alt="Santander" />
+        </div>
+        <h3 id="sanPromoPopupTitle">¡Tenés un préstamo preaprobado!</h3>
+        <p>Un asesor de Santander te explica las mejores opciones de financiamiento.</p>
+      </div>
+      <div class="san-promo-popup-body">
+        <span class="san-promo-popup-badge">Oferta exclusiva</span>
+        <div class="san-promo-popup-highlight">
+          <strong>Hasta $1.000.000</strong>
+          <span>Tasa preferencial · 36 cuotas</span>
+        </div>
+        <ul class="san-promo-popup-features">
+          <li><i class="bi bi-check-circle-fill"></i> Asesoría personalizada por videollamada</li>
+          <li><i class="bi bi-check-circle-fill"></i> Aprobación rápida sin ir a la sucursal</li>
+          <li><i class="bi bi-check-circle-fill"></i> Respuesta inmediata en horario bancario</li>
+        </ul>
+        <button type="button" class="san-promo-popup-cta" id="btnPromoVideollamada">
+          <i class="bi bi-camera-video-fill"></i> Solicitar videollamada con asesor
+        </button>
+        <button type="button" class="san-promo-popup-dismiss" id="btnPromoPopupDismiss">Ahora no</button>
       </div>
     </div>
   </div>
+
+  <!-- Atención por videollamada — Fila Virtual -->
+  <div id="sanModalAtencion" class="san-modal-atencion" aria-hidden="true" role="dialog" aria-labelledby="sanModalAtencionTitle">
+    <div class="san-modal-atencion-backdrop" id="sanModalAtencionBackdrop"></div>
+    <div class="san-modal-atencion-panel">
+      <div class="san-modal-atencion-head">
+        <div>
+          <h3 id="sanModalAtencionTitle"><i class="bi bi-camera-video"></i> Recibir asesoramiento</h3>
+          <p id="sanModalAtencionSubtitle">Generando tu atención en el sistema…</p>
+        </div>
+        <button type="button" class="san-modal-close" id="sanModalAtencionClose" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div id="sanFvFormAlert" class="san-fv-alert" role="alert"></div>
+      <div id="sanFvLoading" class="san-fv-loading">
+        <span class="san-fv-spinner"></span>
+        <p>Conectando con tu ejecutivo…</p>
+      </div>
+      <div class="san-fv-info-text">
+        <i class="bi bi-info-circle"></i> Al continuar, te asignaremos una atención y verás una sala de espera. Cuando el agente esté listo, podrás iniciar una videollamada.
+      </div>
+      <div id="sanFvTurnInfoSection" class="san-fv-turn-info">
+        <div style="text-align:center;margin-bottom:0.85rem;">
+          <span class="san-fv-success-badge"><i class="bi bi-check2-circle"></i> Atención reservada</span>
+          <div style="font-size:0.82rem;font-weight:600;color:var(--numia-success);">¡Tu atención ha sido generada en el sistema!</div>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Código de la atención</span>
+          <span class="san-fv-info-value" id="sanFvTurnCodeDisplay">—</span>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Número de atención</span>
+          <span class="san-fv-info-value" id="sanFvTurnNumber">—</span>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Estado</span>
+          <span class="san-fv-info-value san-fv-status-warn" id="sanFvTurnStatus">Consultando...</span>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Tiempo de espera actual</span>
+          <span class="san-fv-info-value" id="sanFvCurrentWaitingTime">N/A</span>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Tiempo promedio</span>
+          <span class="san-fv-info-value" id="sanFvAvgWaitingTime">N/A</span>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Cola / servicio</span>
+          <span class="san-fv-info-value" id="sanFvQueueName">—</span>
+        </div>
+        <div class="san-fv-info-item">
+          <span class="san-fv-info-label">Sala de espera</span>
+          <span class="san-fv-info-value" id="sanFvWaitingRoomName">—</span>
+        </div>
+        <button type="button" id="sanFvBtnAbrirVideo" class="san-fv-btn-video" disabled>
+          <i class="bi bi-camera-video"></i> Conectarme a videollamada
+        </button>
+        <p class="san-fv-hint">El botón se habilitará cuando el agente te llame.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sanVideoModal" class="san-video-modal" aria-hidden="true">
+    <div class="san-video-container">
+      <div class="san-video-head">
+        <h6><i class="bi bi-camera-video"></i> Videollamada</h6>
+        <button type="button" class="san-video-close" id="sanBtnCloseVideo" aria-label="Cerrar videollamada"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <iframe id="sanVideoFrame" class="san-video-iframe" src="about:blank" title="Videollamada"
+        allow="camera; microphone; autoplay; fullscreen; clipboard-write; display-capture"
+        referrerpolicy="no-referrer" allowfullscreen></iframe>
+    </div>
   </div>
   
   <!-- Contenedor de Logs a la derecha -->
@@ -2370,6 +3262,333 @@
         return div.innerHTML;
       }
     });
+  </script>
+  <script>
+    (function () {
+      var screenHome = document.getElementById('sanScreenHome');
+      var screenAyuda = document.getElementById('sanScreenAyuda');
+
+      function showHome() {
+        if (screenHome) screenHome.classList.add('active');
+        if (screenAyuda) screenAyuda.classList.remove('active');
+      }
+
+      function showAyuda() {
+        if (screenHome) screenHome.classList.remove('active');
+        if (screenAyuda) {
+          screenAyuda.classList.add('active');
+          var body = screenAyuda.querySelector('.san-ayuda-body');
+          if (body) body.scrollTop = 0;
+        }
+      }
+
+      function activarAsesoramiento() {
+        if (typeof window.abrirModalAtencionSAN === 'function') {
+          window.abrirModalAtencionSAN();
+        }
+      }
+
+      var btnVerCentroAyuda = document.getElementById('btnVerCentroAyuda');
+      if (btnVerCentroAyuda) btnVerCentroAyuda.addEventListener('click', showAyuda);
+      var btnAyudaBack = document.getElementById('btnAyudaBack');
+      if (btnAyudaBack) btnAyudaBack.addEventListener('click', showHome);
+      var btnAyudaClose = document.getElementById('btnAyudaClose');
+      if (btnAyudaClose) btnAyudaClose.addEventListener('click', showHome);
+
+      function bindVideollamada(el) {
+        if (!el) return;
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          activarAsesoramiento();
+        });
+      }
+
+      bindVideollamada(document.getElementById('btnEjecutivoVideollamada'));
+      bindVideollamada(document.getElementById('btnAyudaVideollamada'));
+
+      document.addEventListener('click', function (e) {
+        var demo = e.target.closest('[data-san-demo]');
+        if (demo) {
+          e.preventDefault();
+          window.alert('Opción demo: en la app real se abriría este canal de contacto.');
+        }
+      });
+
+      var btnCerrarPromoLoan = document.getElementById('btnCerrarPromoLoan');
+      if (btnCerrarPromoLoan) {
+        btnCerrarPromoLoan.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var p = document.getElementById('sanPromoLoan');
+          if (p) p.style.display = 'none';
+        });
+      }
+
+      var promoPopup = document.getElementById('sanPromoPopup');
+      var PROMO_DISMISS_KEY = 'sanPromoDismissed';
+
+      function cerrarPromoPopup(remember) {
+        if (!promoPopup) return;
+        promoPopup.classList.remove('active');
+        promoPopup.setAttribute('aria-hidden', 'true');
+        if (remember) {
+          try { sessionStorage.setItem(PROMO_DISMISS_KEY, '1'); } catch (err) { /* ignore */ }
+        }
+      }
+
+      function abrirPromoPopup() {
+        if (!promoPopup) return;
+        promoPopup.classList.add('active');
+        promoPopup.setAttribute('aria-hidden', 'false');
+      }
+
+      function irAVideollamadaDesdePromo() {
+        cerrarPromoPopup(true);
+        activarAsesoramiento();
+      }
+
+      var btnPromoVideollamada = document.getElementById('btnPromoVideollamada');
+      if (btnPromoVideollamada) btnPromoVideollamada.addEventListener('click', irAVideollamadaDesdePromo);
+      var btnPromoPopupClose = document.getElementById('btnPromoPopupClose');
+      if (btnPromoPopupClose) btnPromoPopupClose.addEventListener('click', function () { cerrarPromoPopup(true); });
+      var btnPromoPopupDismiss = document.getElementById('btnPromoPopupDismiss');
+      if (btnPromoPopupDismiss) btnPromoPopupDismiss.addEventListener('click', function () { cerrarPromoPopup(true); });
+      var promoBackdrop = document.getElementById('sanPromoPopupBackdrop');
+      if (promoBackdrop) promoBackdrop.addEventListener('click', function () { cerrarPromoPopup(true); });
+
+      var sanPromoLoan = document.getElementById('sanPromoLoan');
+      if (sanPromoLoan) {
+        sanPromoLoan.addEventListener('click', function (e) {
+          if (e.target.closest('#btnCerrarPromoLoan')) return;
+          irAVideollamadaDesdePromo();
+        });
+        sanPromoLoan.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            irAVideollamadaDesdePromo();
+          }
+        });
+      }
+
+      var dismissed = false;
+      try { dismissed = sessionStorage.getItem(PROMO_DISMISS_KEY) === '1'; } catch (e2) { /* ignore */ }
+      if (!dismissed) {
+        setTimeout(function () {
+          if (screenHome && screenHome.classList.contains('active')) {
+            abrirPromoPopup();
+          }
+        }, 1200);
+      }
+    })();
+
+    (function () {
+      var FV_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+      var FV_QUEUE = 16223;
+      var FV_BRANCH = 10750;
+      var FV_BASE = 'https://filavirtual2.debmedia.com/api/v1';
+      var fvPollingInterval = null;
+      window.sanCurrentVideoCallUrl = 'about:blank';
+
+      var modalEl = document.getElementById('sanModalAtencion');
+      var modalBackdrop = document.getElementById('sanModalAtencionBackdrop');
+      var modalClose = document.getElementById('sanModalAtencionClose');
+      var fvFormAlert = document.getElementById('sanFvFormAlert');
+      var fvTurnInfoSection = document.getElementById('sanFvTurnInfoSection');
+      var fvLoadingEl = document.getElementById('sanFvLoading');
+      var fv$ = function (id) { return document.getElementById(id); };
+
+      var SAN_USUARIOS = {
+        'Jorge': { firstName: 'Jorge', lastName: 'Macera', dni: '29328703', email: 'jmacera@gmail.com' },
+        'Joaquin': { firstName: 'Joaquin', lastName: 'Zolio', dni: '33877733', email: 'demo@santander.com' },
+        'Gustavo': { firstName: 'Gustavo', lastName: 'Lauria', dni: '33689449', email: 'demo@santander.com' },
+        'Martin': { firstName: 'Martin', lastName: 'Fernandez', dni: '34982731', email: 'demo@santander.com' },
+        'demo': { firstName: 'Romy', lastName: 'Demo', dni: '12345678', email: 'demo@santander.com' }
+      };
+
+      function getFvUser() {
+        var sel = document.getElementById('nombreSelector');
+        var key = sel ? sel.value : 'Jorge';
+        return SAN_USUARIOS[key] || SAN_USUARIOS['Jorge'];
+      }
+
+      function fvSetFormAlert(type, msg) {
+        fvFormAlert.className = 'san-fv-alert ' + type;
+        fvFormAlert.textContent = msg;
+      }
+
+      function fvClearFormAlert() {
+        fvFormAlert.className = 'san-fv-alert';
+        fvFormAlert.textContent = '';
+      }
+
+      function fvStopPolling() {
+        if (fvPollingInterval) {
+          clearInterval(fvPollingInterval);
+          fvPollingInterval = null;
+        }
+      }
+
+      function fvResetModal() {
+        fvStopPolling();
+        fvClearFormAlert();
+        if (fvTurnInfoSection) fvTurnInfoSection.classList.remove('active');
+        if (fvLoadingEl) fvLoadingEl.style.display = '';
+        var vf = document.getElementById('sanVideoFrame');
+        if (vf) vf.src = 'about:blank';
+        window.sanCurrentVideoCallUrl = 'about:blank';
+        var vm = document.getElementById('sanVideoModal');
+        if (vm) {
+          vm.classList.remove('active');
+          vm.setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      function cerrarModalAtencion() {
+        if (!modalEl) return;
+        modalEl.classList.remove('active');
+        modalEl.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        fvResetModal();
+      }
+
+      async function fvEnviarAtencion() {
+        fvClearFormAlert();
+        if (fvLoadingEl) fvLoadingEl.style.display = '';
+        if (fvTurnInfoSection) fvTurnInfoSection.classList.remove('active');
+        var user = getFvUser();
+
+        try {
+          var res = await fetch(FV_BASE + '/queue/' + FV_QUEUE + '/branch/' + FV_BRANCH + '/enqueue', {
+            method: 'POST',
+            headers: { 'x-api-token': FV_TOKEN, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              firstName: user.firstName,
+              lastName: user.lastName,
+              dni: user.dni,
+              email: user.email,
+              phone: user.phone || ''
+            })
+          });
+
+          var out = await res.json().catch(function () { return {}; });
+          if (!res.ok) throw new Error((out && out.message) || ('Error en servidor (' + res.status + ')'));
+
+          var turnCode = out.code || '—';
+          var turnNumber = (out.jsonDetails && (out.jsonDetails.turn || out.jsonDetails.actualTurn)) || '—';
+          var avgWait = (out.jsonDetails && (out.jsonDetails.averageWaitingTime != null ? out.jsonDetails.averageWaitingTime : out.jsonDetails.serviceTime)) || 'N/A';
+          var queueName = (out.jsonDetails && out.jsonDetails.queue && out.jsonDetails.queue.name) || '—';
+          var wrName = (out.jsonDetails && out.jsonDetails.waitingRoom && out.jsonDetails.waitingRoom.name) || '—';
+          window.sanCurrentVideoCallUrl = (out.jsonDetails && out.jsonDetails.videoCallUrl) || 'about:blank';
+
+          if (fvLoadingEl) fvLoadingEl.style.display = 'none';
+          fv$('sanFvTurnCodeDisplay').textContent = turnCode;
+          fv$('sanFvTurnNumber').textContent = turnNumber;
+          fv$('sanFvAvgWaitingTime').textContent = isFinite(avgWait) ? Math.floor(parseFloat(avgWait)) + ' min' : 'N/A';
+          fv$('sanFvQueueName').textContent = queueName;
+          fv$('sanFvWaitingRoomName').textContent = wrName;
+          fv$('sanFvTurnStatus').textContent = 'Consultando...';
+          fv$('sanFvTurnStatus').className = 'san-fv-info-value san-fv-status-warn';
+          fv$('sanFvCurrentWaitingTime').textContent = 'N/A';
+          fv$('sanFvBtnAbrirVideo').disabled = true;
+          if (fvTurnInfoSection) fvTurnInfoSection.classList.add('active');
+          fvStartPolling(turnCode);
+        } catch (err) {
+          if (fvLoadingEl) fvLoadingEl.style.display = 'none';
+          fvSetFormAlert('danger', err.message);
+        }
+      }
+
+      window.abrirModalAtencionSAN = function () {
+        if (!modalEl) return;
+        fvResetModal();
+        modalEl.classList.add('active');
+        modalEl.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        fvEnviarAtencion();
+      };
+
+      if (modalBackdrop) modalBackdrop.addEventListener('click', cerrarModalAtencion);
+      if (modalClose) modalClose.addEventListener('click', cerrarModalAtencion);
+
+      function fvStartPolling(turnCode) {
+        fvStopPolling();
+        var url = FV_BASE + '/turn/code/' + encodeURIComponent(turnCode);
+        var mapStatus = function (s) {
+          if (s === 'ANNOUNCED') return { text: 'Lo estamos llamando', cls: 'san-fv-status-ok' };
+          if (s === 'WAITING_TO_BE_CALLED') return { text: 'En breve lo llamaremos', cls: 'san-fv-status-warn' };
+          if (s === 'FINALIZED') return { text: 'Atención finalizada', cls: 'san-fv-status-done' };
+          return { text: s || 'Desconocido', cls: 'san-fv-status-warn' };
+        };
+
+        var tick = async function () {
+          try {
+            var res = await fetch(url, {
+              headers: { 'x-api-token': FV_TOKEN, 'Content-Type': 'text/plain' }
+            });
+            if (!res.ok) throw new Error('Estado no disponible (' + res.status + ')');
+            var data = await res.json();
+            var m = mapStatus(data.status);
+            fv$('sanFvTurnStatus').textContent = m.text;
+            fv$('sanFvTurnStatus').className = 'san-fv-info-value ' + m.cls;
+            var avg = (data.averageWaitingTime != null ? data.averageWaitingTime : data.serviceTime);
+            if (avg !== undefined && avg !== null && !isNaN(avg)) {
+              fv$('sanFvCurrentWaitingTime').textContent = Math.floor(parseFloat(avg)) + ' min';
+            }
+            if (data.status === 'ANNOUNCED') {
+              fv$('sanFvBtnAbrirVideo').disabled = false;
+            }
+          } catch (e) {
+            fv$('sanFvTurnStatus').textContent = 'Error al consultar';
+            fv$('sanFvTurnStatus').className = 'san-fv-info-value san-fv-status-err';
+          }
+        };
+
+        tick();
+        fvPollingInterval = setInterval(tick, 5000);
+      }
+
+      var fvBtnAbrirVideo = document.getElementById('sanFvBtnAbrirVideo');
+      var sanVideoModal = document.getElementById('sanVideoModal');
+      if (fvBtnAbrirVideo) {
+        fvBtnAbrirVideo.addEventListener('click', function () {
+          var videoUrl = window.sanCurrentVideoCallUrl || 'about:blank';
+          var urlWithParam = videoUrl.indexOf('?') >= 0 ? videoUrl + '&videocallUser=mobile' : videoUrl + '?videocallUser=mobile';
+          var vf = document.getElementById('sanVideoFrame');
+          if (vf) vf.src = urlWithParam;
+          if (sanVideoModal) {
+            sanVideoModal.classList.add('active');
+            sanVideoModal.setAttribute('aria-hidden', 'false');
+          }
+          document.body.style.overflow = 'hidden';
+        });
+      }
+
+      var sanBtnCloseVideo = document.getElementById('sanBtnCloseVideo');
+      if (sanBtnCloseVideo && sanVideoModal) {
+        sanBtnCloseVideo.addEventListener('click', function () {
+          sanVideoModal.classList.remove('active');
+          sanVideoModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = modalEl && modalEl.classList.contains('active') ? 'hidden' : '';
+        });
+        sanVideoModal.addEventListener('click', function (e) {
+          if (e.target === sanVideoModal) {
+            sanVideoModal.classList.remove('active');
+            sanVideoModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = modalEl && modalEl.classList.contains('active') ? 'hidden' : '';
+          }
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (sanVideoModal && sanVideoModal.classList.contains('active')) {
+          sanVideoModal.classList.remove('active');
+          sanVideoModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = modalEl && modalEl.classList.contains('active') ? 'hidden' : '';
+        } else if (modalEl && modalEl.classList.contains('active')) {
+          cerrarModalAtencion();
+        }
+      });
+    })();
   </script>
 </body>
 </html>
