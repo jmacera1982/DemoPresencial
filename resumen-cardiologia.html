@@ -332,6 +332,19 @@
 
     .btn-print:hover { background: var(--primary-dark); color: #fff; }
 
+    .btn-pdf {
+      background: #fff;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-pdf:hover:not(:disabled) { background: var(--primary-light); }
+
+    .btn-pdf:disabled, .btn-print:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
     @media print {
       .email-bar, .actions { display: none; }
       body { background: #fff; }
@@ -356,7 +369,7 @@
   </div>
 
   <div class="page-wrap">
-    <div class="doc-card">
+    <div class="doc-card" id="docCard">
       <header class="doc-header">
         <div class="doc-header-top">
           <div class="brand">
@@ -509,12 +522,16 @@
     </div>
 
     <div class="actions">
-      <button type="button" class="btn-action btn-print" onclick="window.print()">
-        <i class="bi bi-printer"></i> Imprimir / Guardar PDF
+      <button type="button" class="btn-action btn-pdf" id="btnExportPdf">
+        <i class="bi bi-file-earmark-pdf"></i><span id="btnExportPdfLabel">Exportar PDF</span>
+      </button>
+      <button type="button" class="btn-action btn-print" id="btnPrint">
+        <i class="bi bi-printer"></i> Imprimir
       </button>
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
@@ -588,6 +605,56 @@
         'Cita sugerida: ' + formatDate(proxima);
 
       document.title = 'Resumen Cardiología — ' + nombre;
+
+      var btnExportPdf = document.getElementById('btnExportPdf');
+      var btnPrint = document.getElementById('btnPrint');
+
+      if (btnPrint) {
+        btnPrint.addEventListener('click', function () { window.print(); });
+      }
+
+      if (btnExportPdf) {
+        btnExportPdf.addEventListener('click', function () {
+          if (typeof html2pdf === 'undefined') {
+            window.alert('No se pudo cargar la librería de PDF. Usá Imprimir y elegí "Guardar como PDF".');
+            return;
+          }
+
+          var docEl = document.getElementById('docCard');
+          if (!docEl) return;
+
+          var slug = nombre.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9\-áéíóúñÁÉÍÓÚÑ]/g, '');
+          var filename = 'resumen-cardiologia-' + (slug || 'paciente') + '.pdf';
+
+          btnExportPdf.disabled = true;
+          var labelEl = document.getElementById('btnExportPdfLabel');
+          var prevLabel = labelEl ? labelEl.textContent : 'Exportar PDF';
+          if (labelEl) labelEl.textContent = 'Generando PDF…';
+
+          html2pdf().set({
+            margin: [0.35, 0.4, 0.35, 0.4],
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              letterRendering: true,
+              scrollY: 0,
+              windowWidth: docEl.scrollWidth
+            },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['css', 'legacy'], avoid: '.section, .recommendation-box, .patient-banner' }
+          }).from(docEl).save().then(function () {
+            btnExportPdf.disabled = false;
+            if (labelEl) labelEl.textContent = prevLabel;
+          }).catch(function (err) {
+            console.error(err);
+            btnExportPdf.disabled = false;
+            if (labelEl) labelEl.textContent = prevLabel;
+            window.alert('Error al generar el PDF. Probá con Imprimir → Guardar como PDF.');
+          });
+        });
+      }
     })();
   </script>
 </body>
