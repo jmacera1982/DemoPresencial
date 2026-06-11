@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Iniciar videollamada — Banco Provincia</title>
+  <link rel="icon" type="image/png" href="images/logo-banco-provincia.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bp-green: #00853F;
+      --bp-green-dark: #006B32;
+      --bp-green-light: #7BC143;
+      --bp-bg: #ebebeb;
+      --bp-card: #ffffff;
+      --bp-text: #1a1a1a;
+      --bp-muted: #6b7280;
+      --bp-border: #dde8e0;
+    }
+
+    body {
+      font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      background: var(--bp-bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .form-container {
+      background: var(--bp-card);
+      border: 1px solid #d4d4d4;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .form-data-panel {
+      background: var(--bp-bg);
+      padding: 2rem 2.5rem 2.25rem;
+    }
+
+    .form-footer {
+      background: var(--bp-card);
+      padding: 1.5rem 2.5rem 2.5rem;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-header img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+
+    .form-header h1 {
+      color: var(--bp-green);
+      font-weight: 700;
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+      color: var(--bp-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--bp-text);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .form-control {
+      border: 2px solid var(--bp-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--bp-green);
+      box-shadow: 0 0 0 3px rgba(0, 133, 63, 0.12);
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: var(--bp-green);
+      color: #fff;
+      border-color: var(--bp-green);
+      border-radius: 8px;
+      padding: 0.85rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--bp-green-dark);
+      border-color: var(--bp-green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 133, 63, 0.25);
+    }
+
+    .btn-primary:disabled {
+      background-color: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .info-text {
+      background: #f0faf4;
+      border-left: 4px solid var(--bp-green);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      margin-bottom: 0;
+      font-size: 0.875rem;
+      color: var(--bp-muted);
+      line-height: 1.45;
+    }
+
+    .alert {
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+      border-width: 0.15em;
+    }
+
+    .success-badge {
+      background: var(--bp-green-light);
+      color: var(--bp-green-dark);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      display: inline-block;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--bp-border);
+      border-radius: 0.6rem;
+      background: linear-gradient(135deg, #f8fcf9, #eef7f0);
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--bp-muted);
+    }
+
+    .info-value {
+      font-weight: 700;
+      color: var(--bp-green);
+      text-align: right;
+    }
+
+    .status-warn { color: #d97706 !important; }
+    .status-ok { color: var(--bp-green) !important; }
+    .status-done { color: #2563eb !important; }
+    .status-err { color: #dc2626 !important; }
+
+    .turn-info-section {
+      display: none;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--bp-border);
+    }
+
+    .turn-info-section.active {
+      display: block;
+    }
+
+    .video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .video-modal.active {
+      display: flex;
+    }
+
+    .video-container {
+      background: var(--bp-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 90vw;
+      height: min(80vh, 640px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .video-header h6 {
+      margin: 0;
+      font-weight: 600;
+      color: var(--bp-text);
+    }
+
+    .video-iframe {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      background: #000;
+    }
+
+    .btn-close-video {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--bp-text);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .btn-close-video:hover {
+      background: var(--bp-bg);
+    }
+
+    @media (max-width: 768px) {
+      .form-data-panel {
+        padding: 1.5rem 1.25rem 1.75rem;
+      }
+
+      .form-footer {
+        padding: 0 1.25rem 1.5rem;
+      }
+
+      .form-header h1 {
+        font-size: 1.35rem;
+      }
+
+      .video-container {
+        width: 95vw;
+        height: 70vh;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="form-data-panel">
+      <div class="form-header">
+        <img src="images/logo-banco-provincia.png" alt="Banco Provincia de Buenos Aires" />
+        <h1><i class="bi bi-camera-video me-2"></i>Iniciar videollamada</h1>
+        <p>Completá tus datos para conectarte con un asesor</p>
+      </div>
+
+      <div id="formAlert" class="alert d-none"></div>
+
+      <form id="guardiaForm" class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="firstName">Nombre</label>
+          <input type="text" class="form-control" id="firstName" name="firstName" required autocomplete="given-name">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="lastName">Apellido</label>
+          <input type="text" class="form-control" id="lastName" name="lastName" required autocomplete="family-name">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="dni">DNI</label>
+          <input type="text" class="form-control" id="dni" name="dni" required inputmode="numeric" autocomplete="off">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="phone">Teléfono</label>
+          <input type="tel" class="form-control" id="phone" name="phone" required autocomplete="tel">
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+        </div>
+      </form>
+    </div>
+
+    <div class="form-footer">
+      <div class="info-text">
+        <i class="bi bi-info-circle"></i> Al continuar, te asignaremos una atención y verás una sala de espera. Cuando el agente esté listo, podrás iniciar una videollamada.
+      </div>
+
+      <div class="mt-4">
+        <button type="button" id="btnEnviarTurno" class="btn btn-primary">
+          <i class="bi bi-check2-circle me-2"></i>Generar atención
+        </button>
+      </div>
+
+      <div id="turnInfoSection" class="turn-info-section">
+      <div class="text-center mb-3">
+        <div class="success-badge">
+          <i class="bi bi-check2-circle me-1"></i>Atención reservada exitosamente
+        </div>
+        <div class="text-success fw-semibold">¡Tu atención ha sido generada en el sistema!</div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="info-item">
+            <div class="info-label">Código de la atención</div>
+            <div class="info-value" id="turnCodeDisplay">—</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Número de atención</div>
+            <div class="info-value" id="turnNumber">—</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Estado</div>
+            <div class="info-value status-warn" id="turnStatus">Consultando...</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Tiempo de espera actual</div>
+            <div class="info-value" id="currentWaitingTime">N/A</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Tiempo promedio</div>
+            <div class="info-value" id="avgWaitingTime">N/A</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Cola / servicio</div>
+            <div class="info-value" id="queueName">—</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Sala de espera</div>
+            <div class="info-value" id="waitingRoomName">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="button" id="btnAbrirVideo" class="btn btn-primary" disabled>
+          <i class="bi bi-camera-video me-2"></i>Conectarme a videollamada
+        </button>
+        <div class="form-text mt-2">El botón se habilitará cuando el agente te llame.</div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="video-modal" id="videoModal">
+    <div class="video-container">
+      <div class="video-header">
+        <h6><i class="bi bi-camera-video me-2"></i>Videollamada — Banco Provincia</h6>
+        <button type="button" class="btn-close-video" id="btnCloseVideo" aria-label="Cerrar">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <iframe id="videoFrame" class="video-iframe" src="about:blank" title="Videollamada"
+        allow="camera; microphone; autoplay; fullscreen; clipboard-write; display-capture"
+        referrerpolicy="no-referrer" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const FV_TOKEN  = 'yY0aPtMhsmyOZTJIFgrmZ8bORIG2o4agdGiitbvy';
+    const FV_QUEUE  = 18567;
+    const FV_BRANCH = 10827;
+    const FV_BASE   = 'https://filavirtual2.debmedia.com/api/v1';
+
+    let pollingInterval = null;
+    window.currentVideoCallUrl = 'about:blank';
+
+    const formEl = document.getElementById('guardiaForm');
+    const formAlert = document.getElementById('formAlert');
+    const btnEnviarTurno = document.getElementById('btnEnviarTurno');
+    const $ = (id) => document.getElementById(id);
+
+    function setFormAlert(type, msg) {
+      formAlert.className = `alert alert-${type}`;
+      formAlert.textContent = msg;
+      formAlert.classList.remove('d-none');
+    }
+
+    function clearFormAlert() {
+      formAlert.className = 'alert d-none';
+      formAlert.textContent = '';
+    }
+
+    btnEnviarTurno.addEventListener('click', async () => {
+      clearFormAlert();
+      const data = Object.fromEntries(new FormData(formEl).entries());
+
+      if (!data.firstName || !data.lastName || !data.dni || !data.email || !data.phone) {
+        setFormAlert('danger', 'Completá todos los campos.');
+        return;
+      }
+
+      btnEnviarTurno.disabled = true;
+      btnEnviarTurno.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generando...';
+
+      try {
+        const url = `${FV_BASE}/queue/${FV_QUEUE}/branch/${FV_BRANCH}/enqueue`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'x-api-token': FV_TOKEN,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            firstName: data.firstName.trim(),
+            lastName: data.lastName.trim(),
+            dni: data.dni.trim(),
+            email: data.email.trim(),
+            phone: data.phone.trim()
+          })
+        });
+
+        const out = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(out?.message || `Error en servidor (${res.status})`);
+        }
+
+        const turnCode = out.code || '—';
+        localStorage.setItem('turnCode', turnCode);
+
+        const turnNumber = out.jsonDetails?.turn || out.jsonDetails?.actualTurn || '—';
+        const avgWait = out.jsonDetails?.averageWaitingTime ?? out.jsonDetails?.serviceTime ?? 'N/A';
+        const queueName = out.jsonDetails?.queue?.name || '—';
+        const wrName = out.jsonDetails?.waitingRoom?.name || '—';
+        const videoCallUrl = out.jsonDetails?.videoCallUrl || 'about:blank';
+        window.currentVideoCallUrl = videoCallUrl;
+
+        fillWaitModal({
+          code: turnCode,
+          number: turnNumber,
+          avgWait: isFinite(avgWait) ? `${Math.floor(parseFloat(avgWait))} min` : 'N/A',
+          queueName,
+          waitingRoom: wrName
+        });
+
+        $('turnInfoSection').classList.add('active');
+
+        formEl.querySelectorAll('input').forEach(input => { input.disabled = true; });
+        btnEnviarTurno.disabled = true;
+        btnEnviarTurno.style.display = 'none';
+
+        startPolling(turnCode);
+
+      } catch (err) {
+        setFormAlert('danger', err.message);
+        btnEnviarTurno.disabled = false;
+        btnEnviarTurno.innerHTML = '<i class="bi bi-check2-circle me-2"></i>Generar atención';
+      }
+    });
+
+    function fillWaitModal({ code, number, avgWait, queueName, waitingRoom }) {
+      $('turnCodeDisplay').textContent = code;
+      $('turnNumber').textContent = number;
+      $('avgWaitingTime').textContent = avgWait;
+      $('queueName').textContent = queueName;
+      $('waitingRoomName').textContent = waitingRoom;
+      $('turnStatus').textContent = 'Consultando...';
+      $('turnStatus').className = 'info-value status-warn';
+      $('currentWaitingTime').textContent = 'N/A';
+      $('btnAbrirVideo').disabled = true;
+    }
+
+    function startPolling(turnCode) {
+      stopPolling();
+      const url = `${FV_BASE}/turn/code/${encodeURIComponent(turnCode)}`;
+      const mapStatus = (s) => {
+        if (s === 'ANNOUNCED') return { text: 'Lo estamos llamando', cls: 'status-ok' };
+        if (s === 'WAITING_TO_BE_CALLED') return { text: 'En breve lo llamaremos', cls: 'status-warn' };
+        if (s === 'FINALIZED') return { text: 'Atención finalizada', cls: 'status-done' };
+        return { text: s || 'Desconocido', cls: 'status-warn' };
+      };
+
+      const tick = async () => {
+        try {
+          const res = await fetch(url, {
+            headers: {
+              'x-api-token': FV_TOKEN,
+              'Content-Type': 'text/plain'
+            }
+          });
+
+          if (!res.ok) throw new Error(`Estado no disponible (${res.status})`);
+
+          const data = await res.json();
+          const m = mapStatus(data.status);
+
+          $('turnStatus').textContent = m.text;
+          $('turnStatus').className = `info-value ${m.cls}`;
+
+          const avg = (data.averageWaitingTime ?? data.serviceTime);
+          if (avg !== undefined && avg !== null && !isNaN(avg)) {
+            $('currentWaitingTime').textContent = `${Math.floor(parseFloat(avg))} min`;
+          }
+
+          if (data.status === 'ANNOUNCED') {
+            $('btnAbrirVideo').disabled = false;
+          }
+        } catch (e) {
+          $('turnStatus').textContent = 'Error al consultar';
+          $('turnStatus').className = 'info-value status-err';
+        }
+      };
+
+      tick();
+      pollingInterval = setInterval(tick, 5000);
+    }
+
+    function stopPolling() {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+      }
+    }
+
+    $('btnAbrirVideo').addEventListener('click', () => {
+      const videoUrl = window.currentVideoCallUrl || 'about:blank';
+      const urlWithParam = videoUrl.includes('?')
+        ? `${videoUrl}&videocallUser=mobile`
+        : `${videoUrl}?videocallUser=mobile`;
+
+      $('videoFrame').src = urlWithParam;
+      $('videoModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    $('btnCloseVideo').addEventListener('click', () => {
+      $('videoModal').classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    $('videoModal').addEventListener('click', (e) => {
+      if (e.target === $('videoModal')) {
+        $('videoModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && $('videoModal').classList.contains('active')) {
+        $('videoModal').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>
