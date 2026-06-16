@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Agente Numia — Gestión presencial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/gh/debmedia/numiajb-widget@1.0.17/dist/build/static/js/bundle.min.js"></script>
   <style>
     *,
@@ -16,30 +18,750 @@
     body {
       margin: 0;
       width: 100%;
-      height: 100%;
       min-height: 100dvh;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      font-size: 12px;
+      color: #374151;
+      background: #eef0f4;
+    }
+
+    .page-backdrop {
+      width: 100%;
+      min-height: 100dvh;
+      padding: 10px 14px 24px;
+    }
+
+    .dashboard {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* ── Top filters ── */
+    .dash-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .dash-filters {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dash-select {
+      appearance: none;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") no-repeat right 8px center;
+      padding: 6px 28px 6px 10px;
+      font: inherit;
+      color: #374151;
+      min-width: 110px;
+    }
+
+    .dash-btn-filter {
+      border: none;
+      border-radius: 6px;
+      background: #7c5cfc;
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      padding: 7px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .dash-time-toggle {
+      display: inline-flex;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
       background: #fff;
     }
 
+    .dash-time-toggle button {
+      border: none;
+      background: #fff;
+      font: inherit;
+      padding: 6px 14px;
+      color: #6b7280;
+      cursor: pointer;
+    }
+
+    .dash-time-toggle button.active {
+      background: #f3f4f6;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    /* ── Tabs row ── */
+    .dash-tabs-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .dash-tabs {
+      display: flex;
+      gap: 20px;
+    }
+
+    .dash-tab {
+      border: none;
+      background: none;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      padding: 8px 2px 10px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .dash-tab.active {
+      color: #7c5cfc;
+      border-bottom-color: #7c5cfc;
+      font-weight: 600;
+    }
+
+    .dash-updated {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    .dash-updated i {
+      font-size: 13px;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+
+    /* ── KPI row ── */
+    .dash-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-card {
+      background: #fff;
+      border: 1px solid #e8eaef;
+      border-radius: 8px;
+      padding: 10px 12px;
+      min-height: 72px;
+    }
+
+    .kpi-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .kpi-head span {
+      font-size: 11px;
+      color: #6b7280;
+      line-height: 1.3;
+    }
+
+    .kpi-head i {
+      font-size: 14px;
+      color: #9ca3af;
+      flex-shrink: 0;
+    }
+
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.1;
+    }
+
+    .kpi-value.danger {
+      color: #ef4444;
+    }
+
+    .kpi-sub {
+      margin-top: 4px;
+      font-size: 10px;
+      color: #9ca3af;
+      line-height: 1.35;
+    }
+
+    /* ── Main layout ── */
+    .dash-main {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dash-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .dash-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .dash-section-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .view-toggle {
+      display: inline-flex;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .view-toggle button {
+      border: none;
+      background: #fff;
+      padding: 5px 8px;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .view-toggle button.active {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .dash-search {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font: inherit;
+      font-size: 11px;
+      width: 120px;
+      color: #9ca3af;
+    }
+
+    .dash-sort {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font: inherit;
+      font-size: 11px;
+      color: #374151;
+      background: #fff;
+    }
+
+    /* ── Trámite cards grid ── */
+    .tramites-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .tramite-card {
+      background: #fff;
+      border: 1px solid #e8eaef;
+      border-radius: 8px;
+      padding: 10px 12px;
+      min-height: 118px;
+    }
+
+    .tramite-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .tramite-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #374151;
+      line-height: 1.35;
+      max-width: 75%;
+    }
+
+    .tramite-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .tramite-badge i {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .tramite-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+
+    .metric {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: #6b7280;
+    }
+
+    .metric i {
+      font-size: 12px;
+      color: #9ca3af;
+      width: 14px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .metric strong {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .metric strong.danger {
+      color: #ef4444;
+    }
+
+    .metric.empty strong {
+      color: #d1d5db;
+      font-weight: 500;
+    }
+
+    /* ── Sidebar ── */
+    .dash-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .side-card {
+      background: #fff;
+      border: 1px solid #e8eaef;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .side-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .sla-chart-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sla-donut {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: conic-gradient(#ef4444 0deg 72deg, #e5e7eb 72deg 360deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .sla-donut::after {
+      content: "";
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+    }
+
+    .sla-donut span {
+      position: relative;
+      z-index: 1;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ef4444;
+    }
+
+    .sla-legend {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #374151;
+    }
+
+    .sla-legend .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    .sla-legend .up {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    .resumen-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 11px;
+    }
+
+    .resumen-row .label {
+      color: #6b7280;
+    }
+
+    .status-active {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .status-active .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    .resumen-big {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .resumen-big .label {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .resumen-big .value {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .resumen-list {
+      border-top: 1px solid #f3f4f6;
+      padding-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .resumen-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #6b7280;
+      padding: 4px 0;
+    }
+
+    .resumen-item strong {
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .resumen-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 8px;
+      font-size: 11px;
+    }
+
+    .resumen-footer .label {
+      color: #6b7280;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .resumen-footer .value {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    /* ── Chat flotante ── */
     .jb-shell {
       position: fixed;
       bottom: max(16px, env(safe-area-inset-bottom, 0px));
       right: max(16px, env(safe-area-inset-right, 0px));
       z-index: 2147483000;
+      pointer-events: none;
     }
 
-    journey-builder-chat {
+    .jb-shell journey-builder-chat {
       display: block;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 960px) {
+      .dash-kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dash-main {
+        grid-template-columns: 1fr;
+      }
+
+      .tramites-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="page-backdrop">
+    <div class="dashboard">
+      <!-- Filtros superiores -->
+      <div class="dash-top">
+        <div class="dash-filters">
+          <select class="dash-select" aria-label="Central">
+            <option>central</option>
+          </select>
+          <select class="dash-select" aria-label="Canales">
+            <option>Todos los canales</option>
+          </select>
+          <button type="button" class="dash-btn-filter">+ Agregar filtro</button>
+        </div>
+        <div class="dash-time-toggle" aria-label="Periodo">
+          <button type="button">Hora</button>
+          <button type="button" class="active">Día</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="dash-tabs-row">
+        <div class="dash-tabs">
+          <button type="button" class="dash-tab active">Compañía</button>
+          <button type="button" class="dash-tab">Usuarios</button>
+        </div>
+        <div class="dash-updated">
+          <span>Última actualización: 17:10:52 - hora estándar de Argentina (UTC-3)</span>
+          <i class="bi bi-arrow-clockwise" title="Actualizar"></i>
+          <i class="bi bi-pause-fill" title="Pausar"></i>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="dash-kpis">
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span>Usuarios en atención</span>
+            <i class="bi bi-person"></i>
+          </div>
+          <div class="kpi-value">0</div>
+          <div class="kpi-sub">4 activos hoy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span>Clientes en espera</span>
+            <i class="bi bi-person-plus"></i>
+          </div>
+          <div class="kpi-value">24</div>
+          <div class="kpi-sub">14 Presencial<br />10 Videollamada</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span>Tiempo prom. de espera</span>
+            <i class="bi bi-hourglass-split"></i>
+          </div>
+          <div class="kpi-value">3h 28m</div>
+          <div class="kpi-sub">Máx: 15h 4m</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span>Tiempo prom. de atención</span>
+            <i class="bi bi-clock"></i>
+          </div>
+          <div class="kpi-value">9m 19s</div>
+          <div class="kpi-sub">Máx: 30m 1s</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-head">
+            <span>Tasa de abandono</span>
+            <i class="bi bi-box-arrow-right"></i>
+          </div>
+          <div class="kpi-value danger">36.36%</div>
+          <div class="kpi-sub">16 abandonos</div>
+        </div>
+      </div>
+
+      <!-- Contenido principal + sidebar -->
+      <div class="dash-main">
+        <section>
+          <div class="dash-section-head">
+            <div class="dash-section-title">Detalle de trámites</div>
+            <div class="dash-section-tools">
+              <div class="view-toggle">
+                <button type="button" class="active" aria-label="Vista lista"><i class="bi bi-list-ul"></i></button>
+                <button type="button" aria-label="Vista grilla"><i class="bi bi-grid-3x3-gap"></i></button>
+              </div>
+              <input type="text" class="dash-search" placeholder="Buscar" readonly />
+              <select class="dash-sort" aria-label="Ordenar">
+                <option>Ordenar por: Mayor espera</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="tramites-grid">
+            <article class="tramite-card">
+              <div class="tramite-head">
+                <div class="tramite-title">Atención comercial presencial</div>
+                <div class="tramite-badge"><i class="bi bi-people"></i> 14</div>
+              </div>
+              <div class="tramite-metrics">
+                <div class="metric"><i class="bi bi-hourglass-split"></i> Prom. espera <strong>3h 28m</strong></div>
+                <div class="metric"><i class="bi bi-clock"></i> Prom. atención <strong>9m 19s</strong></div>
+                <div class="metric"><i class="bi bi-box-arrow-right"></i> Abandono (%) <strong class="danger">76.19%</strong></div>
+                <div class="metric"><i class="bi bi-arrow-down"></i> SLA <strong class="danger">20%</strong></div>
+              </div>
+            </article>
+
+            <article class="tramite-card">
+              <div class="tramite-head">
+                <div class="tramite-title">Atención comercial soporte</div>
+                <div class="tramite-badge"><i class="bi bi-people"></i> 3</div>
+              </div>
+              <div class="tramite-metrics">
+                <div class="metric empty"><i class="bi bi-hourglass-split"></i> Prom. espera <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-clock"></i> Prom. atención <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-box-arrow-right"></i> Abandono (%) <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-arrow-down"></i> SLA <strong>—</strong></div>
+              </div>
+            </article>
+
+            <article class="tramite-card">
+              <div class="tramite-head">
+                <div class="tramite-title">Alta de Cliente</div>
+              </div>
+              <div class="tramite-metrics">
+                <div class="metric empty"><i class="bi bi-hourglass-split"></i> Prom. espera <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-clock"></i> Prom. atención <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-box-arrow-right"></i> Abandono (%) <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-arrow-down"></i> SLA <strong>—</strong></div>
+              </div>
+            </article>
+
+            <article class="tramite-card">
+              <div class="tramite-head">
+                <div class="tramite-title">Atención de soporte presencial</div>
+              </div>
+              <div class="tramite-metrics">
+                <div class="metric empty"><i class="bi bi-hourglass-split"></i> Prom. espera <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-clock"></i> Prom. atención <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-box-arrow-right"></i> Abandono (%) <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-arrow-down"></i> SLA <strong>—</strong></div>
+              </div>
+            </article>
+
+            <article class="tramite-card">
+              <div class="tramite-head">
+                <div class="tramite-title">Atención videollamada comercial</div>
+                <div class="tramite-badge"><i class="bi bi-people"></i> 10</div>
+              </div>
+              <div class="tramite-metrics">
+                <div class="metric empty"><i class="bi bi-hourglass-split"></i> Prom. espera <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-clock"></i> Prom. atención <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-box-arrow-right"></i> Abandono (%) <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-arrow-down"></i> SLA <strong>—</strong></div>
+              </div>
+            </article>
+
+            <article class="tramite-card">
+              <div class="tramite-head">
+                <div class="tramite-title">Autorizaciones</div>
+              </div>
+              <div class="tramite-metrics">
+                <div class="metric empty"><i class="bi bi-hourglass-split"></i> Prom. espera <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-clock"></i> Prom. atención <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-box-arrow-right"></i> Abandono (%) <strong>—</strong></div>
+                <div class="metric empty"><i class="bi bi-arrow-down"></i> SLA <strong>—</strong></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="dash-sidebar">
+          <div class="side-card">
+            <div class="side-card-title">Nivel de servicio [SLA]</div>
+            <div class="sla-chart-wrap">
+              <div class="sla-donut" aria-hidden="true"><span>20%</span></div>
+              <div class="sla-legend">
+                <span class="dot"></span>
+                <span class="up">↑</span>
+                <span>20%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-card-title">Resumen</div>
+            <div class="resumen-row">
+              <span class="label">Estado de la sucursal</span>
+              <span class="status-active"><span class="dot"></span> Activo</span>
+            </div>
+            <div class="resumen-big">
+              <span class="label">Ingresos totales</span>
+              <span class="value"><i class="bi bi-person"></i> 44</span>
+            </div>
+            <div class="resumen-list">
+              <div class="resumen-item"><span>No clientes</span><span><strong>3</strong> · 6.8%</span></div>
+              <div class="resumen-item"><span>Clientes no identificados</span><span><strong>15</strong> · 34.1%</span></div>
+              <div class="resumen-item"><span>Clientes identificados</span><span><strong>26</strong> · 59.1%</span></div>
+            </div>
+            <div class="resumen-footer">
+              <span class="label"><i class="bi bi-clock"></i> Tiempo total de visita</span>
+              <span class="value">3h 38m</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
   <div class="jb-shell">
     <journey-builder-chat
       window_title="Agente-Numia - Gestion presencial"
-      flow_id="dc3a0d7a-531b-4321-a0e4-5c1f161e6af3"
-      host_url="https://api.journeybuilder.numia.co"
-      api_key="sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM"
+      flow_id="a0800b6b-6c94-4c32-b3d9-6efda6f5b92c"
+      host_url="https://api.journeybuilder.qa.numia.co"
+      api_key="sk-Rk4OMcG9oTc1PuylXykzJQmXV8Avi-P18Em9RBrikgI"
       chat_position="top-left">
     </journey-builder-chat>
   </div>
