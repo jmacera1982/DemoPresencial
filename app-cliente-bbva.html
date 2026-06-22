@@ -2905,7 +2905,7 @@
     <div class="jb-chat-shell" id="jbChatShell" aria-hidden="true">
       <journey-builder-chat
         window_title="Asistente BBVA"
-        flow_id="2c47f677-226d-4157-9f93-092f484ce42f"
+        flow_id="99cc4a04-ed6a-4f77-baba-edb37a726c53"
         host_url="https://api.journeybuilder.numia.co"
         api_key="sk-Q6K4cRLD_l3L7ZuTNIRVl8hSwR8nMwuHWFqiwhv4st0"
         chat_position="bottom-right">
@@ -4349,6 +4349,7 @@
           logContainer.classList.remove('visible');
         }
         if (citaFormRest) citaFormRest.classList.remove('visible');
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
       }
 
       function mostrarChatCita() {
@@ -4482,7 +4483,9 @@
           summaryContent.innerHTML = '<div class="conversation-output">' + html + '</div>';
         }
         if (summarySection) summarySection.style.display = 'block';
-        if (motivo !== 'Transferencias') {
+        if (motivo === 'Transferencias') {
+          if (citaTransferenciasTip) citaTransferenciasTip.classList.add('visible');
+        } else {
           if (citaFormRest) citaFormRest.classList.add('visible');
           aplicarRecomendacionCanalCita(motivo, recomiendaVideo);
         }
@@ -4512,9 +4515,8 @@
           stepsContainer.innerHTML = '';
           stepsContainer.style.display = 'block';
         }
-        if (motivo !== 'Transferencias' && citaFormRest) {
-          citaFormRest.classList.remove('visible');
-        }
+        if (citaFormRest) citaFormRest.classList.remove('visible');
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
 
         var nombreCliente = getNombreClienteCita();
         var motivoLabels = {
@@ -4555,12 +4557,8 @@
         document.querySelectorAll('#citaMotivoToggle button').forEach(function (b) {
           b.classList.toggle('active', b.getAttribute('data-motivo') === motivo);
         });
-        if (citaTransferenciasTip) {
-          citaTransferenciasTip.classList.toggle('visible', isTransferencias);
-        }
-        if (citaFormRest && !isTransferencias) {
-          citaFormRest.classList.remove('visible');
-        }
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
+        if (citaFormRest) citaFormRest.classList.remove('visible');
         if (!isTransferencias && prevMotivo === 'Transferencias') {
           setCitaTipo('sucursal');
         }
