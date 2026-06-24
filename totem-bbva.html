@@ -39,7 +39,8 @@
     .totem-container {
       max-width: 600px;
       width: 100%;
-      background: #fff;
+      background: #fff url('images/totem-bbva-bg.png') no-repeat center top;
+      background-size: cover;
       border-radius: 24px;
       box-shadow: 0 8px 32px rgba(7, 33, 70, 0.18);
       overflow: hidden;
@@ -47,29 +48,17 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      position: relative;
     }
 
     .totem-header {
-      background: #fff;
-      padding: 1.35rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border-bottom: 1px solid #e8e8e8;
-    }
-
-    .totem-header .header-logo {
-      height: 44px;
-      width: auto;
-      display: block;
-      object-fit: contain;
+      display: none;
     }
 
     .totem-content {
       flex: 1;
       overflow-y: auto;
-      padding: 1.5rem 2rem;
+      padding: 9.5rem 2rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -81,6 +70,10 @@
       max-width: 500px;
       text-align: center;
       display: none;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 16px;
+      padding: 1.25rem 1rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(7, 33, 70, 0.08);
     }
 
     .totem-screen.active { display: block; }
@@ -220,15 +213,6 @@
       background: linear-gradient(135deg, var(--bbva-light) 0%, #fff 100%);
     }
 
-    .opcion-card.videollamada {
-      border-color: var(--numia-success);
-      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    }
-
-    .opcion-card.videollamada.recomendada {
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
-    }
-
     .opcion-card.presencial {
       border-color: var(--bbva-blue);
       background: linear-gradient(135deg, #f0f6fb 0%, var(--bbva-light) 100%);
@@ -243,8 +227,6 @@
       margin-bottom: 0.35rem;
       color: var(--bbva-blue);
     }
-
-    .opcion-card.videollamada .opcion-icon { color: var(--numia-success); font-size: 2.5rem; }
 
     .opcion-title {
       font-size: 1.05rem;
@@ -265,6 +247,39 @@
 
     .opcion-badge.bbva {
       background: var(--bbva-blue);
+    }
+
+    .opcion-espera {
+      display: inline-block;
+      background: var(--bbva-blue);
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.45rem 0.85rem;
+      margin-top: 0.4rem;
+      min-width: 9rem;
+    }
+
+    .opcion-espera-label {
+      display: block;
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      opacity: 0.92;
+      line-height: 1.2;
+    }
+
+    .opcion-espera-valor {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-top: 0.1rem;
+    }
+
+    .opcion-espera.loading .opcion-espera-valor {
+      font-size: 0.72rem;
+      font-weight: 600;
     }
 
     .opcion-desc {
@@ -298,18 +313,6 @@
       font-size: 1.4rem;
       font-weight: 700;
       color: var(--bbva-navy);
-    }
-
-    .btn-video {
-      background: var(--numia-success);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 0.9rem 1.75rem;
-      font-size: 1rem;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-block;
     }
 
     .btn-volver {
@@ -505,11 +508,6 @@
           <div class="tiempo-espera-label">Tiempo de espera estimado</div>
           <div class="tiempo-espera-valor" id="tiempoEsperaValor">--</div>
         </div>
-        <div id="videoLinkContainer" style="display:none; margin-top:1rem;">
-          <a href="#" id="btnVideoLink" class="btn-video" target="_blank" rel="noopener">
-            <i class="bi bi-camera-video me-1"></i> Iniciar videollamada
-          </a>
-        </div>
       </div>
     </div>
   </div>
@@ -532,10 +530,10 @@
       var FV_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
       var FV_BRANCH = 10750;
       var FV_QUEUE_PRESENCIAL = 16221;
-      var FV_QUEUE_VIDEO = 16223;
 
       var dniIngresado = '';
       var motivoActual = '';
+      var turnoPresencialData = null;
       var analisisTimeouts = [];
       var ultimoDetalleExtraFields = 'El cliente cuenta con un Score crediticio >700. Adicionalmente registro el abandono de un proceso de oboarding digital. Se recomienda ofrecer Prestamo personal';
 
@@ -577,6 +575,7 @@
         limpiarPanelAgente();
         dniIngresado = '';
         motivoActual = '';
+        turnoPresencialData = null;
         actualizarDisplayDni();
         showScreen('dni');
       }
@@ -659,13 +658,13 @@
       function obtenerResumenDemo(motivo) {
         var id = dniIngresado || 'cliente';
         if (motivo === 'Prestamos') {
-          return 'Recomendación para DNI ' + id + ':\n\n**Tipo de atención sugerida**: Videollamada inmediata\n\nConsultas recientes sobre préstamos y perfil compatible con precalificación digital. Score: 720.\n\n- Sugerir videollamada: Sí\n- Tiempo estimado videollamada: ~8 min\n- Tiempo estimado sucursal: ~45 min';
+          return 'Recomendación para DNI ' + id + ':\n\n**Tipo de atención sugerida**: Sucursal\n\nConsultas recientes sobre préstamos y perfil compatible con precalificación. Score: 720.\n\n- Sugerir sucursal: Sí\n- Tiempo estimado sucursal: ~45 min';
         }
         if (motivo === 'Tarjetas') {
-          return 'Recomendación para DNI ' + id + ':\n\n**Tipo de atención sugerida**: Sucursal\n\nHistorial de gestiones sobre tarjeta de crédito. Para aumento de límite conviene atención presencial.\n\n- Sugerir videollamada: No\n- Videollamada disponible para consultas generales.';
+          return 'Recomendación para DNI ' + id + ':\n\n**Tipo de atención sugerida**: Sucursal\n\nHistorial de gestiones sobre tarjeta de crédito. Para aumento de límite conviene atención presencial.\n\n- Sugerir sucursal: Sí';
         }
         if (motivo === 'Transferencias') {
-          return 'Recomendación para DNI ' + id + ':\n\n**Tipo de atención sugerida**: Videollamada\n\nLa transferencia puede hacerse desde la app. Si necesita ayuda en sucursal, se sugiere videollamada con un especialista.\n\n- Sugerir videollamada: Sí\n- No requiere turno presencial';
+          return 'Recomendación para DNI ' + id + ':\n\n**Tipo de atención sugerida**: Autogestión en app\n\nLa transferencia puede hacerse desde la app BBVA. Si necesita ayuda en sucursal, un asesor lo orientará en mostrador.\n\n- Sugerir sucursal: Sí\n- No requiere turno presencial para operaciones simples';
         }
         return '';
       }
@@ -732,57 +731,92 @@
         }, pasos.length * delay + 400));
       }
 
+      function formatearTiempoEspera(segundos) {
+        if (segundos == null || segundos === '' || isNaN(segundos)) return 'No disponible';
+        var total = Math.max(0, Math.floor(parseFloat(segundos)));
+        var minutos = Math.floor(total / 60);
+        var segs = total % 60;
+        if (minutos > 0 && segs > 0) return minutos + ' min ' + segs + ' seg';
+        if (minutos > 0) return minutos + ' min';
+        return segs + ' seg';
+      }
+
+      function extraerTiempoEsperaSegundos(data) {
+        if (!data) return null;
+        if (data.averageWaitingTime != null) return data.averageWaitingTime;
+        if (data.serviceTime != null) return data.serviceTime;
+        if (data.jsonDetails) {
+          if (data.jsonDetails.averageWaitingTime != null) return data.jsonDetails.averageWaitingTime;
+          if (data.jsonDetails.serviceTime != null) return data.jsonDetails.serviceTime;
+        }
+        return null;
+      }
+
+      function actualizarTiempoEsperaEnCard(valor, loading) {
+        var badge = document.getElementById('cardTiempoEspera');
+        var valorEl = document.getElementById('cardTiempoEsperaValor');
+        if (!badge || !valorEl) return;
+        badge.classList.toggle('loading', !!loading);
+        valorEl.textContent = valor;
+      }
+
+      async function precargarTurnoPresencial() {
+        turnoPresencialData = null;
+        actualizarTiempoEsperaEnCard('Consultando...', true);
+        try {
+          var res = await fetch('https://filavirtual2.debmedia.com/api/v1/queue/' + FV_QUEUE_PRESENCIAL + '/branch/' + FV_BRANCH + '/enqueue', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-api-token': FV_TOKEN },
+            body: JSON.stringify(buildDatosEnqueue())
+          });
+          if (!res.ok) throw new Error('Error en servidor (' + res.status + ')');
+          turnoPresencialData = await res.json();
+          actualizarTiempoEsperaEnCard(formatearTiempoEspera(extraerTiempoEsperaSegundos(turnoPresencialData)), false);
+        } catch (err) {
+          console.error('Error al consultar tiempo de espera:', err);
+          actualizarTiempoEsperaEnCard('No disponible', false);
+        }
+      }
+
       function mostrarOpcionesAtencion(motivo) {
         showScreen('opciones');
         opcionesGrid.innerHTML = '';
+        turnoPresencialData = null;
 
-        document.getElementById('opcionesTitle').textContent = 'Seleccione tipo de atención';
-        document.getElementById('opcionesSubtitle').textContent = 'Según el análisis del agente';
+        document.getElementById('opcionesTitle').textContent = 'Atención en sucursal';
+        document.getElementById('opcionesSubtitle').textContent =
+          motivo === 'Transferencias'
+            ? 'Un asesor te orientará en mostrador'
+            : 'Según el análisis del agente';
 
-        if (motivo === 'Transferencias') {
-          opcionesGrid.appendChild(crearCardVideo(true, true));
-          return;
-        }
-
-        var recomiendaVideo = motivo === 'Prestamos';
-        if (recomiendaVideo) {
-          opcionesGrid.appendChild(crearCardVideo(true, true));
-          opcionesGrid.appendChild(crearCardPresencial(false));
-        } else {
-          opcionesGrid.appendChild(crearCardPresencial(true));
-          opcionesGrid.appendChild(crearCardVideo(false, false));
-        }
+        opcionesGrid.appendChild(crearCardPresencial());
+        precargarTurnoPresencial();
       }
 
-      function crearCardVideo(recomendada, destacada) {
+      function crearCardPresencial() {
         var card = document.createElement('div');
-        card.className = 'opcion-card videollamada' + (recomendada ? ' recomendada' : '');
-        card.innerHTML =
-          '<div class="opcion-icon"><i class="bi bi-camera-video"></i></div>' +
-          '<div class="opcion-title">Videollamada inmediata</div>' +
-          (recomendada ? '<div class="opcion-badge">Recomendado · Menos espera</div>' : '<div class="opcion-desc">Atención remota</div>') +
-          (destacada ? '<div class="opcion-desc">Conectate ahora con un especialista</div>' : '');
-        card.addEventListener('click', function () { solicitarAtencion('videollamada'); });
-        return card;
-      }
-
-      function crearCardPresencial(recomendada) {
-        var card = document.createElement('div');
-        card.className = 'opcion-card presencial' + (recomendada ? ' recomendada' : '');
+        card.className = 'opcion-card presencial recomendada';
         card.innerHTML =
           '<div class="opcion-icon"><i class="bi bi-geo-alt"></i></div>' +
           '<div class="opcion-title">Atención en sucursal</div>' +
-          (recomendada
-            ? '<div class="opcion-badge bbva">Recomendado</div><div class="opcion-desc">Te llamaremos por tu DNI</div>'
-            : '<div class="opcion-badge less-recommended" style="background:#94a3b8;">Alternativa</div><div class="opcion-desc">Mayor tiempo de espera</div>');
-        card.addEventListener('click', function () { solicitarAtencion('presencial'); });
+          '<div class="opcion-espera loading" id="cardTiempoEspera">' +
+            '<span class="opcion-espera-label">Tiempo de espera estimado</span>' +
+            '<span class="opcion-espera-valor" id="cardTiempoEsperaValor">Consultando...</span>' +
+          '</div>' +
+          '<div class="opcion-desc">Te llamaremos por tu DNI</div>';
+        card.addEventListener('click', function () {
+          if (turnoPresencialData) {
+            mostrarConfirmacion(turnoPresencialData, 'presencial');
+            return;
+          }
+          solicitarAtencion('presencial');
+        });
         return card;
       }
 
       async function solicitarAtencion(tipo) {
         try {
-          var queueId = tipo === 'videollamada' ? FV_QUEUE_VIDEO : FV_QUEUE_PRESENCIAL;
-          var res = await fetch('https://filavirtual2.debmedia.com/api/v1/queue/' + queueId + '/branch/' + FV_BRANCH + '/enqueue', {
+          var res = await fetch('https://filavirtual2.debmedia.com/api/v1/queue/' + FV_QUEUE_PRESENCIAL + '/branch/' + FV_BRANCH + '/enqueue', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-api-token': FV_TOKEN },
             body: JSON.stringify(buildDatosEnqueue())
@@ -808,7 +842,6 @@
           document.getElementById('confirmMessage').innerHTML =
             'Tenés cita agendada. Presentate en recepción.<br>Te llamaremos por tu DNI: <strong>' + escapeHtml(dniIngresado) + '</strong>';
           document.getElementById('tiempoEspera').style.display = 'none';
-          document.getElementById('videoLinkContainer').style.display = 'none';
         } catch (err) {
           alert('Error: ' + err.message);
         }
@@ -816,26 +849,17 @@
 
       function mostrarConfirmacion(data, tipo) {
         showScreen('confirmacion');
-        document.getElementById('confirmTitle').textContent = tipo === 'videollamada' ? '¡Videollamada solicitada!' : '¡Turno asignado!';
+        document.getElementById('confirmTitle').textContent = '¡Turno asignado!';
         document.getElementById('confirmMessage').innerHTML =
-          'DNI: <strong>' + escapeHtml(dniIngresado) + '</strong><br>En breve un asesor te atenderá.';
+          'DNI: <strong>' + escapeHtml(dniIngresado) + '</strong><br>En breve un asesor te atenderá en sucursal.';
 
         var tiempoEl = document.getElementById('tiempoEspera');
-        var videoEl = document.getElementById('videoLinkContainer');
         tiempoEl.style.display = 'none';
-        videoEl.style.display = 'none';
 
-        if (data && data.averageWaitingTime != null) {
-          var m = Math.floor(data.averageWaitingTime / 60);
-          var s = data.averageWaitingTime % 60;
+        var segundos = extraerTiempoEsperaSegundos(data);
+        if (segundos != null) {
           tiempoEl.style.display = 'block';
-          document.getElementById('tiempoEsperaValor').textContent = m + ' min ' + s + ' seg';
-        }
-
-        if (tipo === 'videollamada' && data && data.videoCallUrl) {
-          var url = data.videoCallUrl + (data.videoCallUrl.indexOf('?') >= 0 ? '&' : '?') + 'videocallUser=mobile';
-          videoEl.style.display = 'block';
-          document.getElementById('btnVideoLink').href = url;
+          document.getElementById('tiempoEsperaValor').textContent = formatearTiempoEspera(segundos);
         }
       }
 
