@@ -767,8 +767,8 @@
     
     <!-- Contenido del tótem -->
     <div class="totem-content">
-      <!-- Pantalla inicial: Menú de selección -->
-      <div class="screen-menu-inicial" id="screenMenuInicial">
+      <!-- Pantalla inicial: Menú de selección (hidden on load) -->
+      <div class="screen-menu-inicial hidden" id="screenMenuInicial">
         <h2>Select an option</h2>
         <p class="subtitle">Choose how you wish to proceed</p>
         <div class="opciones-grid" id="menuInicialGrid">
@@ -788,7 +788,7 @@
       </div>
       
       <!-- Pantalla 1: Ingreso de DNI -->
-      <div class="screen-dni" id="screenDni" style="display: none;">
+      <div class="screen-dni" id="screenDni" style="display: block;">
         <!-- Mensaje entre logo y teclado -->
         <div class="instruction" style="margin-bottom: 1rem; font-size: 1rem; color: var(--numia-azul); font-weight: 500;">Welcome! Please enter your ID</div>
         
