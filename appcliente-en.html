@@ -1626,7 +1626,7 @@
           <option value="demo">demo</option>
         </select>
       </div>
-      <h1 id="saludoNombre">Hello, Jorge!</h1>
+      <h1 id="saludoNombre">Hi, Jorge!</h1>
       <p>Welcome to your online banking</p>
       <button id="btnSolicitarAtencion" class="btn" style="background-color: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); padding: 0.75rem 1.5rem; border-radius: 10px; font-size: 0.95rem; font-weight: 600; margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; width: auto;">
         <i class="bi bi-geo-alt"></i><span>I'm at the branch</span>
@@ -1635,8 +1635,8 @@
 
     <div class="san-promo-loan" id="sanPromoLoan" role="button" tabindex="0" aria-label="Pre-approved loan — request advisory">
       <button type="button" class="san-promo-close" id="btnCerrarPromoLoan" aria-label="Close"><i class="bi bi-x"></i></button>
-      <div class="san-promo-loan-text">You have an approved loan at a preferential rate</div>
-      <div class="san-promo-loan-amount">$1,000,000 in 36 installments</div>
+      <div class="san-promo-loan-text">You're pre-approved for a loan at a preferred rate</div>
+      <div class="san-promo-loan-amount">Up to $1M · 36-month term</div>
     </div>
 
     <button type="button" class="numia-agendar-card" id="btnAgendarCita">
@@ -1650,15 +1650,15 @@
 
     <div class="san-ejecutivo-section">
       <div class="san-ejecutivo-head">
-        <h2>Talk to my advisor</h2>
+        <h2>Connect with my advisor</h2>
         <button type="button" id="btnVerCentroAyuda">See all</button>
       </div>
       <div class="san-ejecutivo-card">
         <div class="san-ejecutivo-top">
           <img class="san-ejecutivo-avatar" src="https://i.pravatar.cc/112?img=33" width="52" height="52" alt="Ejecutivo Numia" />
           <div>
-            <strong>I'm Martín Restrepo</strong>
-            <span>Your Numia advisor · Contact me via</span>
+            <strong>Martín Restrepo</strong>
+            <span>Your dedicated advisor · Contact me via</span>
           </div>
         </div>
         <div class="san-ejecutivo-contact">
@@ -1720,7 +1720,7 @@
         <div class="product-balance positive">$85,450.00</div>
         <div class="product-details">
           <div class="product-detail-item">
-            <span class="product-detail-label">Disponible</span>
+            <span class="product-detail-label">Available credit</span>
             <span class="product-detail-value">$85,450.00</span>
           </div>
           <div class="product-detail-item">
@@ -1741,23 +1741,23 @@
             <i class="bi bi-credit-card-2-front"></i>
           </div>
         </div>
-        <div class="product-balance negative">-$12,350.00</div>
+        <div class="product-balance" style="color: var(--numia-text);">Balance: $12,350.00</div>
         <div class="product-details">
           <div class="product-detail-item">
             <span class="product-detail-label">Credit limit</span>
             <span class="product-detail-value">$50,000.00</span>
           </div>
           <div class="product-detail-item">
-            <span class="product-detail-label">Disponible</span>
+            <span class="product-detail-label">Available credit</span>
             <span class="product-detail-value">$37,650.00</span>
           </div>
           <div class="product-detail-item">
-            <span class="product-detail-label">Closing date</span>
-            <span class="product-detail-value">15th of each month</span>
+            <span class="product-detail-label">Statement closing date</span>
+            <span class="product-detail-value">July 15</span>
           </div>
           <div class="product-detail-item">
-            <span class="product-detail-label">Payment date</span>
-            <span class="product-detail-value">30th of each month</span>
+            <span class="product-detail-label">Payment due date</span>
+            <span class="product-detail-value">July 30</span>
           </div>
         </div>
       </div>
@@ -1772,7 +1772,7 @@
 
     <!-- Sección de opciones de atención (se mostrará después del análisis) -->
     <div id="opcionesAtencionSection" class="dni-input-section" style="display: none;">
-      <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--numia-text); margin-bottom: 1rem; text-align: center;">Select your preference</h3>
+      <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--numia-text); margin-bottom: 1rem; text-align: center;">Get help faster</h3>
       <div id="opcionesAtencionContainer" style="display: flex; flex-direction: column; gap: 1rem;">
         <!-- Los botones se agregarán aquí dinámicamente -->
       </div>
@@ -1793,6 +1793,11 @@
           <i class="bi bi-graph-up-arrow me-2"></i>Investments
         </button>
       </div>
+    </div>
+
+    <!-- Intent sub-menu (shown after selecting a service category) -->
+    <div id="menuIntentSection" class="dni-input-section" style="display: none;">
+      <div id="menuIntentContent"></div>
     </div>
 
       </div><!-- /main-container -->
@@ -1885,6 +1890,26 @@
         </journey-builder-chat>
       </div>
 
+      <!-- Specialist notification popup (constrained to the phone view) -->
+      <div id="specialistPopup" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(0,0,0,0.55); align-items:center; justify-content:center; border-radius:28px;">
+        <div style="background:white; border-radius:20px; padding:2rem 1.75rem; max-width:280px; width:88%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.2); animation: popIn 0.3s ease;">
+          <div style="font-size:3rem; margin-bottom:0.75rem;">✅</div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#1f2937; margin-bottom:0.4rem;">You're all set!</h3>
+          <p style="font-size:0.95rem; font-weight:600; color:#1f2937; margin-bottom:1.5rem;">We've notified the right specialist that you're here.</p>
+          <button id="btnSpecialistPopupOk" style="background:var(--numia-azul); color:white; border:none; border-radius:12px; padding:0.85rem 2rem; font-weight:700; font-size:0.95rem; cursor:pointer; width:100%;">Got it</button>
+        </div>
+      </div>
+
+      <!-- In-app video call overlay (renders the client's video call inside the phone) -->
+      <div id="videoCallOverlay" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:10000; background:#000; border-radius:28px; overflow:hidden;">
+        <button id="btnCloseVideoCall" aria-label="End call" style="position:absolute; top:12px; right:12px; z-index:2; width:38px; height:38px; border-radius:50%; border:none; background:rgba(0,0,0,0.55); color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;"><i class="bi bi-x-lg"></i></button>
+        <div id="videoCallLoading" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem; color:#fff; text-align:center; padding:1.5rem;">
+          <div class="spinner-border" role="status" style="width:2.5rem; height:2.5rem;"></div>
+          <div style="font-size:0.9rem; opacity:0.9;">Connecting your video call…</div>
+        </div>
+        <iframe id="videoCallFrame" title="Numia video call" allow="camera; microphone; fullscreen; autoplay; display-capture" allowfullscreen style="width:100%; height:100%; border:0; position:relative; z-index:1;"></iframe>
+      </div>
+
     </div>
   </div>
   </div>
@@ -1914,8 +1939,8 @@
       <div class="san-promo-popup-body">
         <span class="san-promo-popup-badge">Exclusive offer</span>
         <div class="san-promo-popup-highlight">
-          <strong>Up to $1,000,000</strong>
-          <span>Preferential rate · 36 installments</span>
+          <strong>Up to $1M · 36-month term</strong>
+          <span>You're pre-approved at a preferred rate</span>
         </div>
         <ul class="san-promo-popup-features">
           <li><i class="bi bi-check-circle-fill"></i> Personalized advisory via video call</li>
@@ -1933,7 +1958,7 @@
   <!-- Contenedor de Logs a la derecha -->
   <div class="log-container">
     <div class="log-header">
-      Agent Analysis
+      Agentic Orchestration
     </div>
     <div class="log-content">
       <!-- Sección de Resultados de Atención -->
@@ -1954,6 +1979,10 @@
   </div>
 
 
+  <style>
+    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  </style>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -1963,10 +1992,10 @@
       const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/d83a2fbd-f8d0-468f-9ecd-375709fd149f?stream=false';
       const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
       const PASOS_ANALISIS_UI = [
-        { titulo: 'Digital behavior', detalle: 'Evaluation of onboarding and digital signals.' },
-        { titulo: 'Scoring', detalle: 'Score and best available offer.' },
-        { titulo: 'Channel suggestion', detalle: 'Prioritization of the service channel.' },
-        { titulo: 'Calculate priority', detalle: 'Analysis of current branch status compared to the client.' }
+        { titulo: '1 · Understand customer context', detalle: 'Analysing profile, digital behaviour and recent journey history.' },
+        { titulo: '2 · Identify intent and opportunity', detalle: 'Matching customer needs with relevant products and next-best actions.' },
+        { titulo: '3 · Evaluate real-time capacity', detalle: 'Comparing wait times, staff availability and remote service capacity.' },
+        { titulo: '4 · Recommend the best journey', detalle: 'Selecting the optimal channel based on customer context and operational conditions.' }
       ];
 
       // Objeto con nombres y DNI
@@ -2008,11 +2037,11 @@
       if (nombreSelector && saludoNombre) {
         nombreSelector.addEventListener('change', function() {
           const nombreSeleccionado = this.value;
-          saludoNombre.textContent = `Hello, ${nombreSeleccionado}!`;
+          saludoNombre.textContent = `Hi, ${nombreSeleccionado}!`;
         });
         
         // Inicializar saludo con el valor por defecto
-        saludoNombre.textContent = `Hello, ${nombreSelector.value}!`;
+        saludoNombre.textContent = `Hi, ${nombreSelector.value}!`;
       }
 
       // Elementos del DOM
@@ -2069,28 +2098,98 @@
         }, 100);
       });
       
+      // Intent sub-menus per category
+      const INTENT_MENUS = {
+        prestamos: {
+          title: 'What do you need with Loans?',
+          subtitle: 'Based on your profile, Jorge, here are the most relevant options',
+          items: [
+            { icon: 'bi-cash-stack', label: 'Apply for a loan — up to $5M', hint: 'Pre-approved · Fast disbursement' },
+            { icon: 'bi-graph-up-arrow', label: 'Apply for a loan — up to $10M', hint: 'Subject to credit evaluation' },
+            { icon: 'bi-search', label: 'Check my available loan limit', hint: 'Instant result' },
+            { icon: 'bi-three-dots', label: 'Something else', hint: '' }
+          ]
+        },
+        tarjetas: {
+          title: 'What do you need with Credit cards?',
+          subtitle: 'Platinum card ending in 4521 detected on your profile',
+          items: [
+            { icon: 'bi-arrow-up-circle', label: 'Increase my credit limit', hint: 'Current limit: $50,000' },
+            { icon: 'bi-credit-card', label: 'Replace my card', hint: 'Lost, damaged or expired' },
+            { icon: 'bi-flag', label: 'Dispute a transaction', hint: 'Unauthorized or incorrect charge' },
+            { icon: 'bi-three-dots', label: 'Something else', hint: '' }
+          ]
+        },
+        inversiones: {
+          title: 'Based on your investment history',
+          subtitle: "Jorge, your last FTI matured on June 30 — here's what we suggest:",
+          items: [
+            { icon: 'bi-star-fill', label: 'Renew FTI · $2,800,000 at 9.2%', hint: 'Same term, better rate than last time · Recommended' },
+            { icon: 'bi-piggy-bank', label: 'Open a new FTI — 90 days', hint: "Lock in today's rate before it changes" },
+            { icon: 'bi-bar-chart-line', label: 'Review my full portfolio', hint: 'Performance + upcoming maturities' },
+            { icon: 'bi-three-dots', label: 'Something else', hint: '' }
+          ]
+        }
+      };
+
+      function mostrarMenuIntent(opcion, sourceBtn) {
+        const menu = INTENT_MENUS[opcion];
+        if (!menu) return;
+        // Hide the category menu
+        menuOpcionesPresencial.style.display = 'none';
+        // Build intent HTML
+        const intentSection = document.getElementById('menuIntentSection');
+        const intentContent = document.getElementById('menuIntentContent');
+        intentContent.innerHTML = `
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--numia-text); margin-bottom: 0.25rem; text-align: center;">${menu.title}</h3>
+          <p style="font-size: 0.82rem; color: var(--numia-text-light); text-align: center; margin-bottom: 1rem;">${menu.subtitle}</p>
+          <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+            ${menu.items.map((item, i) => `
+              <button class="btn-intent w-100 btn" data-idx="${i}" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: left; display: flex; flex-direction: column; align-items: flex-start;">
+                <span><i class="bi ${item.icon} me-2"></i>${item.label}</span>
+                ${item.hint ? `<span style="font-size: 0.75rem; color: var(--numia-text-light); font-weight: 400; margin-top: 0.15rem; padding-left: 1.4rem;">${item.hint}</span>` : ''}
+              </button>`).join('')}
+          </div>
+        `;
+        intentSection.style.display = 'block';
+        setTimeout(() => intentSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        // Bind clicks — each option triggers the agent flow
+        intentContent.querySelectorAll('.btn-intent').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            // Mantener la posición de scroll (que no salte al balance durante el análisis)
+            const scroller = document.getElementById('sanScreenHome');
+            const prevScroll = scroller ? scroller.scrollTop : 0;
+            let spacer = document.getElementById('opcionesSpacer');
+            if (!spacer) {
+              spacer = document.createElement('div');
+              spacer.id = 'opcionesSpacer';
+              opcionesAtencionSection.parentNode.appendChild(spacer);
+            }
+            spacer.style.height = (scroller ? scroller.clientHeight : 600) + 'px';
+            intentSection.style.display = 'none';
+            if (scroller) scroller.scrollTop = prevScroll;
+            await llamarAgenteConOpcionDesdeMenu(opcion, btn);
+          });
+        });
+      }
+
       // Event listeners para las opciones del menú
-      btnOpcionPrestamos.addEventListener('click', async () => {
-        await llamarAgenteConOpcionDesdeMenu('prestamos', btnOpcionPrestamos);
+      btnOpcionPrestamos.addEventListener('click', () => {
+        mostrarMenuIntent('prestamos', btnOpcionPrestamos);
       });
       
-      btnOpcionTarjetas.addEventListener('click', async () => {
-        await llamarAgenteConOpcionDesdeMenu('tarjetas', btnOpcionTarjetas);
+      btnOpcionTarjetas.addEventListener('click', () => {
+        mostrarMenuIntent('tarjetas', btnOpcionTarjetas);
       });
       
-      btnOpcionInversiones.addEventListener('click', async () => {
-        await llamarAgenteConOpcionDesdeMenu('inversiones', btnOpcionInversiones);
+      btnOpcionInversiones.addEventListener('click', () => {
+        mostrarMenuIntent('inversiones', btnOpcionInversiones);
       });
       
       // Función para llamar al agente desde el menú inicial
       async function llamarAgenteConOpcionDesdeMenu(opcion, btn) {
         try {
           btn.disabled = true;
-          if (opcion === 'inversiones') {
-            try {
-              window.open('app-inversion-bdb.html#cdt', '_blank');
-            } catch (eOpen) {}
-          }
           btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Connecting...';
           
           // Ocultar el menú
@@ -2144,9 +2243,9 @@
 
 
           const HARDCODED_RESPONSES = {
-            prestamos: `Client Analysis — ID: ${dni}\n\n**Score: 742**\n\nThe client has a credit score of 742, placing them in the high-value segment. A digital onboarding process was abandoned 14 days ago, indicating active interest in a personal loan product.\n\n- **Recommended product:** Personal Loan up to $1,000,000\n- **Suggested rate:** 18.5% APR (preferential)\n- **Term:** 12 to 48 installments\n- **Pre-approval status:** Pre-approved\n\n**Suggested service type**: Video call\n- Suggest video call: Yes\n- Estimated video call time: ~8 min\n- Estimated branch wait time: ~40 min\n\nRecommendation: Initiate video call immediately to capture the client's intent and complete the loan application digitally.`,
-            tarjetas: `Client Analysis — ID: ${dni}\n\n**Score: 718**\n\nThe client holds an active checking account with consistent transaction activity over the past 6 months. No current credit card on file — high cross-sell opportunity.\n\n- **Recommended product:** Numia Bank Platinum Credit Card\n- **Pre-approved limit:** $500,000\n- **Annual fee:** Waived for first year\n- **Rewards:** 2x points on all purchases\n\n**Suggested service type**: Video call\n- Suggest video call: Yes\n- Estimated video call time: ~6 min\n- Estimated branch wait time: ~35 min\n\nRecommendation: Offer card via video call — activation can be completed remotely in under 10 minutes.`,
-            inversiones: `Client Analysis — ID: ${dni}\n\n**Score: 761**\n\nThe client has a savings account with an average balance of $2,800,000 over the last 3 months, currently earning below-market returns. Strong candidate for investment product migration.\n\n- **Recommended product:** Fixed-Term Investment (FTI) — 30/60/90 days\n- **Current rate available:** 9.2% annual\n- **Minimum investment:** $100,000\n- **Capital guarantee:** 100%\n\n**Suggested service type**: Video call\n- Suggest video call: Yes\n- Estimated video call time: ~10 min\n- Estimated branch wait time: ~50 min\n\nRecommendation: Connect client with investment advisor via video call to present portfolio options and lock in the preferential rate.`
+            prestamos: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Numia retrieves a personal loan application started digitally and abandoned 14 days ago. Credit score: 742 — high-value segment.\n\n2 · Intent & opportunity\nActive loan intent detected. The pre-approved offer is still eligible:\n• Personal Loan up to $1,000,000\n• Preferential rate: 18.5% APR\n• Term: 12 to 48 installments\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~18 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active loan intent detected\n• Eligible offer available\n• Remote specialist available now\n• Branch wait time: 18 min\n\nEXPECTED OUTCOME\nFaster resolution + higher conversion probability`,
+            tarjetas: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Active checking account with consistent activity over the last 6 months. No credit card on file. Credit score: 718.\n\n2 · Intent & opportunity\nCard intent detected. High cross-sell fit:\n• Numia Bank Platinum Credit Card\n• Pre-approved limit: $500,000\n• First-year annual fee waived\n• 2x points on every purchase\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~15 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active card intent detected\n• Pre-approved limit available\n• Remote specialist available now\n• Branch wait time: 15 min\n\nEXPECTED OUTCOME\nRemote activation in under 10 min + higher conversion probability`,
+            inversiones: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Savings balance averaging $2,800,000 over the last 3 months, earning below-market returns. Credit score: 761.\n\n2 · Intent & opportunity\nInvestment intent detected. Strong migration opportunity:\n• Fixed-Term Investment (FTI) — 30/60/90 days\n• Current rate: 9.2% annual\n• Minimum: $100,000\n• 100% capital guarantee\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~20 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active investment intent detected\n• Preferential rate available now\n• Remote specialist available now\n• Branch wait time: 20 min\n\nEXPECTED OUTCOME\nLock in preferential rate + higher assets under management`
           };
           const messageText = HARDCODED_RESPONSES[opcion] || HARDCODED_RESPONSES['prestamos'];
 
@@ -2520,8 +2619,8 @@
           summaryContent.appendChild(resumenTexto);
           summarySection.style.display = 'block';
           
-          // Mostrar botones en la APP MÓVIL (no en el log)
-          mostrarOpcionesEnApp(tieneVideollamada);
+          // Mostrar popup de notificación al especialista y luego los botones
+          mostrarPopupEspecialista(() => mostrarOpcionesEnApp(tieneVideollamada));
           
           // Scroll automático al final del log
           setTimeout(() => {
@@ -2535,6 +2634,19 @@
         }
       }
       
+      function mostrarPopupEspecialista(callback) {
+        const popup = document.getElementById('specialistPopup');
+        if (!popup) { callback(); return; }
+        popup.style.display = 'flex';
+        const btn = document.getElementById('btnSpecialistPopupOk');
+        function dismiss() {
+          popup.style.display = 'none';
+          btn.removeEventListener('click', dismiss);
+          callback();
+        }
+        btn.addEventListener('click', dismiss);
+      }
+
       function mostrarOpcionesEnApp(tieneVideollamada) {
         // El botón ya está en el header, no necesitamos ocultarlo
         
@@ -2548,9 +2660,9 @@
         btnVideollamada.className = 'btn w-100';
         btnVideollamada.style.cssText = 'background-color: var(--numia-success); color: white; border: none; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; margin-bottom: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;';
         if (tieneVideollamada) {
-          btnVideollamada.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-camera-video"></i><span>Video call</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">✓ Recommended option - Less wait</span>';
+          btnVideollamada.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-camera-video"></i><span>Video call</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Recommended · Available now</span>';
         } else {
-          btnVideollamada.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-camera-video"></i><span>Video call</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Less wait</span>';
+          btnVideollamada.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-camera-video"></i><span>Video call</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Available now</span>';
         }
         btnVideollamada.addEventListener('click', async () => {
           await solicitarAtencionApp('videollamada', btnVideollamada);
@@ -2561,7 +2673,7 @@
         const btnPresencial = document.createElement('button');
         btnPresencial.className = 'btn';
         btnPresencial.style.cssText = 'background-color: var(--numia-azul); color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; width: auto; margin: 0 auto; font-size: 0.9rem;';
-        btnPresencial.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-geo-alt"></i><span>Continue in person</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Option with more wait</span>';
+        btnPresencial.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-geo-alt"></i><span>Continue in person</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Estimated wait: 15 min</span>';
         btnPresencial.addEventListener('click', async (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -2580,10 +2692,28 @@
         // Mostrar la sección
         opcionesAtencionSection.style.display = 'block';
         
-        // Scroll a la sección
+        // El contenedor que hace scroll es la pantalla activa (.san-screen), no .mobile-app-content
+        const scroller = document.getElementById('sanScreenHome') || document.querySelector('.mobile-app-content');
+
+        // Añadir un espaciador para que las opciones puedan quedar solas en pantalla
+        let spacer = document.getElementById('opcionesSpacer');
+        if (!spacer) {
+          spacer = document.createElement('div');
+          spacer.id = 'opcionesSpacer';
+          opcionesAtencionSection.parentNode.appendChild(spacer);
+        }
+        spacer.style.height = (scroller ? scroller.clientHeight : 600) + 'px';
+
+        // Scroll a la sección de opciones (que quede en pantalla, no el balance)
         setTimeout(() => {
-          opcionesAtencionSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+          if (scroller) {
+            const rSec = opcionesAtencionSection.getBoundingClientRect();
+            const rCont = scroller.getBoundingClientRect();
+            scroller.scrollBy({ top: (rSec.top - rCont.top) - 12, behavior: 'smooth' });
+          } else {
+            opcionesAtencionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 200);
       }
       
       function mostrarOpcionesPresencial() {
@@ -2603,16 +2733,20 @@
         
         // Mostrar opciones
         opcionesPresencialContainer.innerHTML = `
-          <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--numia-text); margin-bottom: 1rem; text-align: center;">How can we help you?</h4>
+          <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--numia-text); margin-bottom: 0.25rem; text-align: center;">What do you need help with?</h4>
+          <p style="font-size: 0.85rem; color: var(--numia-text-light); text-align: center; margin-bottom: 1rem;">We detected you're at the branch, Jorge</p>
           <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <button class="btn-opcion-presencial btn w-100" data-opcion="prestamos" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
-              <i class="bi bi-cash-coin me-2"></i>Loans
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-arrow-up-circle me-2"></i>Increase my credit limit
             </button>
             <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
-              <i class="bi bi-credit-card me-2"></i>Cards
+              <i class="bi bi-credit-card me-2"></i>Replace my card
             </button>
-            <button class="btn-opcion-presencial btn w-100" data-opcion="inversiones" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
-              <i class="bi bi-graph-up-arrow me-2"></i>Investments
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-flag me-2"></i>Dispute a transaction
+            </button>
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-text-light); border: 2px solid #e5e7eb; padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-three-dots me-2"></i>Something else
             </button>
           </div>
         `;
@@ -2638,11 +2772,6 @@
       async function llamarAgenteConOpcion(opcion, btn) {
         try {
           btn.disabled = true;
-          if (opcion === 'inversiones') {
-            try {
-              window.open('app-inversion-bdb.html#cdt', '_blank');
-            } catch (eOpen) {}
-          }
           btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Connecting...';
           
           // Ocultar opciones y mostrar loading
@@ -2682,9 +2811,9 @@
 
 
           const HARDCODED_RESPONSES = {
-            prestamos: `Client Analysis — ID: ${dni}\n\n**Score: 742**\n\nThe client has a credit score of 742, placing them in the high-value segment. A digital onboarding process was abandoned 14 days ago, indicating active interest in a personal loan product.\n\n- **Recommended product:** Personal Loan up to $1,000,000\n- **Suggested rate:** 18.5% APR (preferential)\n- **Term:** 12 to 48 installments\n- **Pre-approval status:** Pre-approved\n\n**Suggested service type**: Video call\n- Suggest video call: Yes\n- Estimated video call time: ~8 min\n- Estimated branch wait time: ~40 min\n\nRecommendation: Initiate video call immediately to capture the client's intent and complete the loan application digitally.`,
-            tarjetas: `Client Analysis — ID: ${dni}\n\n**Score: 718**\n\nThe client holds an active checking account with consistent transaction activity over the past 6 months. No current credit card on file — high cross-sell opportunity.\n\n- **Recommended product:** Numia Bank Platinum Credit Card\n- **Pre-approved limit:** $500,000\n- **Annual fee:** Waived for first year\n- **Rewards:** 2x points on all purchases\n\n**Suggested service type**: Video call\n- Suggest video call: Yes\n- Estimated video call time: ~6 min\n- Estimated branch wait time: ~35 min\n\nRecommendation: Offer card via video call — activation can be completed remotely in under 10 minutes.`,
-            inversiones: `Client Analysis — ID: ${dni}\n\n**Score: 761**\n\nThe client has a savings account with an average balance of $2,800,000 over the last 3 months, currently earning below-market returns. Strong candidate for investment product migration.\n\n- **Recommended product:** Fixed-Term Investment (FTI) — 30/60/90 days\n- **Current rate available:** 9.2% annual\n- **Minimum investment:** $100,000\n- **Capital guarantee:** 100%\n\n**Suggested service type**: Video call\n- Suggest video call: Yes\n- Estimated video call time: ~10 min\n- Estimated branch wait time: ~50 min\n\nRecommendation: Connect client with investment advisor via video call to present portfolio options and lock in the preferential rate.`
+            prestamos: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Numia retrieves a personal loan application started digitally and abandoned 14 days ago. Credit score: 742 — high-value segment.\n\n2 · Intent & opportunity\nActive loan intent detected. The pre-approved offer is still eligible:\n• Personal Loan up to $1,000,000\n• Preferential rate: 18.5% APR\n• Term: 12 to 48 installments\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~18 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active loan intent detected\n• Eligible offer available\n• Remote specialist available now\n• Branch wait time: 18 min\n\nEXPECTED OUTCOME\nFaster resolution + higher conversion probability`,
+            tarjetas: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Active checking account with consistent activity over the last 6 months. No credit card on file. Credit score: 718.\n\n2 · Intent & opportunity\nCard intent detected. High cross-sell fit:\n• Numia Bank Platinum Credit Card\n• Pre-approved limit: $500,000\n• First-year annual fee waived\n• 2x points on every purchase\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~15 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active card intent detected\n• Pre-approved limit available\n• Remote specialist available now\n• Branch wait time: 15 min\n\nEXPECTED OUTCOME\nRemote activation in under 10 min + higher conversion probability`,
+            inversiones: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Savings balance averaging $2,800,000 over the last 3 months, earning below-market returns. Credit score: 761.\n\n2 · Intent & opportunity\nInvestment intent detected. Strong migration opportunity:\n• Fixed-Term Investment (FTI) — 30/60/90 days\n• Current rate: 9.2% annual\n• Minimum: $100,000\n• 100% capital guarantee\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~20 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active investment intent detected\n• Preferential rate available now\n• Remote specialist available now\n• Branch wait time: 20 min\n\nEXPECTED OUTCOME\nLock in preferential rate + higher assets under management`
           };
           const messageText = HARDCODED_RESPONSES[opcion] || HARDCODED_RESPONSES['prestamos'];
 
@@ -2793,22 +2922,31 @@
           if (data.averageWaitingTime !== undefined) {
             const minutos = Math.floor(data.averageWaitingTime / 60);
             const segundos = data.averageWaitingTime % 60;
-            resultadoHtml += `<p class="mb-2"><strong>Estimated wait time:</strong> ${minutos} min ${segundos} seg</p>`;
+            resultadoHtml += `<p class="mb-0"><strong>Estimated wait:</strong> ${minutos} min</p>`;
           }
           
+          let videoUrlParaApp = null;
           if (tipo === 'videollamada' && data.videoCallUrl) {
-            const videoUrl = data.videoCallUrl + (data.videoCallUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
+            videoUrlParaApp = data.videoCallUrl + (data.videoCallUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
             resultadoHtml += `
-              <a href="${videoUrl}" target="_blank" class="btn btn-success w-100 mt-2">
+              <button type="button" id="btnStartVideoCallApp" class="btn btn-success w-100 mt-2">
                 <i class="bi bi-camera-video me-2"></i>Start Video Call
-              </a>
+              </button>
+              <a href="${videoUrlParaApp}" target="_blank" class="d-block text-center mt-2" style="font-size:0.8rem; color:#6b7280;">Open in a new tab</a>
             `;
           } else if (tipo === 'presencial') {
             resultadoHtml += '<p class="mb-0"><i class="bi bi-check-circle me-2"></i>In-person service requested successfully</p>';
           }
-          
+
           resultadoHtml += '</div>';
           resultadoAtencionApp.innerHTML = resultadoHtml;
+
+          if (videoUrlParaApp) {
+            const startBtn = document.getElementById('btnStartVideoCallApp');
+            if (startBtn) startBtn.addEventListener('click', () => window.abrirVideollamadaEnApp(videoUrlParaApp));
+            // Lanzar la videollamada del cliente automáticamente dentro del teléfono
+            window.abrirVideollamadaEnApp(videoUrlParaApp);
+          }
           
         } catch (err) {
           console.error('Error al solicitar atención:', err);
@@ -2950,7 +3088,7 @@
 
           if (rawUrl) {
             const videoUrl = rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
-            window.open(videoUrl, '_blank', 'noopener,noreferrer');
+            window.abrirVideollamadaEnApp(videoUrl);
           } else {
             window.alert('Your video call has been registered. We will contact you shortly.');
           }
@@ -2964,6 +3102,28 @@
           }
         }
       };
+
+      // Abrir la videollamada del cliente DENTRO del teléfono (visible en la demo)
+      window.abrirVideollamadaEnApp = function (url) {
+        const overlay = document.getElementById('videoCallOverlay');
+        const frame = document.getElementById('videoCallFrame');
+        const loading = document.getElementById('videoCallLoading');
+        if (!overlay || !frame) { window.open(url, '_blank'); return; }
+        if (loading) loading.style.display = 'flex';
+        frame.onload = () => { if (loading) loading.style.display = 'none'; };
+        frame.src = url;
+        overlay.style.display = 'block';
+      };
+
+      const btnCloseVideoCall = document.getElementById('btnCloseVideoCall');
+      if (btnCloseVideoCall) {
+        btnCloseVideoCall.addEventListener('click', () => {
+          const overlay = document.getElementById('videoCallOverlay');
+          const frame = document.getElementById('videoCallFrame');
+          if (frame) frame.src = 'about:blank';
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
     });
   </script>
   <script>
