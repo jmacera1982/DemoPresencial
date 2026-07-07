@@ -899,10 +899,10 @@
         </div>
 
         <div class="confirm-qr-block">
-          <div class="qr-title">Take your place in line with you</div>
-          <div class="qr-sub">Scan the QR code to track your wait time and get notified when it&rsquo;s your turn.</div>
-          <img class="qr-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAEICAIAAAAslP2oAAAE80lEQVR4nO3dMW7sNhRA0TgIkCIbyf5Xk42kSDUpUgW4KgjwgZR9TvnhPyPbc0FAzxS/Pp/PL8D//Xr6AuBGwoAgDAjCgCAMCMKAIAwIwoAgDAjCgCAMCMKAIAwIwoAgDAi/rf6H3//4c+I6tvvn77/y35+uf/XrV9932q7rnP75nLL6e7FiQBAGBGFAEAYEYUAQBgRhQFieYzz5affvT9l1ndPf71s+D0+sGBCEAUEYEIQBQRgQhAFBGBC2zTGe7LqvfNs84cn0XGXX+57yls+DFQOCMCAIA4IwIAgDgjAgCAPC+BzjNrc9V2r6vv5b5hu3sWJAEAYEYUAQBgRhQBAGBGFA+HFzjCe3zSvefl7H21kxIAgDgjAgCAOCMCAIA4IwIIzPMd5yH33Xde7a/zB9fsWp80De8nmwYkAQBgRhQBAGBGFAEAYEYUDYNsf4rs8v2nW/f9f54rd9/ZO3fx6sGBCEAUEYEIQBQRgQhAFBGBCW5xhv+Xv6abftZzg1r/iunwcrBgRhQBAGBGFAEAYEYUAQBoTlOcZtzzu67TlOt13Prvc9ZdfPf/V1rBgQhAFBGBCEAUEYEIQBQRgQvj6fz+gb7LovPn0/+9R+hre7be7xxBwDNhAGBGFAEAYEYUAQBgRhQBg/53vaqTnJ9P6Q6fedvv5T85xd12/FgCAMCMKAIAwIwoAgDAjCgPD6c7533Y8/9Tyr1dc/NSd5Mn2dp+ZFVgwIwoAgDAjCgCAMCMKAIAwI2+YYp+43n3p+1JOf9jq3PUdr1/VYMSAIA4IwIAgDgjAgCAOCMCBcdz7G9Hnhq+97ap/Gk9vmBs7HgB9EGBCEAUEYEIQBQRgQhAFheT/G9PnWntf0n+86H3hy2/keVgwIwoAgDAjCgCAMCMKAIAwIy3OM6f0At73+6tzj1Lzi1PO1dn2/t815rBgQhAFBGBCEAUEYEIQBQRgQtp2PsWr6vvX0uRCrpucVb3HbnOqJFQOCMCAIA4IwIAgDgjAgCAPC8vkYp+YAq277u//pfQtvn888OfX9WjEgCAOCMCAIA4IwIAgDgjAgjD9X6rb9A7vmG7f9HKbPi7htTuJ8DDhAGBCEAUEYEIQBQRgQhAFheT/GLtP3xU/NT6bPl3hy2/kV0+zHgAOEAUEYEIQBQRgQhAFBGBCW92NMP2dp9fVve/7SqXO7V19n1W1zIfsx4ABhQBAGBGFAEAYEYUAQBoRj+zFOuW0OM+22/RhveX0rBgRhQBAGBGFAEAYEYUAQBoRj+zGmnXoO0m3346d/X6euc/r3a8WAIAwIwoAgDAjCgCAMCMKAsDzHeHJqbnDqOVG3zRlue+7T9OtM7+uwYkAQBgRhQBAGBGFAEAYEYUDYNsd4Mv0cp1VvOR9jl+lzSHZZnUvYjwEHCAOCMCAIA4IwIAgDgjAgjM8xbnPbc59WX3/XuebT+x+mfz5PnI8Bg4QBQRgQhAFBGBCEAUEYEH7cHGPV9L6F1fvrb9lf8fZ9LFYMCMKAIAwIwoAgDAjCgCAMCONzjFPnZqw6dR/9LfOEU3OJXXObVVYMCMKAIAwIwoAgDAjCgCAMCNvmGLf9Pf2T287HeMv56G+ZSzjnGwYJA4IwIAgDgjAgCAOCMCB8fT6f09cA17FiQBAGBGFAEAYEYUAQBgRhQBAGBGFAEAYEYUAQBgRhQBAGBGFA+Be+H+smRFly0AAAAABJRU5ErkJggg==" alt="QR code to follow your turn" />
-          <div class="qr-caption">Scan to follow your turn</div>
+          <div class="qr-title" id="qrTitle">Take your place in line with you</div>
+          <div class="qr-sub" id="qrSub">Scan the QR code to track your wait time and get notified when it&rsquo;s your turn.</div>
+          <img class="qr-img" id="qrImg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQgAAAEICAIAAAAslP2oAAAE80lEQVR4nO3dMW7sNhRA0TgIkCIbyf5Xk42kSDUpUgW4KgjwgZR9TvnhPyPbc0FAzxS/Pp/PL8D//Xr6AuBGwoAgDAjCgCAMCMKAIAwIwoAgDAjCgCAMCMKAIAwIwoAgDAi/rf6H3//4c+I6tvvn77/y35+uf/XrV9932q7rnP75nLL6e7FiQBAGBGFAEAYEYUAQBgRhQFieYzz5affvT9l1ndPf71s+D0+sGBCEAUEYEIQBQRgQhAFBGBC2zTGe7LqvfNs84cn0XGXX+57yls+DFQOCMCAIA4IwIAgDgjAgCAPC+BzjNrc9V2r6vv5b5hu3sWJAEAYEYUAQBgRhQBAGBGFA+HFzjCe3zSvefl7H21kxIAgDgjAgCAOCMCAIA4IwIIzPMd5yH33Xde7a/zB9fsWp80De8nmwYkAQBgRhQBAGBGFAEAYEYUDYNsf4rs8v2nW/f9f54rd9/ZO3fx6sGBCEAUEYEIQBQRgQhAFBGBCW5xhv+Xv6abftZzg1r/iunwcrBgRhQBAGBGFAEAYEYUAQBoTlOcZtzzu67TlOt13Prvc9ZdfPf/V1rBgQhAFBGBCEAUEYEIQBQRgQvj6fz+gb7LovPn0/+9R+hre7be7xxBwDNhAGBGFAEAYEYUAQBgRhQBg/53vaqTnJ9P6Q6fedvv5T85xd12/FgCAMCMKAIAwIwoAgDAjCgPD6c7533Y8/9Tyr1dc/NSd5Mn2dp+ZFVgwIwoAgDAjCgCAMCMKAIAwI2+YYp+43n3p+1JOf9jq3PUdr1/VYMSAIA4IwIAgDgjAgCAOCMCBcdz7G9Hnhq+97ap/Gk9vmBs7HgB9EGBCEAUEYEIQBQRgQhAFheT/G9PnWntf0n+86H3hy2/keVgwIwoAgDAjCgCAMCMKAIAwIy3OM6f0At73+6tzj1Lzi1PO1dn2/t815rBgQhAFBGBCEAUEYEIQBQRgQtp2PsWr6vvX0uRCrpucVb3HbnOqJFQOCMCAIA4IwIAgDgjAgCAPC8vkYp+YAq277u//pfQtvn888OfX9WjEgCAOCMCAIA4IwIAgDgjAgjD9X6rb9A7vmG7f9HKbPi7htTuJ8DDhAGBCEAUEYEIQBQRgQhAFheT/GLtP3xU/NT6bPl3hy2/kV0+zHgAOEAUEYEIQBQRgQhAFBGBCW92NMP2dp9fVve/7SqXO7V19n1W1zIfsx4ABhQBAGBGFAEAYEYUAQBoRj+zFOuW0OM+22/RhveX0rBgRhQBAGBGFAEAYEYUAQBoRj+zGmnXoO0m3346d/X6euc/r3a8WAIAwIwoAgDAjCgCAMCMKAsDzHeHJqbnDqOVG3zRlue+7T9OtM7+uwYkAQBgRhQBAGBGFAEAYEYUDYNsd4Mv0cp1VvOR9jl+lzSHZZnUvYjwEHCAOCMCAIA4IwIAgDgjAgjM8xbnPbc59WX3/XuebT+x+mfz5PnI8Bg4QBQRgQhAFBGBCEAUEYEH7cHGPV9L6F1fvrb9lf8fZ9LFYMCMKAIAwIwoAgDAjCgCAMCONzjFPnZqw6dR/9LfOEU3OJXXObVVYMCMKAIAwIwoAgDAjCgCAMCNvmGLf9Pf2T287HeMv56G+ZSzjnGwYJA4IwIAgDgjAgCAOCMCB8fT6f09cA17FiQBAGBGFAEAYEYUAQBgRhQBAGBGFAEAYEYUAQBgRhQBAGBGFA+Be+H+smRFly0AAAAABJRU5ErkJggg==" alt="QR code to follow your turn" />
+          <div class="qr-caption" id="qrCaption">Scan to follow your turn</div>
         </div>
       </div>
     </div>
@@ -1020,14 +1020,31 @@
 
       function buildDatosEnqueue(dni) {
         let detalle = ultimoDetalleExtraFields || DETALLE_EXTRA_FIELDS_DEFAULT;
-        // Si el cliente mostró interés en la hipoteca, ese insight va primero para el ejecutivo
+        // Si el cliente mostró interés en la hipoteca, ese anuncio va primero para el ejecutivo
         if (mortgageSignal) {
-          detalle = MORTGAGE_INSIGHT + '\n\n' + detalle;
+          detalle = MORTGAGE_INSIGHT + '\n\n\n' + detalle;
         }
         return {
           dni: dni,
           extraFields: buildExtraFields(detalle)
         };
+      }
+
+      // Extraer solo las secciones 1 (Customer context) y 2 (Intent & opportunity)
+      // del análisis, limpias y con doble espacio, para enviar a Debmedia.
+      function extraerNotasParaDebmedia(texto) {
+        if (!texto) return DETALLE_EXTRA_FIELDS_DEFAULT;
+        const seccion = (ini, fin) => {
+          const i = texto.indexOf(ini);
+          if (i === -1) return '';
+          const desde = i + ini.length;
+          const j = texto.indexOf(fin, desde);
+          return texto.substring(desde, j === -1 ? texto.length : j).trim();
+        };
+        const ctx = seccion('1 · Customer context', '2 · Intent & opportunity');
+        const intent = seccion('2 · Intent & opportunity', '3 · Real-time capacity');
+        if (!ctx && !intent) return DETALLE_EXTRA_FIELDS_DEFAULT;
+        return 'Customer context\n\n' + ctx + '\n\n\nIntent & opportunity\n\n' + intent;
       }
       
       // Variables de estado
@@ -1038,7 +1055,7 @@
       let mortgageSignal = false;
 
       // Insight de alta intención que verá el ejecutivo (pantalla debq2 / workstation)
-      const MORTGAGE_INSIGHT = '🔥 High-intent signal — Jorge expressed interest in his pre-approved mortgage offer during check-in. Suggested action: Discuss mortgage options and offer a consultation with a mortgage specialist.';
+      const MORTGAGE_INSIGHT = '!! High-intent signal — Gustavo expressed interest in his pre-approved mortgage offer during check-in. Suggested action: Discuss mortgage options and offer a consultation with a mortgage specialist.';
       
       // Elementos del DOM
       const screenDni = document.getElementById('screenDni');
@@ -1166,20 +1183,20 @@
         const btnNo = document.getElementById('btnMortgageNo');
         if (!popup || !btnYes || !btnNo) return;
         // Esperar 1 segundo (con la pantalla de opciones ya visible) antes de mostrar el pop-up
-        setTimeout(() => { popup.style.display = 'flex'; }, 1000);
+        setTimeout(() => { popup.style.display = 'flex'; }, 600);
         function limpiar() {
           popup.style.display = 'none';
           btnYes.removeEventListener('click', onYes);
           btnNo.removeEventListener('click', onNo);
         }
         function onYes() {
-          // Interesado: guardar señal y disparar el análisis de hipoteca directamente
+          // Interesado: guardar la señal y permitir continuar con la selección normal.
+          // El interés en la hipoteca se anunciará en las notas del turno en Debmedia.
           mortgageSignal = true;
           limpiar();
-          llamarAgenteConOpcionTotem('hipoteca');
         }
         function onNo() {
-          // No: cerrar y permitir continuar con el flujo normal (Loans/Cards/Investments)
+          // No interesado: cerrar y continuar con el flujo normal (sin alerta de hipoteca)
           mortgageSignal = false;
           limpiar();
         }
@@ -1363,7 +1380,7 @@
             prestamos: `Customer Journey Analysis — ID: ${dniIngresado}
 
 1 · Customer context
-Jorge is identified. Numia retrieves a personal loan application he started digitally and abandoned 14 days ago. Credit score: 742 — high-value segment.
+Gustavo is identified. Numia retrieves a personal loan application he started digitally and abandoned 14 days ago. Credit score: 742 — high-value segment.
 
 2 · Intent & opportunity
 Active loan intent detected. The pre-approved offer is still eligible:
@@ -1394,7 +1411,7 @@ Faster resolution + higher conversion probability`,
             tarjetas: `Customer Journey Analysis — ID: ${dniIngresado}
 
 1 · Customer context
-Jorge is identified. Active checking account with consistent activity over the last 6 months. No credit card on file. Credit score: 718.
+Gustavo is identified. Active checking account with consistent activity over the last 6 months. No credit card on file. Credit score: 718.
 
 2 · Intent & opportunity
 Card intent detected. High cross-sell fit:
@@ -1426,7 +1443,7 @@ Remote activation in under 10 min + higher conversion probability`,
             inversiones: `Customer Journey Analysis — ID: ${dniIngresado}
 
 1 · Customer context
-Jorge is identified. Savings balance averaging $2,800,000 over the last 3 months, earning below-market returns. Credit score: 761.
+Gustavo is identified. Savings balance averaging $2,800,000 over the last 3 months, earning below-market returns. Credit score: 761.
 
 2 · Intent & opportunity
 Investment intent detected. Strong migration opportunity:
@@ -1458,7 +1475,7 @@ Lock in preferential rate + higher assets under management`,
             hipoteca: `Customer Journey Analysis — ID: ${dniIngresado}
 
 1 · Customer context
-Jorge is identified. At check-in he expressed interest in his pre-approved mortgage offer. Credit score: 742 — high-value segment with strong repayment capacity.
+Gustavo is identified. At check-in he expressed interest in his pre-approved mortgage offer. Credit score: 742 — high-value segment with strong repayment capacity.
 
 2 · Intent & opportunity
 Active mortgage intent detected. Pre-approved offer available:
@@ -1629,6 +1646,35 @@ Faster resolution + higher conversion on a high-value product`
       }
       
       // Mostrar pantalla de confirmación
+      // Guardar el QR por defecto (presencial / seguir turno)
+      let QR_PRESENCIAL_SRC = null;
+
+      function configurarQR(tipo, data) {
+        const titleEl = document.getElementById('qrTitle');
+        const subEl = document.getElementById('qrSub');
+        const imgEl = document.getElementById('qrImg');
+        const capEl = document.getElementById('qrCaption');
+        if (!titleEl || !imgEl) return;
+        if (QR_PRESENCIAL_SRC === null) QR_PRESENCIAL_SRC = imgEl.getAttribute('src');
+
+        if (tipo === 'videollamada' && data && data.videoCallUrl) {
+          // QR que abre la videollamada del cliente al escanearlo
+          const videoUrl = data.videoCallUrl + (data.videoCallUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
+          titleEl.textContent = 'Take your video call on your phone';
+          subEl.textContent = 'Scan the QR code to start your video call now.';
+          capEl.textContent = 'Scan to start your video call';
+          imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=' + encodeURIComponent(videoUrl);
+          imgEl.alt = 'QR code to start your video call';
+        } else {
+          // Presencial: seguir el turno
+          titleEl.textContent = 'Take your place in line with you';
+          subEl.textContent = "Scan the QR code to track your wait time and get notified when it's your turn.";
+          capEl.textContent = 'Scan to follow your turn';
+          imgEl.src = QR_PRESENCIAL_SRC;
+          imgEl.alt = 'QR code to follow your turn';
+        }
+      }
+
       function mostrarPantallaConfirmacion(data, tipo) {
         screenOpciones.classList.remove('active');
         screenConfirmacion.classList.add('active');
@@ -1636,8 +1682,10 @@ Faster resolution + higher conversion on a high-value product`
         // El tiempo de espera ahora se sigue vía QR; ocultamos el valor numérico
         const te = document.getElementById('tiempoEspera');
         if (te) te.style.display = 'none';
+
+        configurarQR(tipo, data);
       }
-      
+
       // Mostrar pantalla de confirmación presencial (cuando no hay videollamada recomendada)
       function mostrarPantallaConfirmacionPresencial() {
         screenOpciones.classList.remove('active');
@@ -1646,6 +1694,8 @@ Faster resolution + higher conversion on a high-value product`
         // Misma pantalla final con QR para ambos canales
         const te = document.getElementById('tiempoEspera');
         if (te) te.style.display = 'none';
+
+        configurarQR('presencial', null);
       }
       
       // Función para extraer el Scoring del mensaje
@@ -1722,7 +1772,8 @@ Faster resolution + higher conversion on a high-value product`
         try {
           const messageText = typeof message === 'string' ? message : (message.message || JSON.stringify(message, null, 2));
           if (messageText && !messageText.startsWith('No analysis text received')) {
-            ultimoDetalleExtraFields = messageText;
+            // Solo secciones 1 y 2 (limpias) van a Debmedia; el panel sigue mostrando todo
+            ultimoDetalleExtraFields = extraerNotasParaDebmedia(messageText);
           }
           summaryContent.textContent = messageText;
           summarySection.style.display = 'block';
