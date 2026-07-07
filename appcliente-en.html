@@ -2676,8 +2676,8 @@
           summaryContent.appendChild(resumenTexto);
           summarySection.style.display = 'block';
           
-          // Mostrar popup de notificación al especialista y luego los botones
-          mostrarPopupEspecialista(() => mostrarOpcionesEnApp(tieneVideollamada));
+          // Mostrar directamente las opciones de atención (sin pop-up "You're all set")
+          mostrarOpcionesEnApp(tieneVideollamada);
           
           // Scroll automático al final del log
           setTimeout(() => {
