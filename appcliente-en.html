@@ -1946,7 +1946,11 @@
         <div style="background:white; border-radius:20px; padding:2rem 1.75rem; max-width:290px; width:88%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.2); animation: popIn 0.3s ease;">
           <div style="font-size:3rem; margin-bottom:0.75rem;">🎟️</div>
           <h3 style="font-size:1.25rem; font-weight:800; color:#1f2937; margin-bottom:0.4rem;">Your turn has been assigned</h3>
-          <p style="font-size:0.95rem; font-weight:600; color:#1f2937; margin-bottom:1.5rem;">You'll be notified shortly when it's your turn.</p>
+          <p style="font-size:0.95rem; font-weight:600; color:#1f2937; margin-bottom:1rem;">Someone will call your name when it's your turn</p>
+          <div style="background:#f5f0ff; border:1px solid #ddd6fe; border-radius:12px; padding:0.75rem 1rem; margin-bottom:1.5rem;">
+            <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:#6b7280; font-weight:600; margin-bottom:0.15rem;">Estimated time</div>
+            <div style="font-size:1.15rem; font-weight:800; color:var(--numia-azul);">15 minutes</div>
+          </div>
           <button id="btnTurnAssignedOk" style="background:var(--numia-azul); color:white; border:none; border-radius:12px; padding:0.85rem 2rem; font-weight:700; font-size:0.95rem; cursor:pointer; width:100%;">Got it</button>
         </div>
       </div>
@@ -2908,6 +2912,9 @@
       
       async function solicitarAtencionPresencial() {
         try {
+          // Volver la vista del celular al tope
+          const sc = document.getElementById('sanScreenHome');
+          if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
           // Ocultar opciones y mostrar loading
           opcionesAtencionSection.style.display = 'none';
           resultadoAtencionApp.style.display = 'block';
@@ -2957,9 +2964,12 @@
       
       async function solicitarAtencionApp(tipo, btn) {
         try {
+          // Volver la vista del celular al tope
+          const sc = document.getElementById('sanScreenHome');
+          if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
           btn.disabled = true;
           btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
-          
+
           resultadoAtencionApp.style.display = 'block';
           resultadoAtencionApp.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split me-2"></i>Processing request...</div>';
           
