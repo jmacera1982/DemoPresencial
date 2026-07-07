@@ -1,0 +1,3763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Numia Bank - My Banking</title>
+  <link rel="icon" type="image/png" href="images/N.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/gh/debmedia/numiajb-widget@1.0.4/dist/build/static/js/bundle.min.js"></script>
+  <style>
+    :root {
+      --numia-azul: #863DFF;
+      --numia-azul-claro: #e6ecf9;
+      --numia-azul-muy-claro: #eef2fc;
+      --numia-navy: #372069;
+      --san-red: var(--numia-azul);
+      --san-red-dark: #6b28d9;
+      --san-red-light: #f3ebff;
+      --numia-success: #10b981;
+      --numia-text: #1f2937;
+      --numia-text-light: #6b7280;
+      --numia-border: #e5e7eb;
+      --numia-bg: #f7f7f7;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: var(--numia-bg);
+      color: var(--numia-text);
+      min-height: 100vh;
+      display: flex;
+      gap: 2rem;
+      padding: 2rem;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    
+    .phone-shell {
+      position: relative;
+      flex-shrink: 0;
+      padding: 8px 10px 10px;
+      background: #111;
+      border-radius: 36px;
+      box-shadow:
+        0 0 0 1px #333,
+        0 0 0 2px #1a1a1a,
+        0 24px 64px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .phone-shell::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72px;
+      height: 20px;
+      background: #111;
+      border-radius: 0 0 12px 12px;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .phone-shell::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .phone-side-btn {
+      position: absolute;
+      background: #2a2a2a;
+      border-radius: 2px;
+      z-index: 5;
+    }
+
+    .phone-side-btn.vol-up { right: -3px; top: 120px; width: 3px; height: 36px; }
+    .phone-side-btn.vol-down { right: -3px; top: 168px; width: 3px; height: 36px; }
+    .phone-side-btn.power { left: -3px; top: 140px; width: 3px; height: 52px; }
+
+    /* Contenedor tipo app móvil */
+    .mobile-app-container {
+      max-width: 392px;
+      width: 392px;
+      background: #f5f5f5;
+      border-radius: 28px;
+      box-shadow: none;
+      overflow: hidden;
+      position: relative;
+      height: calc(100vh - 5rem);
+      max-height: 780px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .san-screen {
+      display: none;
+      height: 100%;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .san-screen.active {
+      display: block;
+    }
+    
+    .mobile-app-header {
+      background: linear-gradient(135deg, var(--numia-azul) 0%, #4a6cf7 100%);
+      padding: 0.85rem 1rem;
+      color: white;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .mobile-app-header #btnHeaderBack {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-app-header #numiaHeaderBrand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    
+    .mobile-app-header button:hover {
+      background-color: rgba(255, 255, 255, 0.3) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      transform: translateY(-1px);
+    }
+    
+    .mobile-app-header button:active {
+      transform: translateY(0);
+      background-color: rgba(255, 255, 255, 0.25) !important;
+    }
+    
+    .mobile-app-content {
+      background: #f5f5f5;
+      padding: 1rem;
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+    
+    .mobile-app-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .mobile-app-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    .mobile-app-content::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+    }
+    
+    .mobile-app-content::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Sección de logs a la derecha */
+    .log-container {
+      flex: 1;
+      min-width: 400px;
+      max-width: 500px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: none; /* Oculto inicialmente */
+      flex-direction: column;
+      height: calc(100vh - 5rem);
+      max-height: 780px;
+      overflow: hidden;
+    }
+    
+    .log-container.visible {
+      display: flex; /* Mostrar cuando tenga la clase visible */
+    }
+    
+    .log-header {
+      background: #2d2d2d;
+      padding: 1rem 1.5rem;
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-bottom: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    
+    .log-header::before {
+      content: '▶';
+      color: #ffffff;
+      animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
+    }
+    
+    .log-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    
+    .log-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .log-content::-webkit-scrollbar-track {
+      background: #2d2d2d;
+    }
+    
+    .log-content::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+    }
+    
+    .log-content::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+    
+    .navbar {
+      display: none; /* Ocultar navbar original */
+    }
+    
+    .main-container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Ajustar estilos de la sección de atención para el log */
+    .atencion-section {
+      background: transparent !important;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      box-shadow: none;
+      display: none;
+    }
+    
+    .atencion-section.active {
+      display: block;
+    }
+    
+    .atencion-section .section-title {
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.5rem;
+    }
+    
+    .steps-container {
+      margin: 0;
+    }
+    
+    .step-item {
+      background: #2d2d2d;
+      border-left: 3px solid #ffffff;
+      border-radius: 4px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .step-item.completed {
+      border-left-color: #ffffff;
+      background: #2d2d2d;
+    }
+    
+    .step-item.processing {
+      border-left-color: #ffaa00;
+      background: #3a2e1e;
+    }
+    
+    .step-title {
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .step-duration {
+      color: #888;
+      font-size: 0.75rem;
+    }
+    
+    .step-output-content {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      color: #e0e0e0;
+    }
+    
+    .conversation-line {
+      background: #1a1a1a;
+      border-left: 2px solid #444;
+      color: #e0e0e0;
+    }
+    
+    .conversation-line.success {
+      background: #2d2d2d;
+      border-left-color: #ffffff;
+      color: #ffffff;
+    }
+    
+    .conversation-line.error {
+      background: #3a1e1e;
+      border-left-color: #ff4444;
+      color: #ff8888;
+    }
+    
+    .conversation-line.info {
+      background: #1e1e3a;
+      border-left-color: #4444ff;
+    }
+    
+    .summary-section {
+      background: #2d2d2d;
+      border-left: 3px solid #ffffff;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-top: 1rem;
+      color: #e0e0e0;
+    }
+    
+    .summary-title {
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .summary-content {
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+    }
+    
+    @media (max-width: 1024px) {
+      body {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .phone-shell {
+        width: 100%;
+        max-width: 412px;
+      }
+      
+      .mobile-app-container {
+        width: 100%;
+        max-width: 100%;
+        height: 70vh;
+      }
+      
+      .log-container {
+        min-width: 100%;
+        max-width: 100%;
+        height: 50vh;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .phone-shell {
+        border-radius: 32px;
+        padding: 6px 8px 10px;
+      }
+      
+      .mobile-app-container {
+        border-radius: 24px;
+        height: calc(100vh - 1.5rem);
+        max-height: none;
+      }
+      
+      .log-container {
+        height: 50vh;
+      }
+    }
+    
+    .welcome-section {
+      background: linear-gradient(135deg, var(--numia-azul) 0%, #6d2dd4 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      color: white;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(134, 61, 255, 0.3);
+    }
+    
+    .welcome-section h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .welcome-section p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .welcome-section select {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .welcome-section select:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .welcome-section select:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .welcome-section select option {
+      background: var(--numia-azul);
+      color: white;
+    }
+    
+    .balance-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    
+    .balance-label {
+      color: var(--numia-text-light);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .balance-amount {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 1rem;
+    }
+    
+    .balance-subtitle {
+      color: var(--numia-text-light);
+      font-size: 0.95rem;
+    }
+    
+    .products-section {
+      margin-bottom: 2rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 1.5rem;
+    }
+    
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--numia-azul);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .product-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--numia-azul-claro);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--numia-azul);
+      font-size: 1.5rem;
+    }
+    
+    .product-type {
+      font-weight: 600;
+      color: var(--numia-text);
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .product-number {
+      color: var(--numia-text-light);
+      font-size: 0.9rem;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .product-balance {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-top: 0.5rem;
+    }
+    
+    .product-balance.positive {
+      color: var(--numia-success);
+    }
+    
+    .product-balance.negative {
+      color: #ef4444;
+    }
+    
+    .product-details {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--numia-border);
+    }
+    
+    .product-detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .product-detail-label {
+      color: var(--numia-text-light);
+    }
+    
+    .product-detail-value {
+      font-weight: 600;
+      color: var(--numia-text);
+    }
+    
+    .btn-atencion {
+      background: var(--numia-azul);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      width: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(134, 61, 255, 0.3);
+    }
+    
+    .btn-atencion:hover {
+      background: #6d2dd4;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(134, 61, 255, 0.4);
+    }
+    
+    .btn-atencion i {
+      margin-right: 0.5rem;
+    }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .quick-action-btn {
+      background: white;
+      border: 2px solid var(--numia-border);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      text-decoration: none;
+      color: var(--numia-text);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .quick-action-btn:hover {
+      border-color: var(--numia-azul);
+      color: var(--numia-azul);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .quick-action-btn i {
+      font-size: 2rem;
+      color: var(--numia-azul);
+    }
+    
+    .quick-action-btn span {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .atencion-section {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      display: none;
+    }
+    
+    .atencion-section.active {
+      display: block;
+    }
+    
+    .steps-container {
+      margin-top: 1.5rem;
+    }
+    
+    .step-item {
+      background: var(--numia-bg);
+      border-left: 4px solid var(--numia-azul);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    
+    .step-item.completed {
+      border-left-color: var(--numia-success);
+      background: #f0fdf4;
+    }
+    
+    .step-item.processing {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
+    
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .step-icon.text {
+      background: var(--numia-azul-claro);
+      color: var(--numia-azul);
+    }
+    
+    .step-icon.tool {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    
+    .step-icon.completed {
+      background: var(--numia-success);
+      color: white;
+    }
+    
+    .step-title {
+      font-weight: 600;
+      color: var(--numia-text);
+      font-size: 0.95rem;
+    }
+    
+    .step-duration {
+      color: var(--numia-text-light);
+      font-size: 0.85rem;
+      margin-left: auto;
+    }
+    
+    .step-content {
+      margin-top: 0.75rem;
+      padding-left: 2.75rem;
+    }
+    
+    .step-input {
+      background: white;
+      border: 1px solid var(--numia-border);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--numia-text);
+    }
+    
+    .step-output {
+      background: white;
+      border: 1px solid var(--numia-border);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--numia-text);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .step-output pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 0.85rem;
+    }
+    
+    .step-output-content {
+      background: #f8f9fa;
+      border: 1px solid var(--numia-border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--numia-text);
+    }
+    
+    .conversation-output {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .conversation-line {
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      background: white;
+      border-left: 3px solid var(--numia-azul);
+    }
+    
+    .conversation-line.success {
+      background: #f0fdf4;
+      border-left-color: var(--numia-success);
+      color: #166534;
+    }
+    
+    .conversation-line.error {
+      background: #fef2f2;
+      border-left-color: #ef4444;
+      color: #991b1b;
+    }
+    
+    .conversation-line.info {
+      background: #eff6ff;
+      border-left-color: var(--numia-azul);
+    }
+    
+    .conversation-line.info strong {
+      color: var(--numia-azul);
+      margin-right: 0.5rem;
+    }
+    
+    .conversation-line.title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--numia-text);
+      background: transparent;
+      border-left: none;
+      padding-left: 0;
+      margin-top: 0.25rem;
+    }
+    
+    .summary-section {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+      border-left: 4px solid var(--numia-azul);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .summary-title {
+      font-weight: 700;
+      color: var(--numia-text);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .summary-content {
+      color: var(--numia-text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    
+    .dni-input-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .dni-input-group {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+    
+    .dni-input-group .form-control {
+      flex: 1;
+    }
+
+    .mobile-app-header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-self: end;
+    }
+
+    .numia-agendar-card {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--numia-border);
+      border-radius: 12px;
+      padding: 0.95rem 1rem;
+      margin-bottom: 1.25rem;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 1px 4px rgba(134, 61, 255, 0.06);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .numia-agendar-card:hover {
+      border-color: var(--numia-azul);
+      box-shadow: 0 4px 12px rgba(134, 61, 255, 0.12);
+    }
+
+    .numia-agendar-card .icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--san-red-light);
+      color: var(--numia-azul);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .numia-agendar-card strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--numia-text);
+      margin-bottom: 0.15rem;
+    }
+
+    .numia-agendar-card span {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+    }
+
+    .numia-agendar-card > i.chev {
+      margin-left: auto;
+      color: var(--numia-azul);
+      font-size: 0.9rem;
+    }
+
+    .san-promo-loan {
+      display: flex;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      position: relative;
+      min-height: 68px;
+      cursor: pointer;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .san-promo-loan:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(134, 61, 255, 0.12);
+    }
+
+    .san-promo-loan-text {
+      flex: 1;
+      color: var(--numia-text);
+      padding: 0.85rem 0.95rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      border-left: 4px solid var(--numia-azul);
+    }
+
+    .san-promo-loan-amount {
+      background: var(--numia-azul);
+      color: #fff;
+      padding: 0.75rem 0.85rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      line-height: 1.25;
+      min-width: 36%;
+    }
+
+    .san-promo-close {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.35rem;
+      background: rgba(0,0,0,0.06);
+      border: none;
+      color: var(--numia-text-light);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .san-ejecutivo-section { margin-bottom: 1.25rem; }
+
+    .san-ejecutivo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.55rem;
+    }
+
+    .san-ejecutivo-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin: 0;
+    }
+
+    .san-ejecutivo-head button {
+      border: none;
+      background: none;
+      color: var(--numia-azul);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .san-ejecutivo-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .san-ejecutivo-top {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .san-ejecutivo-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--san-red-light);
+      flex-shrink: 0;
+    }
+
+    .san-ejecutivo-top strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--numia-text);
+      margin-bottom: 0.15rem;
+    }
+
+    .san-ejecutivo-top span {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+    }
+
+    .san-ejecutivo-contact {
+      display: flex;
+      justify-content: space-around;
+      gap: 0.5rem;
+    }
+
+    .san-ejecutivo-contact button {
+      background: transparent;
+      border: none;
+      color: var(--numia-text);
+      font-family: inherit;
+      font-size: 0.62rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+      border-radius: 12px;
+      flex: 1;
+    }
+
+    .san-ejecutivo-contact button i {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--numia-azul);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .san-ejecutivo-contact button:not([data-action="asesoramiento"]) i {
+      background: var(--san-red-light);
+      color: var(--numia-azul);
+    }
+
+    .san-promo-popup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .san-promo-popup.active { display: flex; }
+
+    .san-promo-popup-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .san-promo-popup-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 340px;
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    .san-promo-popup-hero {
+      background: linear-gradient(135deg, var(--numia-azul) 0%, var(--san-red-dark) 100%);
+      padding: 1.5rem 1.25rem 1.25rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .san-promo-popup-close {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .san-promo-popup-logo {
+      display: inline-flex;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      margin-bottom: 0.85rem;
+    }
+
+    .san-promo-popup-logo img { height: 28px; width: auto; }
+
+    .san-promo-popup-hero h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 0.35rem;
+    }
+
+    .san-promo-popup-hero p {
+      font-size: 0.78rem;
+      opacity: 0.92;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .san-promo-popup-body { padding: 1.15rem 1.25rem 1.35rem; }
+
+    .san-promo-popup-badge {
+      display: inline-block;
+      background: var(--san-red-light);
+      color: var(--numia-azul);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.65rem;
+    }
+
+    .san-promo-popup-highlight {
+      background: #f5f0ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .san-promo-popup-highlight strong {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--numia-azul);
+    }
+
+    .san-promo-popup-highlight span {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+    }
+
+    .san-promo-popup-features {
+      list-style: none;
+      margin: 0 0 1rem;
+      padding: 0;
+    }
+
+    .san-promo-popup-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: #374151;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+
+    .san-promo-popup-features li i {
+      color: var(--numia-azul);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .san-promo-popup-cta {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: none;
+      border-radius: 12px;
+      background: var(--numia-azul);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .san-promo-popup-dismiss {
+      width: 100%;
+      padding: 0.55rem;
+      border: none;
+      background: transparent;
+      color: var(--numia-text-light);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .numia-cita-screen { background: #fff; }
+
+    .numia-cita-form { padding: 1rem 1rem 2rem; }
+
+    .numia-cita-form .field { margin-bottom: 1.25rem; }
+
+    .numia-cita-form label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--numia-text);
+      margin-bottom: 0.45rem;
+    }
+
+    .numia-pill-toggle { display: flex; gap: 0.5rem; }
+
+    .numia-pill-toggle button {
+      flex: 1;
+      border: 1.5px solid var(--numia-azul);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--numia-azul);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.65rem 0.85rem;
+      cursor: pointer;
+      white-space: normal;
+      line-height: 1.25;
+      text-align: center;
+      min-height: 2.5rem;
+    }
+
+    .numia-pill-toggle--stacked { flex-direction: column; gap: 0.5rem; }
+    .numia-pill-toggle--stacked button { flex: none; width: 100%; }
+    .numia-pill-toggle button.active { background: var(--numia-azul); color: #fff; }
+
+    .numia-pill-toggle button.recomendado {
+      border-width: 2px;
+      box-shadow: 0 0 0 2px rgba(134, 61, 255, 0.12);
+    }
+
+    .numia-pill-toggle button.recomendado::after {
+      content: ' · Recommended';
+      font-size: 0.65rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .numia-pill-toggle--motivo { flex-direction: column; }
+    .numia-pill-toggle--motivo button { flex: none; width: 100%; font-size: 0.8rem; }
+
+    .numia-cita-callout {
+      display: none;
+      background: linear-gradient(135deg, #f5f0ff 0%, #ede9fe 100%);
+      border: 1.5px solid var(--numia-azul);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .numia-cita-callout.visible { display: block; }
+
+    .numia-cita-callout.transferencias {
+      background: linear-gradient(135deg, var(--numia-navy) 0%, var(--numia-azul) 100%);
+      border-color: var(--numia-navy);
+      color: #fff;
+    }
+
+    .numia-cita-callout.transferencias p {
+      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 1rem;
+    }
+
+    .numia-cita-callout h4 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin: 0 0 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .numia-cita-callout.transferencias h4 { color: #fff; }
+
+    .numia-cita-callout p {
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--numia-text-light);
+      margin: 0 0 1rem;
+    }
+
+    .numia-cita-callout-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .numia-cita-callout-actions button {
+      width: 100%;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.6rem 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .numia-cita-callout-actions .btn-chat {
+      background: #fff;
+      border: 1.5px solid var(--numia-azul);
+      color: var(--numia-azul);
+    }
+
+    .numia-cita-callout.transferencias .btn-chat {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.5);
+      color: #fff;
+    }
+
+    .numia-cita-callout-actions .btn-video-now {
+      background: var(--numia-azul);
+      border: none;
+      color: #fff;
+    }
+
+    .numia-cita-callout.transferencias .btn-video-now {
+      background: #fff;
+      color: var(--numia-navy);
+    }
+
+    .numia-cita-hint {
+      font-size: 0.72rem;
+      color: var(--numia-text-light);
+      line-height: 1.45;
+      margin: 0.65rem 0 0;
+    }
+
+    .numia-cita-hint strong { color: var(--numia-azul); }
+
+    #citaFormRest { display: none; }
+    #citaFormRest.visible { display: block; }
+    #citaAgendaWrap.hidden { display: none; }
+    #citaHoraWrap { display: none; }
+    #citaHoraWrap.visible { display: block; }
+
+    .jb-chat-shell {
+      position: absolute;
+      inset: 0;
+      z-index: 400;
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      overflow: visible;
+    }
+
+    .jb-chat-shell.visible { visibility: visible; opacity: 1; }
+
+    .jb-chat-shell journey-builder-chat {
+      display: none;
+      pointer-events: auto;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      left: 10px;
+      width: auto;
+      height: min(420px, calc(100% - 72px));
+      max-height: calc(100% - 72px);
+    }
+
+    .jb-chat-shell.visible journey-builder-chat { display: block; }
+
+    .numia-cita-form select,
+    .numia-cita-form input[type="date"] {
+      width: 100%;
+      border: 1.5px solid #dde3ea;
+      border-radius: 8px;
+      padding: 0.7rem 0.85rem;
+      font: inherit;
+      font-size: 0.85rem;
+      color: var(--numia-text);
+      background: #fff;
+    }
+
+    .numia-cita-form select:focus,
+    .numia-cita-form input[type="date"]:focus {
+      outline: none;
+      border-color: var(--numia-azul);
+      box-shadow: 0 0 0 3px rgba(134, 61, 255, 0.1);
+    }
+
+    .numia-time-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .numia-time-slot {
+      border: 1.5px solid #dde3ea;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--numia-text);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.55rem 0.35rem;
+      cursor: pointer;
+    }
+
+    .numia-time-slot.active {
+      border-color: var(--numia-azul);
+      background: var(--san-red-light);
+      color: var(--numia-azul);
+    }
+
+    .numia-cita-submit {
+      width: 100%;
+      margin-top: 0.5rem;
+      border: none;
+      border-radius: 999px;
+      background: var(--numia-azul);
+      color: #fff;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+    }
+
+    .numia-cita-submit:disabled {
+      background: #c4b5fd;
+      cursor: not-allowed;
+    }
+
+    .numia-cita-success {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .numia-cita-success.active { display: flex; }
+
+    .numia-cita-success-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(55, 32, 105, 0.45);
+    }
+
+    .numia-cita-success-panel {
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .numia-cita-success-panel i.ok {
+      font-size: 2.5rem;
+      color: var(--numia-success);
+      margin-bottom: 0.75rem;
+    }
+
+    .numia-cita-success-panel h3 {
+      font-size: 1.05rem;
+      color: var(--numia-text);
+      margin: 0 0 0.5rem;
+    }
+
+    .numia-cita-success-panel p {
+      font-size: 0.8rem;
+      color: var(--numia-text-light);
+      line-height: 1.45;
+      margin: 0 0 1rem;
+    }
+
+    .numia-cita-success-panel button {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      background: var(--numia-azul);
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      padding: 0.75rem;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1rem;
+      }
+      
+      .balance-amount {
+        font-size: 2rem;
+      }
+      
+      .welcome-section h1 {
+        font-size: 1.5rem;
+      }
+      
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* === AI agent panel: match the totem's dark look (black bg, light text) === */
+    .log-container .log-content { color: #ffffff; font-family: 'Courier New', monospace; }
+    .log-container .atencion-section { background: transparent !important; box-shadow: none; padding: 0; margin: 0; }
+    .log-container .step-item {
+      background: #2d2d2d;
+      border-left: 3px solid #ffffff;
+      border-radius: 4px;
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+    }
+    .log-container .step-item.completed { border-left-color: #ffffff; background: #2d2d2d; }
+    .log-container .step-item.processing { border-left-color: #ffaa00; background: #3a2e1e; }
+    .log-container .step-title { color: #ffffff; font-size: 0.85rem; font-weight: 600; }
+    .log-container .step-duration { color: #9ca3af; font-size: 0.85rem; }
+    .log-container .step-content { color: #ffffff; font-size: 0.85rem; }
+    .log-container .step-input,
+    .log-container .step-output,
+    .log-container .step-output-content {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #ffffff;
+      font-size: 0.85rem;
+    }
+    .log-container .step-icon.text { background: rgba(134, 61, 255, 0.25); color: #c4b5fd; }
+    .log-container .step-icon.tool { background: rgba(217, 119, 6, 0.25); color: #fbbf24; }
+    .log-container .summary-section {
+      background: #2d2d2d;
+      border-left: 3px solid #ffffff;
+      border-radius: 4px;
+      color: #ffffff;
+    }
+    .log-container .summary-title { color: #ffffff; font-family: 'Courier New', monospace; font-size: 0.85rem; font-weight: 600; }
+    .log-container .summary-content { color: #ffffff; font-family: 'Courier New', monospace; font-size: 0.85rem; white-space: pre-line; line-height: 1.5; }
+    .log-container .conversation-line { background: #1a1a1a; border-left: 2px solid #444; color: #ffffff; }
+    .log-container .conversation-line.success { background: #2d2d2d; border-left-color: #ffffff; color: #ffffff; }
+    .log-container .conversation-line.error { background: #3a1e1e; border-left-color: #ff4444; color: #ff8888; }
+    .log-container .conversation-line.info { background: #1e1e3a; border-left-color: #4444ff; color: #ffffff; }
+    .log-container .conversation-line.info strong { color: #a5b4fc; }
+    .log-container .conversation-line.title { color: #ffffff; }
+  </style>
+</head>
+<body>
+  <script src="auth-portal.js"></script>
+  <script>AuthPortal.require();</script>
+  <!-- Recuadro de celular -->
+  <div class="phone-shell">
+    <span class="phone-side-btn vol-up" aria-hidden="true"></span>
+    <span class="phone-side-btn vol-down" aria-hidden="true"></span>
+    <span class="phone-side-btn power" aria-hidden="true"></span>
+  <div class="mobile-app-container">
+    <!-- Header de la app móvil -->
+    <div class="mobile-app-header">
+      <button type="button" id="btnHeaderBack" aria-label="Go back" style="visibility:hidden"><i class="bi bi-arrow-left"></i></button>
+      <div id="numiaHeaderBrand">
+        <i class="bi bi-bank" style="font-size: 1.5rem;"></i>
+        <span id="numiaHeaderTitle" style="font-weight: 600; font-size: 1.1rem;">Numia Bank</span>
+      </div>
+      <div class="mobile-app-header-actions">
+        <i class="bi bi-bell" style="font-size: 1.2rem; opacity: 0.9;"></i>
+        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+      </div>
+    </div>
+    
+    <!-- Contenido de la app móvil -->
+    <div class="mobile-app-content">
+      <div id="sanScreenHome" class="san-screen active">
+      <!-- Main Container -->
+      <div class="main-container" style="padding: 0; margin: 0;">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <div style="margin-bottom: 1rem;">
+        <select id="nombreSelector" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.2); color: white; font-size: 0.95rem; font-weight: 500; cursor: pointer;">
+          <option value="Jorge" selected>Jorge</option>
+          <option value="Joaquin">Joaquin</option>
+          <option value="Gustavo">Gustavo</option>
+          <option value="Martin">Martin</option>
+          <option value="Juanma S">Juanma S</option>
+          <option value="Juanma L">Juanma L</option>
+          <option value="Nico">Nico</option>
+          <option value="Natalia">Natalia</option>
+          <option value="Juanca">Juanca</option>
+          <option value="Aldo">Aldo</option>
+          <option value="Eduardo">Eduardo</option>
+          <option value="Manuel">Manuel</option>
+          <option value="Alberto">Alberto</option>
+          <option value="demo">Romy</option>
+          <option value="demo">demo</option>
+        </select>
+      </div>
+      <h1 id="saludoNombre">Hi, Jorge!</h1>
+      <p>Welcome to your online banking</p>
+      <button id="btnSolicitarAtencion" class="btn" style="background-color: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); padding: 0.75rem 1.5rem; border-radius: 10px; font-size: 0.95rem; font-weight: 600; margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s; width: auto;">
+        <i class="bi bi-geo-alt"></i><span>I'm at the branch</span>
+      </button>
+    </div>
+
+    <div class="san-promo-loan" id="sanPromoLoan" role="button" tabindex="0" aria-label="Pre-approved loan — request advisory">
+      <button type="button" class="san-promo-close" id="btnCerrarPromoLoan" aria-label="Close"><i class="bi bi-x"></i></button>
+      <div class="san-promo-loan-text">You're pre-approved for a loan at a preferred rate</div>
+      <div class="san-promo-loan-amount">Up to $1M · 36-month term</div>
+    </div>
+
+    <button type="button" class="numia-agendar-card" id="btnAgendarCita">
+      <span class="icon-wrap"><i class="bi bi-calendar-check"></i></span>
+      <div>
+        <strong>Schedule appointment</strong>
+        <span>Branch or video call · choose date and time</span>
+      </div>
+      <i class="bi bi-chevron-right chev"></i>
+    </button>
+
+    <div class="san-ejecutivo-section">
+      <div class="san-ejecutivo-head">
+        <h2>Connect with my advisor</h2>
+        <button type="button" id="btnVerCentroAyuda">See all</button>
+      </div>
+      <div class="san-ejecutivo-card">
+        <div class="san-ejecutivo-top">
+          <img class="san-ejecutivo-avatar" src="https://i.pravatar.cc/112?img=33" width="52" height="52" alt="Ejecutivo Numia" />
+          <div>
+            <strong>Martín Restrepo</strong>
+            <span>Your dedicated advisor · Contact me via</span>
+          </div>
+        </div>
+        <div class="san-ejecutivo-contact">
+          <button type="button" id="btnEjecutivoVideollamada" data-action="asesoramiento">
+            <i class="bi bi-camera-video"></i> Video call
+          </button>
+          <button type="button" data-san-demo="llamada">
+            <i class="bi bi-telephone"></i> Call
+          </button>
+          <button type="button" data-san-demo="whatsapp">
+            <i class="bi bi-whatsapp"></i> Whatsapp
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div class="balance-label">Total Balance</div>
+      <div class="balance-amount">$125,450.00</div>
+      <div class="balance-subtitle">Available to use</div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a href="#" class="quick-action-btn">
+        <i class="bi bi-arrow-up-circle"></i>
+        <span>Transfer</span>
+      </a>
+      <a href="#" class="quick-action-btn">
+        <i class="bi bi-arrow-down-circle"></i>
+        <span>Receive</span>
+      </a>
+      <a href="#" class="quick-action-btn">
+        <i class="bi bi-credit-card"></i>
+        <span>Pay</span>
+      </a>
+      <a href="#" class="quick-action-btn">
+        <i class="bi bi-graph-up"></i>
+        <span>Invest</span>
+      </a>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section">
+      <h2 class="section-title">My Products</h2>
+      
+      <!-- Cuenta Corriente -->
+      <div class="product-card">
+        <div class="product-header">
+          <div>
+            <div class="product-type">Checking Account</div>
+            <div class="product-number">****1234</div>
+          </div>
+          <div class="product-icon">
+            <i class="bi bi-wallet2"></i>
+          </div>
+        </div>
+        <div class="product-balance positive">$85,450.00</div>
+        <div class="product-details">
+          <div class="product-detail-item">
+            <span class="product-detail-label">Available credit</span>
+            <span class="product-detail-value">$85,450.00</span>
+          </div>
+          <div class="product-detail-item">
+            <span class="product-detail-label">Overdraft limit</span>
+            <span class="product-detail-value">$10,000.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Crédito -->
+      <div class="product-card">
+        <div class="product-header">
+          <div>
+            <div class="product-type">Credit Card</div>
+            <div class="product-number">****5678</div>
+          </div>
+          <div class="product-icon">
+            <i class="bi bi-credit-card-2-front"></i>
+          </div>
+        </div>
+        <div class="product-balance" style="color: var(--numia-text);">Balance: $12,350.00</div>
+        <div class="product-details">
+          <div class="product-detail-item">
+            <span class="product-detail-label">Credit limit</span>
+            <span class="product-detail-value">$50,000.00</span>
+          </div>
+          <div class="product-detail-item">
+            <span class="product-detail-label">Available credit</span>
+            <span class="product-detail-value">$37,650.00</span>
+          </div>
+          <div class="product-detail-item">
+            <span class="product-detail-label">Statement closing date</span>
+            <span class="product-detail-value">July 15</span>
+          </div>
+          <div class="product-detail-item">
+            <span class="product-detail-label">Payment due date</span>
+            <span class="product-detail-value">July 30</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón para solicitar atención (movido al header) -->
+    <!-- <div class="dni-input-section">
+      <button id="btnSolicitarAtencion" class="btn w-100" style="background-color: var(--numia-azul); color: #ffffff; border-color: var(--numia-azul); padding: 0.75rem 1.5rem;">
+        <i class="bi bi-geo-alt me-1"></i>Estoy en la sucursal
+      </button>
+    </div> -->
+
+    <!-- Sección de opciones de atención (se mostrará después del análisis) -->
+    <div id="opcionesAtencionSection" class="dni-input-section" style="display: none;">
+      <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--numia-text); margin-bottom: 1rem; text-align: center;">Get help faster</h3>
+      <div id="opcionesAtencionContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Los botones se agregarán aquí dinámicamente -->
+      </div>
+      <div id="resultadoAtencionApp" style="margin-top: 1rem; display: none;"></div>
+    </div>
+
+    <!-- Menú de opciones presenciales (se mostrará al presionar "Estoy en la sucursal") -->
+    <div id="menuOpcionesPresencial" class="dni-input-section" style="display: none;">
+      <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--numia-text); margin-bottom: 1rem; text-align: center;">How can we help you?</h3>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <button id="btnOpcionPrestamos" class="btn w-100" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+          <i class="bi bi-cash-coin me-2"></i>Loans
+        </button>
+        <button id="btnOpcionTarjetas" class="btn w-100" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+          <i class="bi bi-credit-card me-2"></i>Credit cards
+        </button>
+        <button id="btnOpcionInversiones" class="btn w-100" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+          <i class="bi bi-graph-up-arrow me-2"></i>Investments
+        </button>
+      </div>
+    </div>
+
+    <!-- Intent sub-menu (shown after selecting a service category) -->
+    <div id="menuIntentSection" class="dni-input-section" style="display: none;">
+      <div id="menuIntentContent"></div>
+    </div>
+
+      </div><!-- /main-container -->
+
+      </div><!-- /sanScreenHome -->
+
+      <div id="sanScreenCita" class="san-screen numia-cita-screen">
+        <form class="numia-cita-form" id="formAgendarCita">
+          <div class="field">
+            <label>What is the reason for your appointment?</label>
+            <div class="numia-pill-toggle numia-pill-toggle--motivo" id="citaMotivoToggle">
+              <button type="button" data-motivo="Prestamos">Loans</button>
+              <button type="button" data-motivo="Tarjetas">Cards</button>
+              <button type="button" data-motivo="Transferencias">Transfers</button>
+            </div>
+            <input type="hidden" id="citaMotivo" required />
+          </div>
+
+          <div class="numia-cita-callout transferencias" id="citaTransferenciasTip">
+            <h4><i class="bi bi-lightning-charge-fill"></i> Need to make a transfer?</h4>
+            <p><strong>You can do it faster from the Numia Bank app</strong> without going to a branch or waiting in line. If you prefer help, we guide you step by step via chat or immediate video call.</p>
+            <div class="numia-cita-callout-actions">
+              <button type="button" class="btn-chat" id="btnCitaGuiaChat">
+                <i class="bi bi-chat-dots"></i> Guide me via chat
+              </button>
+              <button type="button" class="btn-video-now" id="btnCitaVideoInmediata">
+                <i class="bi bi-camera-video-fill"></i> Immediate video call
+              </button>
+            </div>
+          </div>
+
+          <div id="citaFormRest">
+            <div class="field" id="citaTipoWrap">
+              <label>Service type</label>
+              <div class="numia-pill-toggle numia-pill-toggle--stacked" id="citaTipoToggle">
+                <button type="button" class="active" data-tipo="sucursal">Branch</button>
+                <button type="button" data-tipo="videollamada">Immediate video call</button>
+              </div>
+              <p class="numia-cita-hint" id="citaTipoHint">Choose branch to schedule a turn or video call to connect now.</p>
+            </div>
+
+            <div id="citaAgendaWrap">
+              <div class="field" id="citaSucursalWrap">
+                <label for="citaSucursal">Branch</label>
+                <select id="citaSucursal">
+                  <option value="" disabled selected>Choose a branch</option>
+                  <option value="Numia Reforma — CDMX">Numia Reforma — Av. Paseo de la Reforma 510</option>
+                  <option value="Numia Polanco — CDMX">Numia Polanco — Av. Presidente Masaryk 111</option>
+                  <option value="Numia Santa Fe — CDMX">Numia Santa Fe — Centro Comercial Santa Fe</option>
+                  <option value="Numia Guadalajara Centro">Numia Guadalajara Centro — Av. Vallarta 2345</option>
+                  <option value="Numia Monterrey Valle">Numia Monterrey Valle — Av. Lázaro Cárdenas 2320</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="citaFecha">Date</label>
+                <input type="date" id="citaFecha" />
+              </div>
+              <div class="field" id="citaHoraWrap">
+                <label>Time</label>
+                <div class="numia-time-grid" id="citaHoras">
+                  <button type="button" class="numia-time-slot" data-hora="09:00">09:00</button>
+                  <button type="button" class="numia-time-slot" data-hora="09:30">09:30</button>
+                  <button type="button" class="numia-time-slot" data-hora="10:00">10:00</button>
+                  <button type="button" class="numia-time-slot" data-hora="10:30">10:30</button>
+                  <button type="button" class="numia-time-slot" data-hora="11:00">11:00</button>
+                  <button type="button" class="numia-time-slot" data-hora="11:30">11:30</button>
+                  <button type="button" class="numia-time-slot" data-hora="12:00">12:00</button>
+                  <button type="button" class="numia-time-slot" data-hora="12:30">12:30</button>
+                  <button type="button" class="numia-time-slot" data-hora="15:00">15:00</button>
+                  <button type="button" class="numia-time-slot" data-hora="15:30">15:30</button>
+                  <button type="button" class="numia-time-slot" data-hora="16:00">16:00</button>
+                  <button type="button" class="numia-time-slot" data-hora="16:30">16:30</button>
+                </div>
+                <input type="hidden" id="citaHora" />
+              </div>
+            </div>
+
+            <button type="submit" class="numia-cita-submit" id="btnConfirmarCita" disabled>Confirm appointment</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="jb-chat-shell" id="jbChatShell" aria-hidden="true">
+        <journey-builder-chat
+          window_title="Numia Assistant"
+          flow_id="d83a2fbd-f8d0-468f-9ecd-375709fd149f"
+          host_url="https://api.journeybuilder.numia.co"
+          api_key="sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM"
+          chat_position="bottom-right">
+        </journey-builder-chat>
+      </div>
+
+      <!-- Specialist notification popup (constrained to the phone view) -->
+      <div id="specialistPopup" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(0,0,0,0.55); align-items:center; justify-content:center; border-radius:28px;">
+        <div style="background:white; border-radius:20px; padding:2rem 1.75rem; max-width:280px; width:88%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.2); animation: popIn 0.3s ease;">
+          <div style="font-size:3rem; margin-bottom:0.75rem;">✅</div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#1f2937; margin-bottom:0.4rem;">You're all set!</h3>
+          <p style="font-size:0.95rem; font-weight:600; color:#1f2937; margin-bottom:1.5rem;">We've notified the right specialist that you're here.</p>
+          <button id="btnSpecialistPopupOk" style="background:var(--numia-azul); color:white; border:none; border-radius:12px; padding:0.85rem 2rem; font-weight:700; font-size:0.95rem; cursor:pointer; width:100%;">Got it</button>
+        </div>
+      </div>
+
+      <!-- Turn assigned popup (in-person) -->
+      <div id="turnAssignedPopup" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(0,0,0,0.55); align-items:center; justify-content:center; border-radius:28px;">
+        <div style="background:white; border-radius:20px; padding:2rem 1.75rem; max-width:290px; width:88%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.2); animation: popIn 0.3s ease;">
+          <div style="font-size:3rem; margin-bottom:0.75rem;">🎟️</div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#1f2937; margin-bottom:0.4rem;">Your turn has been assigned</h3>
+          <p style="font-size:0.95rem; font-weight:600; color:#1f2937; margin-bottom:1rem;">Someone will call your name when it's your turn</p>
+          <div style="background:#f5f0ff; border:1px solid #ddd6fe; border-radius:12px; padding:0.75rem 1rem; margin-bottom:1.5rem;">
+            <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:#6b7280; font-weight:600; margin-bottom:0.15rem;">Estimated time</div>
+            <div style="font-size:1.15rem; font-weight:800; color:var(--numia-azul);">15 minutes</div>
+          </div>
+          <button id="btnTurnAssignedOk" style="background:var(--numia-azul); color:white; border:none; border-radius:12px; padding:0.85rem 2rem; font-weight:700; font-size:0.95rem; cursor:pointer; width:100%;">Got it</button>
+        </div>
+      </div>
+
+      <!-- In-app video call overlay (renders the client's video call inside the phone) -->
+      <div id="videoCallOverlay" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:10000; background:#000; border-radius:28px; overflow:hidden;">
+        <button id="btnCloseVideoCall" aria-label="End call" style="position:absolute; top:12px; right:12px; z-index:2; width:38px; height:38px; border-radius:50%; border:none; background:rgba(0,0,0,0.55); color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;"><i class="bi bi-x-lg"></i></button>
+        <div id="videoCallLoading" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem; color:#fff; text-align:center; padding:1.5rem;">
+          <div class="spinner-border" role="status" style="width:2.5rem; height:2.5rem;"></div>
+          <div style="font-size:0.9rem; opacity:0.9;">Connecting your video call…</div>
+        </div>
+        <iframe id="videoCallFrame" title="Numia video call" allow="camera; microphone; fullscreen; autoplay; display-capture" allowfullscreen style="width:100%; height:100%; border:0; position:relative; z-index:1;"></iframe>
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+  <div id="numiaCitaSuccess" class="numia-cita-success" aria-hidden="true" role="dialog">
+    <div class="numia-cita-success-backdrop" id="numiaCitaSuccessBackdrop"></div>
+    <div class="numia-cita-success-panel">
+      <i class="bi bi-check-circle-fill ok"></i>
+      <h3>Appointment scheduled!</h3>
+      <p id="numiaCitaSuccessText">Your appointment has been registered successfully.</p>
+      <button type="button" id="btnCitaSuccessOk">Got it</button>
+    </div>
+  </div>
+
+  <div id="sanPromoPopup" class="san-promo-popup" aria-hidden="true" role="dialog" aria-labelledby="sanPromoPopupTitle">
+    <div class="san-promo-popup-backdrop" id="sanPromoPopupBackdrop"></div>
+    <div class="san-promo-popup-panel">
+      <div class="san-promo-popup-hero">
+        <button type="button" class="san-promo-popup-close" id="btnPromoPopupClose" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+        <div class="san-promo-popup-logo">
+          <img src="images/numia.png" alt="Numia Bank" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <span style="display:none;align-items:center;gap:0.4rem;font-weight:700;font-size:1rem;color:var(--numia-azul);"><i class="bi bi-bank" style="font-size:1.3rem;"></i> Numia Bank</span>
+        </div>
+        <h3 id="sanPromoPopupTitle">You have a pre-approved loan!</h3>
+        <p>A Numia Bank advisor will explain the best financing options.</p>
+      </div>
+      <div class="san-promo-popup-body">
+        <span class="san-promo-popup-badge">Exclusive offer</span>
+        <div class="san-promo-popup-highlight">
+          <strong>Up to $1M · 36-month term</strong>
+          <span>You're pre-approved at a preferred rate</span>
+        </div>
+        <ul class="san-promo-popup-features">
+          <li><i class="bi bi-check-circle-fill"></i> Personalized advisory via video call</li>
+          <li><i class="bi bi-check-circle-fill"></i> Fast approval without going to the branch</li>
+          <li><i class="bi bi-check-circle-fill"></i> Immediate response during banking hours</li>
+        </ul>
+        <button type="button" class="san-promo-popup-cta" id="btnPromoVideollamada">
+          <i class="bi bi-camera-video-fill"></i> Request video call with advisor
+        </button>
+        <button type="button" class="san-promo-popup-dismiss" id="btnPromoPopupDismiss">Not now</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Contenedor de Logs a la derecha -->
+  <div class="log-container">
+    <div class="log-header">
+      Agentic Orchestration
+    </div>
+    <div class="log-content">
+      <!-- Sección de Resultados de Atención -->
+      <div id="atencionSection" class="atencion-section">
+        <div id="stepsContainer" class="steps-container">
+          <!-- Los pasos se agregarán aquí dinámicamente -->
+        </div>
+        
+        <div id="summarySection" class="summary-section" style="display: none;">
+          <div class="summary-title">
+            <i class="bi bi-check-circle-fill"></i>
+            Analysis Summary
+          </div>
+          <div id="summaryContent" class="summary-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <style>
+    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  </style>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Esperar a que el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configuración de la API Journey Builder
+      const JOURNEY_API_URL = 'https://api.journeybuilder.numia.co/api/v1/run/d83a2fbd-f8d0-468f-9ecd-375709fd149f?stream=false';
+      const JOURNEY_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
+      const PASOS_ANALISIS_UI = [
+        { titulo: '1 · Understand customer context', detalle: 'Analysing profile, digital behaviour and recent journey history.' },
+        { titulo: '2 · Identify intent and opportunity', detalle: 'Matching customer needs with relevant products and next-best actions.' },
+        { titulo: '3 · Evaluate real-time capacity', detalle: 'Comparing wait times, staff availability and remote service capacity.' },
+        { titulo: '4 · Recommend the best journey', detalle: 'Selecting the optimal channel based on customer context and operational conditions.' }
+      ];
+
+      // Objeto con nombres y DNI
+      const usuarios = {
+        'Jorge': { dni: '29328703', apellido: 'Macera' },
+        'Joaquin': { dni: '33877733', apellido: 'Zolio' },
+        'Gustavo': { dni: '33689449', apellido: 'Lauria' },
+        'Martin': { dni: '34982731', apellido: 'Fernandez' },
+        'Alberto': { dni: '34982731', apellido: 'Villalpando' },
+        'Juanma S': { dni: '36592634', apellido: 'Suarez' },
+        'Juanma L': { dni: '38004650', apellido: 'Liza' },
+        'Nico': { dni: '573116519209', apellido: 'Usuario' },
+        'Natalia': { dni: '1072655461', apellido: 'Pantoja' },
+        'Aldo': { dni: '5215610238745', apellido: 'Romero' },
+        'Eduardo': { dni: '33333333', apellido: 'Corona' },
+        'Manuel': { dni: '12345678', apellido: 'Ormachea' },
+        'Juanca': { dni: '1090378365', apellido: 'Soto' },
+        'Romy': { dni: '35975313', apellido: 'Cardenas' },
+        'demo': { dni: '12345678', apellido: 'Demo' }
+      };
+      
+      // Función para obtener el usuario actual
+      function getUsuarioActual() {
+        const selector = document.getElementById('nombreSelector');
+        const nombreSeleccionado = selector ? selector.value : 'Jorge';
+        return usuarios[nombreSeleccionado] || usuarios['Jorge'];
+      }
+      
+      // Función para obtener el nombre actual
+      function getNombreActual() {
+        const selector = document.getElementById('nombreSelector');
+        return selector ? selector.value : 'Jorge';
+      }
+      
+      // Manejar cambio de nombre en el selector
+      const nombreSelector = document.getElementById('nombreSelector');
+      const saludoNombre = document.getElementById('saludoNombre');
+      
+      if (nombreSelector && saludoNombre) {
+        nombreSelector.addEventListener('change', function() {
+          const nombreSeleccionado = this.value;
+          saludoNombre.textContent = `Hi, ${nombreSeleccionado}!`;
+        });
+        
+        // Inicializar saludo con el valor por defecto
+        saludoNombre.textContent = `Hi, ${nombreSelector.value}!`;
+      }
+
+      // Elementos del DOM
+      const btnSolicitarAtencion = document.getElementById('btnSolicitarAtencion');
+      const atencionSection = document.getElementById('atencionSection');
+      const stepsContainer = document.getElementById('stepsContainer');
+      const summarySection = document.getElementById('summarySection');
+      const summaryContent = document.getElementById('summaryContent');
+      const opcionesAtencionSection = document.getElementById('opcionesAtencionSection');
+      const opcionesAtencionContainer = document.getElementById('opcionesAtencionContainer');
+      const resultadoAtencionApp = document.getElementById('resultadoAtencionApp');
+
+      // Verificar que todos los elementos existan
+      if (!btnSolicitarAtencion || !atencionSection || !stepsContainer || !summarySection || !summaryContent || !opcionesAtencionSection || !opcionesAtencionContainer || !resultadoAtencionApp) {
+        console.error('Error: No se encontraron todos los elementos del DOM');
+        return;
+      }
+
+      // DNI fijo a usar
+      const DNI_FIJO = '12345678';
+
+      const DETALLE_EXTRA_FIELDS_DEFAULT = 'The client has a credit score >700. Additionally, an abandoned digital onboarding process was recorded. It is recommended to offer a personal loan.';
+      let ultimoDetalleExtraFields = DETALLE_EXTRA_FIELDS_DEFAULT;
+
+      function buildExtraFields(detalle) {
+        return [{
+          showable: [{ in: 'workstation', format: 'both' }],
+          Detalle: detalle
+        }];
+      }
+
+      function buildDatosEnqueue(usuarioActual, nombreActual) {
+        return {
+          firstName: nombreActual,
+          lastName: usuarioActual.apellido,
+          dni: usuarioActual.dni,
+          email: 'mail@mail.com',
+
+          extraFields: buildExtraFields(ultimoDetalleExtraFields || DETALLE_EXTRA_FIELDS_DEFAULT)
+        };
+      }
+
+      // Extraer solo las secciones 1 (Customer context) y 2 (Intent & opportunity)
+      // del análisis, limpias y con doble espacio, para enviar a Debmedia.
+      function extraerNotasParaDebmedia(texto) {
+        if (!texto) return DETALLE_EXTRA_FIELDS_DEFAULT;
+        const seccion = (ini, fin) => {
+          const i = texto.indexOf(ini);
+          if (i === -1) return '';
+          const desde = i + ini.length;
+          const j = texto.indexOf(fin, desde);
+          return texto.substring(desde, j === -1 ? texto.length : j).trim();
+        };
+        const ctx = seccion('1 · Customer context', '2 · Intent & opportunity');
+        const intent = seccion('2 · Intent & opportunity', '3 · Real-time capacity');
+        if (!ctx && !intent) return DETALLE_EXTRA_FIELDS_DEFAULT;
+        return 'Customer context\n\n' + ctx + '\n\n\nIntent & opportunity\n\n' + intent;
+      }
+
+      // Event listener para el botón "Estoy en la sucursal"
+      btnSolicitarAtencion.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Mostrar el menú de opciones (el botón ya está en el header)
+        menuOpcionesPresencial.style.display = 'block';
+        
+        // Scroll al menú
+        setTimeout(() => {
+          menuOpcionesPresencial.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      });
+      
+      // Intent sub-menus per category
+      const INTENT_MENUS = {
+        prestamos: {
+          title: 'What do you need with Loans?',
+          subtitle: 'Based on your profile, Jorge, here are the most relevant options',
+          items: [
+            { icon: 'bi-cash-stack', label: 'Apply for a loan — up to $5M', hint: 'Pre-approved · Fast disbursement' },
+            { icon: 'bi-graph-up-arrow', label: 'Apply for a loan — up to $10M', hint: 'Subject to credit evaluation' },
+            { icon: 'bi-search', label: 'Check my available loan limit', hint: 'Instant result' },
+            { icon: 'bi-three-dots', label: 'Something else', hint: '' }
+          ]
+        },
+        tarjetas: {
+          title: 'What do you need with Credit cards?',
+          subtitle: 'Platinum card ending in 4521 detected on your profile',
+          items: [
+            { icon: 'bi-arrow-up-circle', label: 'Increase my credit limit', hint: 'Current limit: $50,000' },
+            { icon: 'bi-credit-card', label: 'Replace my card', hint: 'Lost, damaged or expired' },
+            { icon: 'bi-flag', label: 'Dispute a transaction', hint: 'Unauthorized or incorrect charge' },
+            { icon: 'bi-three-dots', label: 'Something else', hint: '' }
+          ]
+        },
+        inversiones: {
+          title: 'Based on your investment history',
+          subtitle: "Jorge, your last FTI matured on June 30 — here's what we suggest:",
+          items: [
+            { icon: 'bi-star-fill', label: 'Renew FTI · $2,800,000 at 9.2%', hint: 'Same term, better rate than last time · Recommended' },
+            { icon: 'bi-piggy-bank', label: 'Open a new FTI — 90 days', hint: "Lock in today's rate before it changes" },
+            { icon: 'bi-bar-chart-line', label: 'Review my full portfolio', hint: 'Performance + upcoming maturities' },
+            { icon: 'bi-three-dots', label: 'Something else', hint: '' }
+          ]
+        }
+      };
+
+      function mostrarMenuIntent(opcion, sourceBtn) {
+        const menu = INTENT_MENUS[opcion];
+        if (!menu) return;
+        // Hide the category menu
+        menuOpcionesPresencial.style.display = 'none';
+        // Build intent HTML
+        const intentSection = document.getElementById('menuIntentSection');
+        const intentContent = document.getElementById('menuIntentContent');
+        intentContent.innerHTML = `
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--numia-text); margin-bottom: 0.25rem; text-align: center;">${menu.title}</h3>
+          <p style="font-size: 0.82rem; color: var(--numia-text-light); text-align: center; margin-bottom: 1rem;">${menu.subtitle}</p>
+          <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+            ${menu.items.map((item, i) => `
+              <button class="btn-intent w-100 btn" data-idx="${i}" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.75rem 1rem; border-radius: 10px; font-weight: 600; text-align: left; display: flex; flex-direction: column; align-items: flex-start;">
+                <span><i class="bi ${item.icon} me-2"></i>${item.label}</span>
+                ${item.hint ? `<span style="font-size: 0.75rem; color: var(--numia-text-light); font-weight: 400; margin-top: 0.15rem; padding-left: 1.4rem;">${item.hint}</span>` : ''}
+              </button>`).join('')}
+          </div>
+        `;
+        intentSection.style.display = 'block';
+        setTimeout(() => intentSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        // Bind clicks — each option triggers the agent flow
+        intentContent.querySelectorAll('.btn-intent').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            // Mantener la posición de scroll (que no salte al balance durante el análisis)
+            const scroller = document.getElementById('sanScreenHome');
+            const prevScroll = scroller ? scroller.scrollTop : 0;
+            let spacer = document.getElementById('opcionesSpacer');
+            if (!spacer) {
+              spacer = document.createElement('div');
+              spacer.id = 'opcionesSpacer';
+              opcionesAtencionSection.parentNode.appendChild(spacer);
+            }
+            spacer.style.height = (scroller ? scroller.clientHeight : 600) + 'px';
+            intentSection.style.display = 'none';
+            if (scroller) scroller.scrollTop = prevScroll;
+            await llamarAgenteConOpcionDesdeMenu(opcion, btn);
+          });
+        });
+      }
+
+      // Event listeners para las opciones del menú
+      btnOpcionPrestamos.addEventListener('click', () => {
+        mostrarMenuIntent('prestamos', btnOpcionPrestamos);
+      });
+      
+      btnOpcionTarjetas.addEventListener('click', () => {
+        mostrarMenuIntent('tarjetas', btnOpcionTarjetas);
+      });
+      
+      btnOpcionInversiones.addEventListener('click', () => {
+        mostrarMenuIntent('inversiones', btnOpcionInversiones);
+      });
+      
+      // Función para llamar al agente desde el menú inicial
+      async function llamarAgenteConOpcionDesdeMenu(opcion, btn) {
+        try {
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Connecting...';
+          
+          // Ocultar el menú
+          menuOpcionesPresencial.style.display = 'none';
+          
+          const dni = DNI_FIJO;
+          
+          // Construir mensaje con la opción seleccionada
+          const opcionesTexto = {
+            prestamos: 'Loans',
+            tarjetas: 'Credit cards',
+            inversiones: 'Investments'
+          };
+          const mensaje = `I need assistance regarding ${opcionesTexto[opcion]}. ID: ${dni}`;
+          
+          // Mostrar el contenedor de logs
+          const logContainer = document.querySelector('.log-container');
+          if (logContainer) {
+            logContainer.classList.add('visible');
+          }
+          
+          // Mostrar la sección explícitamente
+          atencionSection.style.display = 'block';
+          atencionSection.classList.add('active');
+
+          summarySection.style.display = 'none';
+          summaryContent.innerHTML = '';
+
+          const pasosInicio = Date.now();
+          const delayPaso = 800;
+          const nPasos = PASOS_ANALISIS_UI.length;
+          const pasosAnimacionMs = nPasos * delayPaso + 500;
+
+          stepsContainer.innerHTML = '';
+          stepsContainer.style.display = 'block';
+          stepsContainer.style.visibility = 'visible';
+          stepsContainer.style.opacity = '1';
+
+          PASOS_ANALISIS_UI.forEach((paso, index) => {
+            setTimeout(() => {
+              agregarPaso({ name: paso.titulo, output: paso.detalle }, index);
+            }, index * delayPaso);
+          });
+
+          setTimeout(() => {
+            const logContent = document.querySelector('.log-content');
+            if (logContent) {
+              logContent.scrollTop = logContent.scrollHeight;
+            }
+          }, 100);
+
+
+          const HARDCODED_RESPONSES = {
+            prestamos: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Numia retrieves a personal loan application started digitally and abandoned 14 days ago. Credit score: 742 — high-value segment.\n\n2 · Intent & opportunity\nActive loan intent detected. The pre-approved offer is still eligible:\n• Personal Loan up to $1,000,000\n• Preferential rate: 18.5% APR\n• Term: 12 to 48 installments\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~18 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active loan intent detected\n• Eligible offer available\n• Remote specialist available now\n• Branch wait time: 18 min\n\nEXPECTED OUTCOME\nFaster resolution + higher conversion probability`,
+            tarjetas: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Active checking account with consistent activity over the last 6 months. No credit card on file. Credit score: 718.\n\n2 · Intent & opportunity\nCard intent detected. High cross-sell fit:\n• Numia Bank Platinum Credit Card\n• Pre-approved limit: $500,000\n• First-year annual fee waived\n• 2x points on every purchase\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~15 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active card intent detected\n• Pre-approved limit available\n• Remote specialist available now\n• Branch wait time: 15 min\n\nEXPECTED OUTCOME\nRemote activation in under 10 min + higher conversion probability`,
+            inversiones: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Savings balance averaging $2,800,000 over the last 3 months, earning below-market returns. Credit score: 761.\n\n2 · Intent & opportunity\nInvestment intent detected. Strong migration opportunity:\n• Fixed-Term Investment (FTI) — 30/60/90 days\n• Current rate: 9.2% annual\n• Minimum: $100,000\n• 100% capital guarantee\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~20 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active investment intent detected\n• Preferential rate available now\n• Remote specialist available now\n• Branch wait time: 20 min\n\nEXPECTED OUTCOME\nLock in preferential rate + higher assets under management`
+          };
+          const messageText = HARDCODED_RESPONSES[opcion] || HARDCODED_RESPONSES['prestamos'];
+
+          const transcurridoFin = Date.now() - pasosInicio;
+          await new Promise(function(resolve) { setTimeout(resolve, Math.max(0, pasosAnimacionMs - transcurridoFin)); });
+
+          mostrarResumen(messageText || 'No analysis text received from the API.');
+        
+      } catch (err) {
+        console.error('Error completo:', err);
+        // Asegurar que el contenedor de logs esté visible incluso en caso de error
+        const logContainer = document.querySelector('.log-container');
+        if (logContainer) {
+          logContainer.classList.add('visible');
+        }
+        // Asegurar que la sección esté visible incluso en caso de error
+        atencionSection.style.display = 'block';
+        atencionSection.classList.add('active');
+        stepsContainer.innerHTML = `
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Error processing the request: ${err.message}
+            <br><small>Revisa la consola para más detalles.</small>
+          </div>
+        `;
+        } finally {
+          btn.disabled = false;
+          // Restaurar texto del botón según la opción
+          const textosBotones = {
+            prestamos: '<i class="bi bi-cash-coin me-2"></i>Loans',
+            tarjetas: '<i class="bi bi-credit-card me-2"></i>Credit cards',
+            inversiones: '<i class="bi bi-graph-up-arrow me-2"></i>Investments'
+          };
+          btn.innerHTML = textosBotones[opcion];
+        }
+      }
+      
+      function extraerInfoDeObjeto(obj, nivel = 0) {
+        if (nivel > 2) return ''; // Limitar profundidad
+        
+        const lineas = [];
+        
+        // Extraer información útil del objeto
+        if (obj.id) lineas.push(`ID: ${obj.id}`);
+        if (obj.firstName || obj.first_name) lineas.push(`Name: ${obj.firstName || obj.first_name}`);
+        if (obj.lastName || obj.last_name) lineas.push(`Last name: ${obj.lastName || obj.last_name}`);
+        if (obj.dni) lineas.push(`DNI: ${obj.dni}`);
+        if (obj.email) lineas.push(`Email: ${obj.email}`);
+        if (obj.phone || obj.telefono) lineas.push(`Phone: ${obj.phone || obj.telefono}`);
+        if (obj.score) lineas.push(`Score: ${obj.score}`);
+        if (obj.status) lineas.push(`Status: ${obj.status}`);
+        if (obj.ok !== undefined) lineas.push(`Status: ${obj.ok ? 'OK' : 'Error'}`);
+        if (obj.exists !== undefined) lineas.push(`Exists: ${obj.exists ? 'Sí' : 'No'}`);
+        
+        // Manejar objetos anidados importantes
+        if (obj.customerType && typeof obj.customerType === 'object') {
+          if (obj.customerType.name) lineas.push(`Client type: ${obj.customerType.name}`);
+          if (obj.customerType.priority) lineas.push(`Priority: ${obj.customerType.priority}`);
+        }
+        
+        if (obj.value && typeof obj.value === 'object') {
+          if (obj.value.segment) lineas.push(`Segment: ${obj.value.segment}`);
+          if (obj.value.products && Array.isArray(obj.value.products)) {
+            obj.value.products.forEach((product, idx) => {
+              if (product.name) lineas.push(`Producto ${idx + 1}: ${product.name}`);
+              if (product.max_amount) lineas.push(`  - Max amount: $${product.max_amount.toLocaleString()}`);
+              if (product.rate_apr) lineas.push(`  - APR rate: ${product.rate_apr}%`);
+            });
+          }
+        }
+        
+        return lineas.join('\n');
+      }
+      
+      function formatearOutputConversacional(output) {
+        if (!output) return '';
+        
+        let texto = '';
+        
+        // Si es un string, verificar si contiene JSON
+        if (typeof output === 'string') {
+          // Si parece ser JSON (contiene { o [), intentar parsearlo
+          if ((output.includes('{') && output.includes('}')) || (output.includes('[') && output.includes(']'))) {
+            try {
+              // Intentar parsear como JSON
+              const parsed = JSON.parse(output);
+              texto = extraerInfoDeObjeto(parsed);
+              
+              // Si no se extrajo nada útil, buscar campos comunes
+              if (!texto) {
+                texto = parsed.text || parsed.message || parsed.response?.raw || '';
+              }
+            } catch (e) {
+              // Si no es JSON válido pero tiene estructura tipo diccionario Python
+              // Intentar extraer información útil sin parsear
+              const match = output.match(/'(\w+)':\s*([^,}]+)/g);
+              if (match) {
+                const info = [];
+                match.forEach(m => {
+                  const keyMatch = m.match(/'(\w+)':/);
+                  const valueMatch = m.match(/:\s*(.+)/);
+                  if (keyMatch && valueMatch) {
+                    const key = keyMatch[1];
+                    let value = valueMatch[1].trim().replace(/^'|'$/g, '');
+                    
+                    // Solo mostrar campos útiles
+                    if (['id', 'firstName', 'lastName', 'dni', 'email', 'phone', 'name', 'score', 'status'].includes(key)) {
+                      info.push(`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`);
+                    }
+                  }
+                });
+                texto = info.join('\n');
+              } else {
+                // Si tiene ✅ o mensajes útiles, mantenerlos
+                if (output.includes('✅') || output.includes('Cliente') || output.includes('actualizado')) {
+                  // Extraer solo las líneas útiles, sin el JSON
+                  const lineas = output.split('\n').filter(l => 
+                    l.includes('✅') || 
+                    l.includes('Cliente') || 
+                    l.includes('DNI:') || 
+                    l.includes('Nombre') ||
+                    l.includes('Score') ||
+                    l.includes('actualizado') ||
+                    (!l.includes('{') && !l.includes('}') && !l.includes("'id'") && !l.includes("'firstName'"))
+                  );
+                  texto = lineas.join('\n');
+                } else {
+                  // Si no hay nada útil, no mostrar nada
+                  texto = '';
+                }
+              }
+            }
+          } else {
+            // Si no parece JSON, usar el texto directamente
+            texto = output;
+          }
+        } 
+        // Si es un objeto, extraer información útil
+        else if (typeof output === 'object') {
+          texto = extraerInfoDeObjeto(output);
+          
+          // Si no se extrajo nada, buscar campos comunes
+          if (!texto) {
+            texto = output.text || output.message || output.response?.raw || '';
+          }
+        } else {
+          texto = String(output);
+        }
+        
+        // Si después de todo el procesamiento no hay texto útil, no mostrar nada
+        if (!texto || texto.trim() === '') {
+          return '<div class="conversation-output"><div class="conversation-line"><em style="color: var(--numia-text-light);">Información procesada correctamente</em></div></div>';
+        }
+        
+        // Formatear como conversación - dividir por líneas y formatear
+        const lineas = texto.split('\n');
+        let html = '<div class="conversation-output">';
+        
+        lineas.forEach(linea => {
+          linea = linea.trim();
+          if (!linea) {
+            html += '<div style="height: 0.5rem;"></div>'; // Espacio entre párrafos
+            return;
+          }
+          
+          // Detectar diferentes tipos de información
+          if (linea.startsWith('✅') || linea.startsWith('✓')) {
+            html += `<div class="conversation-line success"><i class="bi bi-check-circle-fill me-2"></i>${escapeHtml(linea.replace(/^[✅✓]\s*/, ''))}</div>`;
+          } else if (linea.startsWith('❌') || linea.startsWith('✗')) {
+            html += `<div class="conversation-line error"><i class="bi bi-x-circle-fill me-2"></i>${escapeHtml(linea.replace(/^[❌✗]\s*/, ''))}</div>`;
+          } else if (linea.match(/^\*\*.*\*\*:/)) {
+            // Títulos con markdown **texto:**
+            const titulo = linea.replace(/\*\*/g, '').replace(':', '');
+            html += `<div class="conversation-line title"><strong>${escapeHtml(titulo)}</strong></div>`;
+          } else if (linea.includes(':') && !linea.includes('{') && !linea.includes('}') && !linea.includes("'")) {
+            const [key, ...valueParts] = linea.split(':');
+            const value = valueParts.join(':').trim();
+            html += `<div class="conversation-line info"><strong>${escapeHtml(key.trim())}:</strong> <span>${escapeHtml(value)}</span></div>`;
+          } else if (linea.match(/^[A-Z][^:{}]*$/) && linea.length < 100 && !linea.includes("'")) {
+            html += `<div class="conversation-line title">${escapeHtml(linea)}</div>`;
+          } else if (!linea.includes('{') && !linea.includes('}') && !linea.includes("'id'") && !linea.includes("'firstName'")) {
+            html += `<div class="conversation-line">${escapeHtml(linea)}</div>`;
+          }
+        });
+        
+        html += '</div>';
+        return html;
+      }
+      
+      function formatearNombrePasoAmigable(toolName) {
+        if (!toolName || typeof toolName !== 'string') return 'Unknown tool';
+        const t = toolName.trim();
+        if (!t) return 'Unknown tool';
+        // Frases con espacios ya legibles: no usar /\b\w/g (en JS \w no incluye acentos y rompe palabras como "atención")
+        if (/\s/.test(t) && !/[a-z][A-Z]/.test(t)) {
+          return t;
+        }
+        return t
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, str => str.toUpperCase())
+          .trim()
+          .replace(/\b\w/g, l => l.toUpperCase());
+      }
+
+      function agregarPaso(content, index) {
+        try {
+          console.log(`Agregando paso ${index}:`, content);
+          
+          const stepItem = document.createElement('div');
+          stepItem.className = 'step-item processing';
+          stepItem.style.display = 'block';
+          stepItem.style.visibility = 'visible';
+          stepItem.style.opacity = '0';
+          stepItem.style.transition = 'opacity 0.5s ease-in';
+          stepItem.style.minHeight = '50px';
+          
+          // Obtener solo el nombre de la herramienta
+          const toolName = content.name || 
+                          content.tool_name || 
+                          content.tool_use?.name || 
+                          'Unknown tool';
+          
+          const friendlyName = formatearNombrePasoAmigable(toolName);
+          
+          // Obtener el output - buscar en diferentes ubicaciones
+          let toolOutput = content.output || 
+                          content.tool_use?.output || 
+                          '';
+          
+          // Si el output es un objeto, intentar extraer el texto conversacional
+          if (toolOutput && typeof toolOutput === 'object') {
+            // Priorizar campos que contengan texto conversacional
+            toolOutput = toolOutput.text || 
+                        toolOutput.message || 
+                        toolOutput.response?.raw ||
+                        toolOutput.response ||
+                        '';
+            
+            // Si aún es un objeto y no tiene campos de texto, intentar extraer información útil
+            if (toolOutput && typeof toolOutput === 'object') {
+              // Para algunos outputs, puede ser un string dentro de un objeto
+              if (toolOutput.value) {
+                toolOutput = typeof toolOutput.value === 'string' ? toolOutput.value : JSON.stringify(toolOutput.value);
+              } else {
+                // Intentar extraer solo campos útiles
+                const camposUtiles = [];
+                if (toolOutput.ok !== undefined) camposUtiles.push(`Status: ${toolOutput.ok ? 'OK' : 'Error'}`);
+                if (toolOutput.score) camposUtiles.push(`Score: ${toolOutput.score}`);
+                if (toolOutput.dni) camposUtiles.push(`DNI: ${toolOutput.dni}`);
+                
+                toolOutput = camposUtiles.length > 0 ? camposUtiles.join('\n') : '';
+              }
+            }
+          }
+          
+          console.log(`Paso ${index}: ${friendlyName}`, `Output:`, toolOutput);
+          
+          // Formatear el output de manera conversacional
+          let outputHtml = '';
+          if (toolOutput && typeof toolOutput === 'string' && toolOutput.trim()) {
+            outputHtml = `
+              <div class="step-output-content">
+                ${formatearOutputConversacional(toolOutput)}
+              </div>
+            `;
+          } else {
+            // Si no hay output o es muy complejo, mostrar solo el nombre de la herramienta ejecutada
+            outputHtml = '<div class="step-output-content"><em style="color: var(--numia-text-light);">Herramienta ejecutada correctamente</em></div>';
+          }
+          
+          const detallePaso = (typeof toolOutput === 'string' && toolOutput.trim()) ? toolOutput.trim() : 'Completed';
+          stepItem.innerHTML = `
+            <div class="step-title">${escapeHtml(friendlyName)}</div>
+            <div class="step-output-content">
+              <em style="color: #ffffff;">${escapeHtml(detallePaso)}</em>
+            </div>
+          `;
+          
+          // Asegurar que el contenedor esté visible y agregar el elemento
+          if (stepsContainer) {
+            stepsContainer.style.display = 'block';
+            stepsContainer.style.visibility = 'visible';
+            stepsContainer.style.opacity = '1';
+            stepsContainer.appendChild(stepItem);
+            
+            // Scroll automático al final del log
+            setTimeout(() => {
+              const logContent = document.querySelector('.log-content');
+              if (logContent) {
+                logContent.scrollTop = logContent.scrollHeight;
+              }
+            }, 100);
+            
+            // Animar la aparición
+            setTimeout(() => {
+              stepItem.style.opacity = '1';
+            }, 50);
+            
+            console.log(`Paso ${index} agregado al DOM: ${friendlyName}`);
+            
+            // Marcar como completado después de un breve delay
+            setTimeout(() => {
+              stepItem.classList.remove('processing');
+              stepItem.classList.add('completed');
+            }, 600);
+          } else {
+            console.error('stepsContainer no encontrado');
+          }
+        } catch (err) {
+          console.error('Error al agregar paso:', err, content);
+        }
+      }
+    
+      // Función para extraer el Scoring del mensaje
+      function extraerScoring(texto) {
+        if (!texto) return null;
+        
+        // Buscar patrones como "Scoring: 640", "Scoring:640", "scoring: 640", etc.
+        const patrones = [
+          /Score:\s*\*{0,2}(\d+)\*{0,2}/i,
+          /Scoring:\s*(\d+)/i,
+          /Scoring\s*:\s*(\d+)/i,
+          /score\s*:\s*(\d+)/i
+        ];
+        
+        for (const patron of patrones) {
+          const match = texto.match(patron);
+          if (match && match[1]) {
+            const scoring = parseInt(match[1], 10);
+            if (!isNaN(scoring)) {
+              return scoring;
+            }
+          }
+        }
+        
+        return null;
+      }
+    
+      function mostrarResumen(message) {
+        try {
+          const messageText = typeof message === 'string' ? message : (message.message || JSON.stringify(message, null, 2));
+          if (messageText && !messageText.startsWith('No analysis text received')) {
+            // Solo secciones 1 y 2 (limpias) van a Debmedia; el panel sigue mostrando todo
+            ultimoDetalleExtraFields = extraerNotasParaDebmedia(messageText);
+          }
+          
+          // Extraer Scoring y detectar si recomienda videollamada
+          const scoring = extraerScoring(messageText);
+          const tieneVideollamadaTexto = (messageText.toLowerCase().includes('suggested service type') && messageText.toLowerCase().includes('video call')) ||
+                                         messageText.toLowerCase().includes('suggest video call: yes');
+          // Mostrar videollamada si el texto lo sugiere O si el Scoring > 640
+          const tieneVideollamada = tieneVideollamadaTexto || (scoring !== null && scoring > 640);
+          console.log('Scoring extraído:', scoring, 'Videollamada recomendada:', tieneVideollamada);
+          
+          // Mostrar el resumen en el log
+          summaryContent.innerHTML = '';
+          const resumenTexto = document.createElement('div');
+          resumenTexto.textContent = messageText;
+          resumenTexto.style.marginBottom = '1rem';
+          summaryContent.appendChild(resumenTexto);
+          summarySection.style.display = 'block';
+          
+          // Mostrar directamente las opciones de atención (sin pop-up "You're all set")
+          mostrarOpcionesEnApp(tieneVideollamada);
+          
+          // Scroll automático al final del log
+          setTimeout(() => {
+            const logContent = document.querySelector('.log-content');
+            if (logContent) {
+              logContent.scrollTop = logContent.scrollHeight;
+            }
+          }, 100);
+        } catch (err) {
+          console.error('Error al mostrar resumen:', err);
+        }
+      }
+      
+      function mostrarPopupEspecialista(callback) {
+        const popup = document.getElementById('specialistPopup');
+        if (!popup) { callback(); return; }
+        popup.style.display = 'flex';
+        const btn = document.getElementById('btnSpecialistPopupOk');
+        function dismiss() {
+          popup.style.display = 'none';
+          btn.removeEventListener('click', dismiss);
+          callback();
+        }
+        btn.addEventListener('click', dismiss);
+      }
+
+      function mostrarPopupTurnoAsignado() {
+        const popup = document.getElementById('turnAssignedPopup');
+        const btn = document.getElementById('btnTurnAssignedOk');
+        if (!popup || !btn) return;
+        popup.style.display = 'flex';
+        function dismiss() {
+          popup.style.display = 'none';
+          btn.removeEventListener('click', dismiss);
+        }
+        btn.addEventListener('click', dismiss);
+      }
+
+      function mostrarOpcionesEnApp(tieneVideollamada) {
+        // El botón ya está en el header, no necesitamos ocultarlo
+        
+        // Limpiar contenedor
+        opcionesAtencionContainer.innerHTML = '';
+        resultadoAtencionApp.style.display = 'none';
+        resultadoAtencionApp.innerHTML = '';
+        
+        // Botón Videollamada (siempre disponible, pero destacado si está recomendada)
+        const btnVideollamada = document.createElement('button');
+        btnVideollamada.className = 'btn w-100';
+        btnVideollamada.style.cssText = 'background-color: var(--numia-success); color: white; border: none; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; margin-bottom: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;';
+        if (tieneVideollamada) {
+          btnVideollamada.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-camera-video"></i><span>Video call</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Recommended · Available now</span>';
+        } else {
+          btnVideollamada.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-camera-video"></i><span>Video call</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Available now</span>';
+        }
+        btnVideollamada.addEventListener('click', async () => {
+          await solicitarAtencionApp('videollamada', btnVideollamada);
+        });
+        opcionesAtencionContainer.appendChild(btnVideollamada);
+        
+        // Botón Presencial (siempre disponible, más chico y con aclaración de demora)
+        const btnPresencial = document.createElement('button');
+        btnPresencial.className = 'btn';
+        btnPresencial.style.cssText = 'background-color: var(--numia-azul); color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; width: auto; margin: 0 auto; font-size: 0.9rem;';
+        btnPresencial.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><i class="bi bi-geo-alt"></i><span>Continue in person</span></div><span style="font-size: 0.7rem; opacity: 0.9; font-weight: 500;">Estimated wait: 15 min</span>';
+        btnPresencial.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Botón Presencial clickeado');
+          await solicitarAtencionPresencial();
+        });
+        opcionesAtencionContainer.appendChild(btnPresencial);
+        
+        // Contenedor para opciones presenciales (inicialmente oculto)
+        const opcionesPresencialContainer = document.createElement('div');
+        opcionesPresencialContainer.id = 'opcionesPresencialContainer';
+        opcionesPresencialContainer.style.display = 'none';
+        opcionesPresencialContainer.style.marginTop = '1rem';
+        opcionesAtencionContainer.appendChild(opcionesPresencialContainer);
+        
+        // Mostrar la sección
+        opcionesAtencionSection.style.display = 'block';
+        
+        // El contenedor que hace scroll es la pantalla activa (.san-screen), no .mobile-app-content
+        const scroller = document.getElementById('sanScreenHome') || document.querySelector('.mobile-app-content');
+
+        // Añadir un espaciador para que las opciones puedan quedar solas en pantalla
+        let spacer = document.getElementById('opcionesSpacer');
+        if (!spacer) {
+          spacer = document.createElement('div');
+          spacer.id = 'opcionesSpacer';
+          opcionesAtencionSection.parentNode.appendChild(spacer);
+        }
+        spacer.style.height = (scroller ? scroller.clientHeight : 600) + 'px';
+
+        // Scroll a la sección de opciones (que quede en pantalla, no el balance)
+        setTimeout(() => {
+          if (scroller) {
+            const rSec = opcionesAtencionSection.getBoundingClientRect();
+            const rCont = scroller.getBoundingClientRect();
+            scroller.scrollBy({ top: (rSec.top - rCont.top) - 12, behavior: 'smooth' });
+          } else {
+            opcionesAtencionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 200);
+      }
+      
+      function mostrarOpcionesPresencial() {
+        console.log('mostrarOpcionesPresencial llamada');
+        const opcionesPresencialContainer = document.getElementById('opcionesPresencialContainer');
+        console.log('Contenedor encontrado:', opcionesPresencialContainer);
+        if (!opcionesPresencialContainer) {
+          console.error('No se encontró el contenedor opcionesPresencialContainer');
+          return;
+        }
+        
+        // Si ya está visible, ocultarlo
+        if (opcionesPresencialContainer.style.display === 'block') {
+          opcionesPresencialContainer.style.display = 'none';
+          return;
+        }
+        
+        // Mostrar opciones
+        opcionesPresencialContainer.innerHTML = `
+          <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--numia-text); margin-bottom: 0.25rem; text-align: center;">What do you need help with?</h4>
+          <p style="font-size: 0.85rem; color: var(--numia-text-light); text-align: center; margin-bottom: 1rem;">We detected you're at the branch, Jorge</p>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-arrow-up-circle me-2"></i>Increase my credit limit
+            </button>
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-credit-card me-2"></i>Replace my card
+            </button>
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-azul); border: 2px solid var(--numia-azul); padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-flag me-2"></i>Dispute a transaction
+            </button>
+            <button class="btn-opcion-presencial btn w-100" data-opcion="tarjetas" style="background-color: white; color: var(--numia-text-light); border: 2px solid #e5e7eb; padding: 0.875rem 1.25rem; border-radius: 10px; font-weight: 600; text-align: left;">
+              <i class="bi bi-three-dots me-2"></i>Something else
+            </button>
+          </div>
+        `;
+        opcionesPresencialContainer.style.display = 'block';
+        console.log('Opciones mostradas, display:', opcionesPresencialContainer.style.display);
+        
+        // Agregar event listeners a los botones después de un pequeño delay para asegurar que el DOM esté actualizado
+        setTimeout(() => {
+          const botonesOpcion = opcionesPresencialContainer.querySelectorAll('.btn-opcion-presencial');
+          console.log('Botones encontrados:', botonesOpcion.length);
+          botonesOpcion.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const opcion = btn.getAttribute('data-opcion');
+              console.log('Opción seleccionada:', opcion);
+              await llamarAgenteConOpcion(opcion, btn);
+            });
+          });
+        }, 100);
+      }
+      
+      async function llamarAgenteConOpcion(opcion, btn) {
+        try {
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Connecting...';
+          
+          // Ocultar opciones y mostrar loading
+          const opcionesPresencialContainer = document.getElementById('opcionesPresencialContainer');
+          if (opcionesPresencialContainer) {
+            opcionesPresencialContainer.style.display = 'none';
+          }
+          
+          // Mostrar log
+          const logContainer = document.querySelector('.log-container');
+          if (logContainer) {
+            logContainer.classList.add('visible');
+          }
+          
+          atencionSection.style.display = 'block';
+          atencionSection.classList.add('active');
+
+          summarySection.style.display = 'none';
+          summaryContent.innerHTML = '';
+
+          const pasosInicio = Date.now();
+          const delayPaso = 800;
+          const nPasos = PASOS_ANALISIS_UI.length;
+          const pasosAnimacionMs = nPasos * delayPaso + 500;
+
+          stepsContainer.innerHTML = '';
+          stepsContainer.style.display = 'block';
+
+          PASOS_ANALISIS_UI.forEach((paso, index) => {
+            setTimeout(() => {
+              agregarPaso({ name: paso.titulo, output: paso.detalle }, index);
+            }, index * delayPaso);
+          });
+
+          const dni = DNI_FIJO;
+          const mensaje = `I need assistance regarding ${opcion}. ID: ${dni}`;
+
+
+          const HARDCODED_RESPONSES = {
+            prestamos: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Numia retrieves a personal loan application started digitally and abandoned 14 days ago. Credit score: 742 — high-value segment.\n\n2 · Intent & opportunity\nActive loan intent detected. The pre-approved offer is still eligible:\n• Personal Loan up to $1,000,000\n• Preferential rate: 18.5% APR\n• Term: 12 to 48 installments\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~18 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active loan intent detected\n• Eligible offer available\n• Remote specialist available now\n• Branch wait time: 18 min\n\nEXPECTED OUTCOME\nFaster resolution + higher conversion probability`,
+            tarjetas: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Active checking account with consistent activity over the last 6 months. No credit card on file. Credit score: 718.\n\n2 · Intent & opportunity\nCard intent detected. High cross-sell fit:\n• Numia Bank Platinum Credit Card\n• Pre-approved limit: $500,000\n• First-year annual fee waived\n• 2x points on every purchase\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~15 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active card intent detected\n• Pre-approved limit available\n• Remote specialist available now\n• Branch wait time: 15 min\n\nEXPECTED OUTCOME\nRemote activation in under 10 min + higher conversion probability`,
+            inversiones: `Customer Journey Analysis — ID: ${dni}\n\n1 · Customer context\nThe client is identified. Savings balance averaging $2,800,000 over the last 3 months, earning below-market returns. Credit score: 761.\n\n2 · Intent & opportunity\nInvestment intent detected. Strong migration opportunity:\n• Fixed-Term Investment (FTI) — 30/60/90 days\n• Current rate: 9.2% annual\n• Minimum: $100,000\n• 100% capital guarantee\n\n3 · Real-time capacity\n• Remote specialist: available now\n• Branch wait time: ~20 min\n\n4 · Recommended journey\nSuggested service type: Video call\nSuggest video call: Yes\n\n────────────────────\nDECISION\nRecommend video call\n\nWHY\n• Active investment intent detected\n• Preferential rate available now\n• Remote specialist available now\n• Branch wait time: 20 min\n\nEXPECTED OUTCOME\nLock in preferential rate + higher assets under management`
+          };
+          const messageText = HARDCODED_RESPONSES[opcion] || HARDCODED_RESPONSES['prestamos'];
+
+          const transcurridoFin = Date.now() - pasosInicio;
+          await new Promise(function(resolve) { setTimeout(resolve, Math.max(0, pasosAnimacionMs - transcurridoFin)); });
+
+          mostrarResumen(messageText || 'No analysis text received from the API.');
+          
+        } catch (err) {
+          console.error('Error al llamar al agente:', err);
+          stepsContainer.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>Error: ${err.message}</div>`;
+        } finally {
+          btn.disabled = false;
+          const opcionTexto = opcion.charAt(0).toUpperCase() + opcion.slice(1);
+          const iconos = {
+            prestamos: 'bi-cash-coin',
+            tarjetas: 'bi-credit-card',
+            inversiones: 'bi-graph-up-arrow'
+          };
+          btn.innerHTML = `<i class="bi ${iconos[opcion]} me-2"></i>${opcionTexto}`;
+        }
+      }
+      
+      async function solicitarAtencionPresencial() {
+        try {
+          // Volver la vista del celular al tope
+          const sc = document.getElementById('sanScreenHome');
+          if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
+          // Ocultar opciones y mostrar loading
+          opcionesAtencionSection.style.display = 'none';
+          resultadoAtencionApp.style.display = 'block';
+          resultadoAtencionApp.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split me-2"></i>Processing request...</div>';
+          
+          const apiUrl = 'https://filavirtual2.debmedia.com/api/v1/queue/16221/branch/10750/enqueue';
+          const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+          
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
+          
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-token': apiToken
+            },
+            body: JSON.stringify(datos)
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Error en servidor (${response.status})`);
+          }
+          
+          const data = await response.json();
+          console.log('Respuesta de la API presencial:', data);
+          
+          // Mostrar mensaje de confirmación
+          resultadoAtencionApp.innerHTML = `
+            <div class="alert alert-success mt-3">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              <strong>In-person service requested successfully</strong>
+              <p class="mb-0 mt-2">We will call you with your ID: <strong>${usuarioActual.dni}</strong></p>
+            </div>
+          `;
+
+          // Pop-up: turno asignado
+          mostrarPopupTurnoAsignado();
+
+        } catch (err) {
+          console.error('Error al solicitar atención presencial:', err);
+          resultadoAtencionApp.innerHTML = `<div class="alert alert-danger mt-3"><i class="bi bi-exclamation-triangle me-2"></i>Error: ${err.message}</div>`;
+        }
+      }
+      
+      async function solicitarAtencionApp(tipo, btn) {
+        try {
+          // Volver la vista del celular al tope
+          const sc = document.getElementById('sanScreenHome');
+          if (sc) sc.scrollTo({ top: 0, behavior: 'smooth' });
+          btn.disabled = true;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+
+          resultadoAtencionApp.style.display = 'block';
+          resultadoAtencionApp.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split me-2"></i>Processing request...</div>';
+          
+          const queueId = tipo === 'videollamada' ? '16223' : '16221';
+          const apiUrl = `https://filavirtual2.debmedia.com/api/v1/queue/${queueId}/branch/10750/enqueue`;
+          const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+          
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
+          
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-token': apiToken
+            },
+            body: JSON.stringify(datos)
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Error en servidor (${response.status})`);
+          }
+          
+          const data = await response.json();
+          console.log('Respuesta de la API:', data);
+          
+          // Mostrar resultados
+          let resultadoHtml = '<div class="alert alert-success mt-3">';
+          
+          if (data.averageWaitingTime !== undefined) {
+            const minutos = Math.floor(data.averageWaitingTime / 60);
+            const segundos = data.averageWaitingTime % 60;
+            resultadoHtml += `<p class="mb-0"><strong>Estimated wait:</strong> ${minutos} min</p>`;
+          }
+          
+          let videoUrlParaApp = null;
+          if (tipo === 'videollamada' && data.videoCallUrl) {
+            videoUrlParaApp = data.videoCallUrl + (data.videoCallUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
+            resultadoHtml += `
+              <button type="button" id="btnStartVideoCallApp" class="btn btn-success w-100 mt-2">
+                <i class="bi bi-camera-video me-2"></i>Start Video Call
+              </button>
+              <a href="${videoUrlParaApp}" target="_blank" class="d-block text-center mt-2" style="font-size:0.8rem; color:#6b7280;">Open in a new tab</a>
+            `;
+          } else if (tipo === 'presencial') {
+            resultadoHtml += '<p class="mb-0"><i class="bi bi-check-circle me-2"></i>In-person service requested successfully</p>';
+          }
+
+          resultadoHtml += '</div>';
+          resultadoAtencionApp.innerHTML = resultadoHtml;
+
+          if (videoUrlParaApp) {
+            const startBtn = document.getElementById('btnStartVideoCallApp');
+            if (startBtn) startBtn.addEventListener('click', () => window.abrirVideollamadaEnApp(videoUrlParaApp));
+            // Lanzar la videollamada del cliente automáticamente dentro del teléfono
+            window.abrirVideollamadaEnApp(videoUrlParaApp);
+          }
+          
+        } catch (err) {
+          console.error('Error al solicitar atención:', err);
+          resultadoAtencionApp.innerHTML = `<div class="alert alert-danger mt-3"><i class="bi bi-exclamation-triangle me-2"></i>Error: ${err.message}</div>`;
+        } finally {
+          btn.disabled = false;
+          if (tipo === 'videollamada') {
+            btn.innerHTML = '<i class="bi bi-camera-video"></i>Videollamada';
+          } else {
+            btn.innerHTML = '<i class="bi bi-geo-alt"></i>Presencial';
+          }
+        }
+      }
+      
+      async function solicitarAtencion(tipo, btn1, btn2, resultadoContainer) {
+        try {
+          // Deshabilitar ambos botones
+          btn1.disabled = true;
+          btn2.disabled = true;
+          btn1.style.opacity = '0.6';
+          btn2.style.opacity = '0.6';
+          
+          // Mostrar loading
+          resultadoContainer.style.display = 'block';
+          resultadoContainer.innerHTML = '<div style="color: #ffffff;"><i class="bi bi-hourglass-split me-2"></i>Processing request...</div>';
+          
+          // Determinar la URL según el tipo
+          const queueId = tipo === 'videollamada' ? '16223' : '16221';
+          const apiUrl = `https://filavirtual2.debmedia.com/api/v1/queue/${queueId}/branch/10750/enqueue`;
+          const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+          
+          // Datos a enviar
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
+          
+          // Llamar a la API
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-token': apiToken
+            },
+            body: JSON.stringify(datos)
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Error en servidor (${response.status})`);
+          }
+          
+          const data = await response.json();
+          console.log('Respuesta de la API:', data);
+          
+          // Mostrar resultados
+          let resultadoHtml = '<div style="margin-top: 1rem; padding: 1rem; background: #2d2d2d; border-radius: 4px; border-left: 3px solid #ffffff;">';
+          
+          // Mostrar tiempo de espera
+          if (data.averageWaitingTime !== undefined) {
+            const minutos = Math.floor(data.averageWaitingTime / 60);
+            const segundos = data.averageWaitingTime % 60;
+            resultadoHtml += `<div style="color: #ffffff; margin-bottom: 0.5rem;"><strong>Estimated wait time:</strong> ${minutos} min ${segundos} seg</div>`;
+          }
+          
+          // Si es videollamada, mostrar el enlace
+          if (tipo === 'videollamada' && data.videoCallUrl) {
+            const videoUrl = data.videoCallUrl + (data.videoCallUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
+            resultadoHtml += `
+              <div style="margin-top: 1rem;">
+                <a href="${videoUrl}" target="_blank" style="display: inline-block; background-color: #00ff00; color: #000; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                  <i class="bi bi-camera-video me-2"></i>Start Video Call
+                </a>
+              </div>
+            `;
+          } else if (tipo === 'presencial') {
+            resultadoHtml += `<div style="color: #ffffff; margin-top: 0.5rem;"><i class="bi bi-check-circle me-2"></i>In-person service requested successfully</div>`;
+          }
+          
+          resultadoHtml += '</div>';
+          resultadoContainer.innerHTML = resultadoHtml;
+          
+        } catch (err) {
+          console.error('Error al solicitar atención:', err);
+          resultadoContainer.innerHTML = `<div style="color: #ff8888; margin-top: 1rem;"><i class="bi bi-exclamation-triangle me-2"></i>Error: ${err.message}</div>`;
+        } finally {
+          // Rehabilitar botones
+          btn1.disabled = false;
+          btn2.disabled = false;
+          btn1.style.opacity = '1';
+          btn2.style.opacity = '1';
+        }
+      }
+      
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      window.numiaIniciarVideollamada = async function (btn) {
+        const triggerBtn = btn && btn.tagName === 'BUTTON' ? btn : null;
+        const originalHtml = triggerBtn ? triggerBtn.innerHTML : '';
+
+        function getVideoCallUrl(data) {
+          if (!data) return null;
+          if (data.videoCallUrl) return data.videoCallUrl;
+          if (data.jsonDetails && data.jsonDetails.videoCallUrl) return data.jsonDetails.videoCallUrl;
+          return null;
+        }
+
+        try {
+          if (triggerBtn) {
+            triggerBtn.disabled = true;
+            triggerBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+          }
+
+          const apiUrl = 'https://filavirtual2.debmedia.com/api/v1/queue/16223/branch/10750/enqueue';
+          const apiToken = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+          const usuarioActual = getUsuarioActual();
+          const nombreActual = getNombreActual();
+          const datos = buildDatosEnqueue(usuarioActual, nombreActual);
+
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-token': apiToken
+            },
+            body: JSON.stringify(datos)
+          });
+
+          if (!response.ok) {
+            throw new Error('Error en servidor (' + response.status + ')');
+          }
+
+          const data = await response.json();
+          const rawUrl = getVideoCallUrl(data);
+
+          if (rawUrl) {
+            const videoUrl = rawUrl + (rawUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
+            window.abrirVideollamadaEnApp(videoUrl);
+          } else {
+            window.alert('Your video call has been registered. We will contact you shortly.');
+          }
+        } catch (err) {
+          console.error('Error al iniciar videollamada:', err);
+          window.alert('Could not start the video call: ' + err.message);
+        } finally {
+          if (triggerBtn) {
+            triggerBtn.disabled = false;
+            triggerBtn.innerHTML = originalHtml || '<i class="bi bi-camera-video"></i> Videollamada';
+          }
+        }
+      };
+
+      // Abrir la videollamada del cliente DENTRO del teléfono (visible en la demo)
+      window.abrirVideollamadaEnApp = function (url) {
+        const overlay = document.getElementById('videoCallOverlay');
+        const frame = document.getElementById('videoCallFrame');
+        const loading = document.getElementById('videoCallLoading');
+        if (!overlay || !frame) { window.open(url, '_blank'); return; }
+        if (loading) loading.style.display = 'flex';
+        frame.onload = () => { if (loading) loading.style.display = 'none'; };
+        frame.src = url;
+        overlay.style.display = 'block';
+      };
+
+      const btnCloseVideoCall = document.getElementById('btnCloseVideoCall');
+      if (btnCloseVideoCall) {
+        btnCloseVideoCall.addEventListener('click', () => {
+          const overlay = document.getElementById('videoCallOverlay');
+          const frame = document.getElementById('videoCallFrame');
+          if (frame) frame.src = 'about:blank';
+          if (overlay) overlay.style.display = 'none';
+        });
+      }
+    });
+  </script>
+  <script>
+    (function () {
+      var screenHome = document.getElementById('sanScreenHome');
+      var screenCita = document.getElementById('sanScreenCita');
+      var headerTitle = document.getElementById('numiaHeaderTitle');
+      var headerBack = document.getElementById('btnHeaderBack');
+      var headerBrand = document.getElementById('numiaHeaderBrand');
+
+      function setHeader(title, showBack) {
+        var isHome = title === 'Numia Bank';
+        if (headerTitle) headerTitle.textContent = title;
+        if (headerBrand) headerBrand.style.display = isHome ? 'flex' : 'none';
+        if (headerBack) headerBack.style.visibility = showBack ? 'visible' : 'hidden';
+      }
+
+      function showHome() {
+        if (screenCita && screenCita.classList.contains('active')) {
+          limpiarPanelAgenteCita(true);
+        }
+        ocultarChatCita();
+        if (screenHome) screenHome.classList.add('active');
+        if (screenCita) screenCita.classList.remove('active');
+        setHeader('Numia Bank', false);
+      }
+
+      function showCita() {
+        if (screenHome) screenHome.classList.remove('active');
+        if (screenCita) {
+          screenCita.classList.add('active');
+          screenCita.scrollTop = 0;
+        }
+        setHeader('Schedule Appointment', true);
+        resetCitaForm();
+        initCitaFechaMin();
+      }
+
+      if (headerBack) {
+        headerBack.addEventListener('click', function () {
+          if (screenCita && screenCita.classList.contains('active')) showHome();
+        });
+      }
+
+      var btnAgendarCita = document.getElementById('btnAgendarCita');
+      if (btnAgendarCita) btnAgendarCita.addEventListener('click', showCita);
+
+      function activarAsesoramiento() {
+        if (typeof window.numiaIniciarVideollamada === 'function') {
+          window.numiaIniciarVideollamada();
+        }
+      }
+
+      var btnVerCentroAyuda = document.getElementById('btnVerCentroAyuda');
+      if (btnVerCentroAyuda) {
+        btnVerCentroAyuda.addEventListener('click', function () {
+          window.alert('Help center — demo option.');
+        });
+      }
+
+      function bindVideollamada(el) {
+        if (!el) return;
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (typeof window.numiaIniciarVideollamada === 'function') {
+            window.numiaIniciarVideollamada(el);
+          }
+        });
+      }
+
+      bindVideollamada(document.getElementById('btnEjecutivoVideollamada'));
+
+      document.addEventListener('click', function (e) {
+        var demo = e.target.closest('[data-san-demo]');
+        if (demo) {
+          e.preventDefault();
+          window.alert('Demo option: in the real app, this contact channel would open.');
+        }
+      });
+
+      var btnCerrarPromoLoan = document.getElementById('btnCerrarPromoLoan');
+      if (btnCerrarPromoLoan) {
+        btnCerrarPromoLoan.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var p = document.getElementById('sanPromoLoan');
+          if (p) p.style.display = 'none';
+        });
+      }
+
+      var promoPopup = document.getElementById('sanPromoPopup');
+      var PROMO_DISMISS_KEY = 'numiaPromoDismissed';
+
+      function cerrarPromoPopup(remember) {
+        if (!promoPopup) return;
+        promoPopup.classList.remove('active');
+        promoPopup.setAttribute('aria-hidden', 'true');
+        if (remember) {
+          try { sessionStorage.setItem(PROMO_DISMISS_KEY, '1'); } catch (err) { /* ignore */ }
+        }
+      }
+
+      function abrirPromoPopup() {
+        if (!promoPopup) return;
+        promoPopup.classList.add('active');
+        promoPopup.setAttribute('aria-hidden', 'false');
+      }
+
+      function irAVideollamadaDesdePromo() {
+        cerrarPromoPopup(true);
+        activarAsesoramiento();
+      }
+
+      var btnPromoVideollamada = document.getElementById('btnPromoVideollamada');
+      if (btnPromoVideollamada) btnPromoVideollamada.addEventListener('click', irAVideollamadaDesdePromo);
+      var btnPromoPopupClose = document.getElementById('btnPromoPopupClose');
+      if (btnPromoPopupClose) btnPromoPopupClose.addEventListener('click', function () { cerrarPromoPopup(true); });
+      var btnPromoPopupDismiss = document.getElementById('btnPromoPopupDismiss');
+      if (btnPromoPopupDismiss) btnPromoPopupDismiss.addEventListener('click', function () { cerrarPromoPopup(true); });
+      var promoBackdrop = document.getElementById('sanPromoPopupBackdrop');
+      if (promoBackdrop) promoBackdrop.addEventListener('click', function () { cerrarPromoPopup(true); });
+
+      var sanPromoLoan = document.getElementById('sanPromoLoan');
+      if (sanPromoLoan) {
+        sanPromoLoan.addEventListener('click', function (e) {
+          if (e.target.closest('#btnCerrarPromoLoan')) return;
+          irAVideollamadaDesdePromo();
+        });
+        sanPromoLoan.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            irAVideollamadaDesdePromo();
+          }
+        });
+      }
+
+      var dismissed = false;
+      try { dismissed = sessionStorage.getItem(PROMO_DISMISS_KEY) === '1'; } catch (e2) { /* ignore */ }
+      if (!dismissed) {
+        setTimeout(function () {
+          if (screenHome && screenHome.classList.contains('active')) {
+            abrirPromoPopup();
+          }
+        }, 1200);
+      }
+
+      var citaTipo = 'sucursal';
+      var citaMotivo = '';
+      var citaHoraInput = document.getElementById('citaHora');
+      var citaMotivoInput = document.getElementById('citaMotivo');
+      var btnConfirmarCita = document.getElementById('btnConfirmarCita');
+      var citaSucursalWrap = document.getElementById('citaSucursalWrap');
+      var citaSucursal = document.getElementById('citaSucursal');
+      var citaFecha = document.getElementById('citaFecha');
+      var citaAgendaWrap = document.getElementById('citaAgendaWrap');
+      var citaHoraWrap = document.getElementById('citaHoraWrap');
+      var citaFormRest = document.getElementById('citaFormRest');
+      var citaTransferenciasTip = document.getElementById('citaTransferenciasTip');
+      var citaSuccess = document.getElementById('numiaCitaSuccess');
+      var citaSuccessText = document.getElementById('numiaCitaSuccessText');
+      var formAgendarCita = document.getElementById('formAgendarCita');
+      var citaAnalisisTimeouts = [];
+
+      function setCitaTipo(tipo) {
+        citaTipo = tipo;
+        document.querySelectorAll('#citaTipoToggle button').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-tipo') === tipo);
+        });
+        var isVideo = tipo === 'videollamada';
+        if (citaAgendaWrap) citaAgendaWrap.classList.toggle('hidden', isVideo);
+        if (citaSucursalWrap) citaSucursalWrap.style.display = isVideo ? 'none' : 'block';
+        if (citaSucursal) {
+          if (isVideo) citaSucursal.removeAttribute('required');
+          else citaSucursal.setAttribute('required', 'required');
+        }
+        if (btnConfirmarCita) {
+          btnConfirmarCita.textContent = isVideo ? 'Connect video call now' : 'Confirm appointment';
+        }
+        validateCitaForm();
+      }
+
+      function cancelarAnalisisCitaAgente() {
+        citaAnalisisTimeouts.forEach(function (id) { clearTimeout(id); });
+        citaAnalisisTimeouts = [];
+      }
+
+      function limpiarPanelAgenteCita(ocultar) {
+        cancelarAnalisisCitaAgente();
+        var logContainer = document.querySelector('.log-container');
+        var atencionSection = document.getElementById('atencionSection');
+        var stepsContainer = document.getElementById('stepsContainer');
+        var summarySection = document.getElementById('summarySection');
+        var summaryContent = document.getElementById('summaryContent');
+        if (stepsContainer) {
+          stepsContainer.innerHTML = '';
+          stepsContainer.style.display = 'none';
+        }
+        if (summaryContent) summaryContent.innerHTML = '';
+        if (summarySection) summarySection.style.display = 'none';
+        if (atencionSection) {
+          atencionSection.style.display = 'none';
+          atencionSection.classList.remove('active');
+        }
+        if (ocultar !== false && logContainer) logContainer.classList.remove('visible');
+        if (citaFormRest) citaFormRest.classList.remove('visible');
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
+      }
+
+      function mostrarChatCita() {
+        var shell = document.getElementById('jbChatShell');
+        if (!shell) return;
+        shell.classList.add('visible');
+        shell.setAttribute('aria-hidden', 'false');
+        var chat = shell.querySelector('journey-builder-chat');
+        if (chat && typeof chat.open === 'function') chat.open();
+      }
+
+      function ocultarChatCita() {
+        var shell = document.getElementById('jbChatShell');
+        if (!shell) return;
+        shell.classList.remove('visible');
+        shell.setAttribute('aria-hidden', 'true');
+        var chat = shell.querySelector('journey-builder-chat');
+        if (chat && typeof chat.close === 'function') chat.close();
+      }
+
+      function getNombreClienteCita() {
+        var sel = document.getElementById('nombreSelector');
+        return sel && sel.value ? sel.value : 'Cliente';
+      }
+
+      function escapeHtmlCita(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function agregarPasoCitaAgente(titulo, detalle, index) {
+        var stepsContainer = document.getElementById('stepsContainer');
+        if (!stepsContainer) return;
+        var stepItem = document.createElement('div');
+        stepItem.className = 'step-item processing';
+        stepItem.innerHTML =
+          '<div class="step-header">' +
+            '<div class="step-icon tool"><i class="bi bi-gear"></i></div>' +
+            '<div style="flex:1">' +
+              '<div class="step-title">' + escapeHtmlCita(titulo) + '</div>' +
+              '<div class="step-duration">Step ' + (index + 1) + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="step-content">' +
+            '<div class="step-output-content"><em style="color:#e0e0e0;">' + escapeHtmlCita(detalle) + '</em></div>' +
+          '</div>';
+        stepsContainer.appendChild(stepItem);
+        setTimeout(function () {
+          stepItem.classList.remove('processing');
+          stepItem.classList.add('completed');
+          var icon = stepItem.querySelector('.step-icon');
+          if (icon) {
+            icon.className = 'step-icon completed';
+            icon.innerHTML = '<i class="bi bi-check-circle"></i>';
+          }
+        }, 500);
+        var logContent = document.querySelector('.log-content');
+        if (logContent) logContent.scrollTop = logContent.scrollHeight;
+      }
+
+      function resetCitaTipoToggleOrder() {
+        var toggle = document.getElementById('citaTipoToggle');
+        if (!toggle) return;
+        var btnSucursal = toggle.querySelector('[data-tipo="sucursal"]');
+        var btnVideo = toggle.querySelector('[data-tipo="videollamada"]');
+        if (btnSucursal && btnVideo) toggle.insertBefore(btnSucursal, btnVideo);
+        toggle.querySelectorAll('button').forEach(function (b) { b.classList.remove('recomendado'); });
+        var hint = document.getElementById('citaTipoHint');
+        if (hint) hint.textContent = 'Choose branch to schedule a turn or video call to connect now.';
+      }
+
+      function obtenerResumenCitaDemo(motivo, nombre) {
+        if (motivo === 'Prestamos') {
+          return 'Recommendation for ' + nombre + ':\n\n**Tipo de atención sugerida**: Videollamada inmediata\n\nEl cliente consultó préstamos en los últimos 30 días y tiene productos activos compatibles con precalificación digital. Score crediticio: 720.\n\n- Sugerir videollamada: Sí\n- Tiempo estimado videollamada: ~8 min\n- Tiempo estimado sucursal: ~45 min';
+        }
+        if (motivo === 'Tarjetas') {
+          return 'Recomendación para ' + nombre + ':\n\n**Tipo de atención sugerida**: Sucursal\n\nHistorial de gestiones sobre tarjeta de crédito. Para aumento de límite o reposición conviene agendar turno presencial.\n\n- Sugerir videollamada: No\n- Videollamada disponible para consultas generales.';
+        }
+        if (motivo === 'Transferencias') {
+          return 'Recomendación para ' + nombre + ':\n\n**Tipo de atención sugerida**: Autogestión en app\n\nLa transferencia puede completarse en segundos desde la app Numia Bank, sin turno ni sucursal. Si el cliente prefiere ayuda, se sugiere chat guiado o videollamada inmediata.\n\n- Sugerir videollamada: Sí\n- Tiempo estimado en app: ~2 min\n- No requiere agendar sucursal';
+        }
+        return '';
+      }
+
+      function aplicarRecomendacionCanalCita(motivo, recomiendaVideo) {
+        var toggle = document.getElementById('citaTipoToggle');
+        var hint = document.getElementById('citaTipoHint');
+        if (!toggle) return;
+        var btnSucursal = toggle.querySelector('[data-tipo="sucursal"]');
+        var btnVideo = toggle.querySelector('[data-tipo="videollamada"]');
+        toggle.querySelectorAll('button').forEach(function (b) { b.classList.remove('recomendado'); });
+        if (recomiendaVideo && btnVideo && btnSucursal) {
+          toggle.insertBefore(btnVideo, btnSucursal);
+          btnVideo.classList.add('recomendado');
+          setCitaTipo('videollamada');
+          if (hint) hint.textContent = 'The agent recommends immediate video call: faster service with a specialist.';
+        } else {
+          if (btnSucursal && btnVideo) toggle.insertBefore(btnSucursal, btnVideo);
+          if (btnSucursal) btnSucursal.classList.add('recomendado');
+          setCitaTipo('sucursal');
+          if (hint) hint.textContent = 'Choose branch to schedule a turn or video call to connect now.';
+        }
+      }
+
+      function mostrarResumenAnalisisCita(texto, motivo, recomiendaVideo) {
+        var summaryContent = document.getElementById('summaryContent');
+        var summarySection = document.getElementById('summarySection');
+        if (summaryContent) {
+          var html = '';
+          texto.split('\n').forEach(function (linea) {
+            linea = linea.trim();
+            if (!linea) {
+              html += '<div style="height:0.5rem"></div>';
+              return;
+            }
+            if (linea.match(/^\*\*.*\*\*:/)) {
+              html += '<div class="conversation-line title"><strong>' + escapeHtmlCita(linea.replace(/\*\*/g, '').replace(':', '')) + '</strong></div>';
+            } else if (linea.indexOf(':') > -1 && linea.indexOf('-') !== 0) {
+              var parts = linea.split(':');
+              html += '<div class="conversation-line info"><strong>' + escapeHtmlCita(parts[0].trim()) + ':</strong> ' + escapeHtmlCita(parts.slice(1).join(':').trim()) + '</div>';
+            } else {
+              html += '<div class="conversation-line">' + escapeHtmlCita(linea) + '</div>';
+            }
+          });
+          summaryContent.innerHTML = '<div class="conversation-output">' + html + '</div>';
+        }
+        if (summarySection) summarySection.style.display = 'block';
+        if (motivo === 'Transferencias') {
+          if (citaTransferenciasTip) citaTransferenciasTip.classList.add('visible');
+        } else {
+          if (citaFormRest) citaFormRest.classList.add('visible');
+          aplicarRecomendacionCanalCita(motivo, recomiendaVideo);
+        }
+        setTimeout(function () {
+          var logContent = document.querySelector('.log-content');
+          if (logContent) logContent.scrollTop = logContent.scrollHeight;
+        }, 100);
+      }
+
+      function iniciarAnalisisAgenteCita(motivo) {
+        cancelarAnalisisCitaAgente();
+        var logContainer = document.querySelector('.log-container');
+        var atencionSection = document.getElementById('atencionSection');
+        var stepsContainer = document.getElementById('stepsContainer');
+        var summarySection = document.getElementById('summarySection');
+        var summaryContent = document.getElementById('summaryContent');
+
+        if (logContainer) logContainer.classList.add('visible');
+        if (atencionSection) {
+          atencionSection.style.display = 'block';
+          atencionSection.classList.add('active');
+        }
+        if (summarySection) summarySection.style.display = 'none';
+        if (summaryContent) summaryContent.innerHTML = '';
+        if (stepsContainer) {
+          stepsContainer.innerHTML = '';
+          stepsContainer.style.display = 'block';
+        }
+        if (citaFormRest) citaFormRest.classList.remove('visible');
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
+
+        var nombreCliente = getNombreClienteCita();
+        var motivoLabels = {
+          Prestamos: 'Personal loans',
+          Tarjetas: 'Credit cards',
+          Transferencias: 'Transfers'
+        };
+        var motivoLabel = motivoLabels[motivo] || motivo;
+        var pasos = [
+          { titulo: 'Analyzing requested service type', detalle: 'Reason: ' + motivoLabel + '. Evaluating digital scheduling channel.' },
+          { titulo: 'Analyzing previous client interactions', detalle: 'Reviewing queries, operations and products for ' + nombreCliente + '.' },
+          { titulo: 'Generating advisory recommendation', detalle: 'Determining the most efficient channel based on profile and availability.' }
+        ];
+        var delayPaso = 900;
+        pasos.forEach(function (paso, index) {
+          var tid = setTimeout(function () {
+            agregarPasoCitaAgente(paso.titulo, paso.detalle, index);
+          }, index * delayPaso);
+          citaAnalisisTimeouts.push(tid);
+        });
+
+        var recomiendaVideo = motivo === 'Prestamos';
+        var textoResumen = obtenerResumenCitaDemo(motivo, nombreCliente);
+        var tidFin = setTimeout(function () {
+          mostrarResumenAnalisisCita(textoResumen, motivo, recomiendaVideo);
+        }, pasos.length * delayPaso + 400);
+        citaAnalisisTimeouts.push(tidFin);
+      }
+
+      function setCitaMotivo(motivo) {
+        var prevMotivo = citaMotivo;
+        citaMotivo = motivo;
+        if (motivo !== prevMotivo) limpiarPanelAgenteCita(!motivo);
+        if (citaMotivoInput) citaMotivoInput.value = motivo;
+        document.querySelectorAll('#citaMotivoToggle button').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-motivo') === motivo);
+        });
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
+        if (citaFormRest) citaFormRest.classList.remove('visible');
+        if (!motivo || motivo !== 'Transferencias') {
+          if (prevMotivo === 'Transferencias') setCitaTipo('sucursal');
+        }
+        if (motivo) iniciarAnalisisAgenteCita(motivo);
+        validateCitaForm();
+      }
+
+      function iniciarVideollamadaCita() {
+        if (!citaMotivo) {
+          window.alert('Please select the reason for your inquiry first.');
+          return;
+        }
+        showHome();
+        activarAsesoramiento();
+      }
+
+      function clearCitaHoraSelection() {
+        if (citaHoraInput) citaHoraInput.value = '';
+        document.querySelectorAll('.numia-time-slot').forEach(function (s) { s.classList.remove('active'); });
+      }
+
+      function updateCitaHoraVisibility() {
+        var hasDate = citaFecha && citaFecha.value;
+        if (citaHoraWrap) citaHoraWrap.classList.toggle('visible', !!hasDate);
+        if (!hasDate) clearCitaHoraSelection();
+        validateCitaForm();
+      }
+
+      function initCitaFechaMin() {
+        if (!citaFecha) return;
+        var today = new Date();
+        var y = today.getFullYear();
+        var m = String(today.getMonth() + 1).padStart(2, '0');
+        var d = String(today.getDate()).padStart(2, '0');
+        citaFecha.min = y + '-' + m + '-' + d;
+        citaFecha.value = '';
+        updateCitaHoraVisibility();
+      }
+
+      function validateCitaForm() {
+        if (!btnConfirmarCita) return;
+        if (!citaMotivo) {
+          btnConfirmarCita.disabled = true;
+          return;
+        }
+        if (citaMotivo === 'Transferencias') {
+          btnConfirmarCita.disabled = true;
+          return;
+        }
+        if (citaTipo === 'videollamada') {
+          btnConfirmarCita.disabled = false;
+          return;
+        }
+        var okFecha = citaFecha && citaFecha.value;
+        var okHora = citaHoraInput && citaHoraInput.value;
+        var okSucursal = citaSucursal && citaSucursal.value;
+        btnConfirmarCita.disabled = !(okFecha && okHora && okSucursal);
+      }
+
+      document.querySelectorAll('#citaMotivoToggle button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setCitaMotivo(btn.getAttribute('data-motivo'));
+        });
+      });
+
+      document.querySelectorAll('#citaTipoToggle button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setCitaTipo(btn.getAttribute('data-tipo'));
+        });
+      });
+
+      document.querySelectorAll('.numia-time-slot').forEach(function (slot) {
+        slot.addEventListener('click', function () {
+          document.querySelectorAll('.numia-time-slot').forEach(function (s) { s.classList.remove('active'); });
+          slot.classList.add('active');
+          if (citaHoraInput) citaHoraInput.value = slot.getAttribute('data-hora');
+          validateCitaForm();
+        });
+      });
+
+      if (citaFecha) citaFecha.addEventListener('change', updateCitaHoraVisibility);
+      if (citaSucursal) citaSucursal.addEventListener('change', validateCitaForm);
+
+      var btnCitaGuiaChat = document.getElementById('btnCitaGuiaChat');
+      if (btnCitaGuiaChat) btnCitaGuiaChat.addEventListener('click', mostrarChatCita);
+
+      var btnCitaVideoInmediata = document.getElementById('btnCitaVideoInmediata');
+      if (btnCitaVideoInmediata) btnCitaVideoInmediata.addEventListener('click', iniciarVideollamadaCita);
+
+      if (formAgendarCita) {
+        formAgendarCita.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (!citaMotivo) return;
+          if (citaTipo === 'videollamada') {
+            iniciarVideollamadaCita();
+            return;
+          }
+          var lugar = citaSucursal ? citaSucursal.value : '';
+          var fechaFmt = citaFecha && citaFecha.value
+            ? new Date(citaFecha.value + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+            : '';
+          if (citaSuccessText) {
+            citaSuccessText.textContent = 'Tu cita por ' + citaMotivo.toLowerCase() + ' en sucursal' +
+              (lugar ? ' (' + lugar + ')' : '') +
+              ' quedó agendada para el ' + fechaFmt + ' a las ' + (citaHoraInput ? citaHoraInput.value : '') + ' hs.';
+          }
+          if (citaSuccess) {
+            citaSuccess.classList.add('active');
+            citaSuccess.setAttribute('aria-hidden', 'false');
+          }
+        });
+      }
+
+      function resetCitaForm() {
+        limpiarPanelAgenteCita(true);
+        ocultarChatCita();
+        citaMotivo = '';
+        citaTipo = 'sucursal';
+        if (citaMotivoInput) citaMotivoInput.value = '';
+        document.querySelectorAll('#citaMotivoToggle button').forEach(function (b) { b.classList.remove('active'); });
+        if (citaFormRest) citaFormRest.classList.remove('visible');
+        if (citaTransferenciasTip) citaTransferenciasTip.classList.remove('visible');
+        if (formAgendarCita) formAgendarCita.reset();
+        clearCitaHoraSelection();
+        if (citaHoraWrap) citaHoraWrap.classList.remove('visible');
+        resetCitaTipoToggleOrder();
+        setCitaTipo('sucursal');
+        if (citaSucursalWrap) citaSucursalWrap.style.display = 'block';
+        if (citaAgendaWrap) citaAgendaWrap.classList.remove('hidden');
+        validateCitaForm();
+      }
+
+      function cerrarCitaSuccess() {
+        if (citaSuccess) {
+          citaSuccess.classList.remove('active');
+          citaSuccess.setAttribute('aria-hidden', 'true');
+        }
+        showHome();
+        resetCitaForm();
+      }
+
+      var btnCitaSuccessOk = document.getElementById('btnCitaSuccessOk');
+      if (btnCitaSuccessOk) btnCitaSuccessOk.addEventListener('click', cerrarCitaSuccess);
+      var numiaCitaSuccessBackdrop = document.getElementById('numiaCitaSuccessBackdrop');
+      if (numiaCitaSuccessBackdrop) numiaCitaSuccessBackdrop.addEventListener('click', cerrarCitaSuccess);
+    })();
+  </script>
+</body>
+</html>
