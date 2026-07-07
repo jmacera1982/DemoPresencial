@@ -199,7 +199,8 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       display: none; /* Oculto inicialmente */
       flex-direction: column;
-      height: calc(100vh - 4rem);
+      height: calc(100vh - 5rem);
+      max-height: 780px;
       overflow: hidden;
     }
     
@@ -1576,6 +1577,46 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
+    /* === AI agent panel: match the totem's dark look (black bg, light text) === */
+    .log-container .log-content { color: #ffffff; font-family: 'Courier New', monospace; }
+    .log-container .atencion-section { background: transparent !important; box-shadow: none; padding: 0; margin: 0; }
+    .log-container .step-item {
+      background: #2d2d2d;
+      border-left: 3px solid #ffffff;
+      border-radius: 4px;
+      color: #ffffff;
+      font-family: 'Courier New', monospace;
+    }
+    .log-container .step-item.completed { border-left-color: #ffffff; background: #2d2d2d; }
+    .log-container .step-item.processing { border-left-color: #ffaa00; background: #3a2e1e; }
+    .log-container .step-title { color: #ffffff; font-size: 0.85rem; font-weight: 600; }
+    .log-container .step-duration { color: #9ca3af; font-size: 0.85rem; }
+    .log-container .step-content { color: #ffffff; font-size: 0.85rem; }
+    .log-container .step-input,
+    .log-container .step-output,
+    .log-container .step-output-content {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #ffffff;
+      font-size: 0.85rem;
+    }
+    .log-container .step-icon.text { background: rgba(134, 61, 255, 0.25); color: #c4b5fd; }
+    .log-container .step-icon.tool { background: rgba(217, 119, 6, 0.25); color: #fbbf24; }
+    .log-container .summary-section {
+      background: #2d2d2d;
+      border-left: 3px solid #ffffff;
+      border-radius: 4px;
+      color: #ffffff;
+    }
+    .log-container .summary-title { color: #ffffff; font-family: 'Courier New', monospace; font-size: 0.85rem; font-weight: 600; }
+    .log-container .summary-content { color: #ffffff; font-family: 'Courier New', monospace; font-size: 0.85rem; white-space: pre-line; line-height: 1.5; }
+    .log-container .conversation-line { background: #1a1a1a; border-left: 2px solid #444; color: #ffffff; }
+    .log-container .conversation-line.success { background: #2d2d2d; border-left-color: #ffffff; color: #ffffff; }
+    .log-container .conversation-line.error { background: #3a1e1e; border-left-color: #ff4444; color: #ff8888; }
+    .log-container .conversation-line.info { background: #1e1e3a; border-left-color: #4444ff; color: #ffffff; }
+    .log-container .conversation-line.info strong { color: #a5b4fc; }
+    .log-container .conversation-line.title { color: #ffffff; }
   </style>
 </head>
 <body>
@@ -1900,6 +1941,16 @@
         </div>
       </div>
 
+      <!-- Turn assigned popup (in-person) -->
+      <div id="turnAssignedPopup" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:9999; background:rgba(0,0,0,0.55); align-items:center; justify-content:center; border-radius:28px;">
+        <div style="background:white; border-radius:20px; padding:2rem 1.75rem; max-width:290px; width:88%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.2); animation: popIn 0.3s ease;">
+          <div style="font-size:3rem; margin-bottom:0.75rem;">🎟️</div>
+          <h3 style="font-size:1.25rem; font-weight:800; color:#1f2937; margin-bottom:0.4rem;">Your turn has been assigned</h3>
+          <p style="font-size:0.95rem; font-weight:600; color:#1f2937; margin-bottom:1.5rem;">You'll be notified shortly when it's your turn.</p>
+          <button id="btnTurnAssignedOk" style="background:var(--numia-azul); color:white; border:none; border-radius:12px; padding:0.85rem 2rem; font-weight:700; font-size:0.95rem; cursor:pointer; width:100%;">Got it</button>
+        </div>
+      </div>
+
       <!-- In-app video call overlay (renders the client's video call inside the phone) -->
       <div id="videoCallOverlay" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; z-index:10000; background:#000; border-radius:28px; overflow:hidden;">
         <button id="btnCloseVideoCall" aria-label="End call" style="position:absolute; top:12px; right:12px; z-index:2; width:38px; height:38px; border-radius:50%; border:none; background:rgba(0,0,0,0.55); color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;"><i class="bi bi-x-lg"></i></button>
@@ -2079,9 +2130,26 @@
           lastName: usuarioActual.apellido,
           dni: usuarioActual.dni,
           email: 'mail@mail.com',
-   
+
           extraFields: buildExtraFields(ultimoDetalleExtraFields || DETALLE_EXTRA_FIELDS_DEFAULT)
         };
+      }
+
+      // Extraer solo las secciones 1 (Customer context) y 2 (Intent & opportunity)
+      // del análisis, limpias y con doble espacio, para enviar a Debmedia.
+      function extraerNotasParaDebmedia(texto) {
+        if (!texto) return DETALLE_EXTRA_FIELDS_DEFAULT;
+        const seccion = (ini, fin) => {
+          const i = texto.indexOf(ini);
+          if (i === -1) return '';
+          const desde = i + ini.length;
+          const j = texto.indexOf(fin, desde);
+          return texto.substring(desde, j === -1 ? texto.length : j).trim();
+        };
+        const ctx = seccion('1 · Customer context', '2 · Intent & opportunity');
+        const intent = seccion('2 · Intent & opportunity', '3 · Real-time capacity');
+        if (!ctx && !intent) return DETALLE_EXTRA_FIELDS_DEFAULT;
+        return 'Customer context\n\n' + ctx + '\n\n\nIntent & opportunity\n\n' + intent;
       }
 
       // Event listener para el botón "Estoy en la sucursal"
@@ -2516,18 +2584,11 @@
             outputHtml = '<div class="step-output-content"><em style="color: var(--numia-text-light);">Herramienta ejecutada correctamente</em></div>';
           }
           
+          const detallePaso = (typeof toolOutput === 'string' && toolOutput.trim()) ? toolOutput.trim() : 'Completed';
           stepItem.innerHTML = `
-            <div class="step-header">
-              <div class="step-icon tool">
-                <i class="bi bi-gear"></i>
-              </div>
-              <div style="flex: 1;">
-                <div class="step-title">${escapeHtml(friendlyName)}</div>
-                <div class="step-duration">Paso ${index + 1}</div>
-              </div>
-            </div>
-            <div class="step-content">
-              ${outputHtml}
+            <div class="step-title">${escapeHtml(friendlyName)}</div>
+            <div class="step-output-content">
+              <em style="color: #ffffff;">${escapeHtml(detallePaso)}</em>
             </div>
           `;
           
@@ -2557,11 +2618,6 @@
             setTimeout(() => {
               stepItem.classList.remove('processing');
               stepItem.classList.add('completed');
-              const icon = stepItem.querySelector('.step-icon');
-              if (icon) {
-                icon.className = 'step-icon completed';
-                icon.innerHTML = '<i class="bi bi-check-circle"></i>';
-              }
             }, 600);
           } else {
             console.error('stepsContainer no encontrado');
@@ -2600,7 +2656,8 @@
         try {
           const messageText = typeof message === 'string' ? message : (message.message || JSON.stringify(message, null, 2));
           if (messageText && !messageText.startsWith('No analysis text received')) {
-            ultimoDetalleExtraFields = messageText;
+            // Solo secciones 1 y 2 (limpias) van a Debmedia; el panel sigue mostrando todo
+            ultimoDetalleExtraFields = extraerNotasParaDebmedia(messageText);
           }
           
           // Extraer Scoring y detectar si recomienda videollamada
@@ -2643,6 +2700,18 @@
           popup.style.display = 'none';
           btn.removeEventListener('click', dismiss);
           callback();
+        }
+        btn.addEventListener('click', dismiss);
+      }
+
+      function mostrarPopupTurnoAsignado() {
+        const popup = document.getElementById('turnAssignedPopup');
+        const btn = document.getElementById('btnTurnAssignedOk');
+        if (!popup || !btn) return;
+        popup.style.display = 'flex';
+        function dismiss() {
+          popup.style.display = 'none';
+          btn.removeEventListener('click', dismiss);
         }
         btn.addEventListener('click', dismiss);
       }
@@ -2876,7 +2945,10 @@
               <p class="mb-0 mt-2">We will call you with your ID: <strong>${usuarioActual.dni}</strong></p>
             </div>
           `;
-          
+
+          // Pop-up: turno asignado
+          mostrarPopupTurnoAsignado();
+
         } catch (err) {
           console.error('Error al solicitar atención presencial:', err);
           resultadoAtencionApp.innerHTML = `<div class="alert alert-danger mt-3"><i class="bi bi-exclamation-triangle me-2"></i>Error: ${err.message}</div>`;
