@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guion de Argumentación · Sala de Atención</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#0B1B33;
+    --navy-mid:#14294D;
+    --navy-line:#233A5E;
+    --slate:#4C6584;
+    --paper:#F4F5F8;
+    --paper-card:#FFFFFF;
+    --ink:#16213E;
+    --ink-soft:#4B5876;
+    --gold:#B8893F;
+    --gold-soft:#E7D2A8;
+    --success:#2F6F4E;
+    --success-bg:#E7F1EB;
+    --alert:#A6420F;
+    --alert-bg:#FBEBE2;
+    --radius:14px;
+    --shadow: 0 1px 2px rgba(11,27,51,0.06), 0 8px 24px rgba(11,27,51,0.08);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+
+  :focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  .shell{
+    display:grid;
+    grid-template-columns: 260px 1fr;
+    min-height:100vh;
+  }
+
+  @media (max-width: 900px){
+    .shell{grid-template-columns: 1fr;}
+  }
+
+  .sidebar{
+    background:var(--navy-deep);
+    color:#EDEFF4;
+    padding:28px 20px 32px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    border-right:1px solid var(--navy-line);
+  }
+
+  @media (max-width: 900px){
+    .sidebar{position:static; height:auto;}
+  }
+
+  .brandmark{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.05rem;
+    letter-spacing:0.02em;
+    color:#fff;
+    margin:0 0 2px;
+  }
+
+  .brand-sub{
+    font-size:0.72rem;
+    color:#93A2C2;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin:0 0 28px;
+  }
+
+  .nav-label{
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:#7E8FB3;
+    margin:0 0 10px;
+    padding-left:2px;
+  }
+
+  .scenario-list{
+    list-style:none;
+    margin:0 0 30px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .scenario-btn{
+    width:100%;
+    text-align:left;
+    background:transparent;
+    border:1px solid transparent;
+    color:#C7D0E4;
+    padding:12px 14px;
+    border-radius:10px;
+    font-family:inherit;
+    font-size:0.92rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .scenario-btn .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:#6E7FA3;
+    min-width:22px;
+  }
+
+  .scenario-btn:hover{
+    background:rgba(255,255,255,0.05);
+    color:#fff;
+  }
+
+  .scenario-btn.active{
+    background:var(--navy-mid);
+    border-color:var(--navy-line);
+    color:#fff;
+  }
+  .scenario-btn.active .tag{color:var(--gold-soft);}
+
+  .compass{
+    border-top:1px solid var(--navy-line);
+    padding-top:20px;
+  }
+
+  .compass-title{
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:#7E8FB3;
+    margin:0 0 4px;
+  }
+
+  .compass-hint{
+    font-size:0.72rem;
+    color:#5F6E8F;
+    margin:0 0 16px;
+    line-height:1.4;
+  }
+
+  .compass-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    position:relative;
+  }
+
+  .compass-list::before{
+    content:"";
+    position:absolute;
+    left:9px;
+    top:6px;
+    bottom:6px;
+    width:1px;
+    background:var(--navy-line);
+  }
+
+  .compass-item{
+    position:relative;
+    padding-left:28px;
+    margin-bottom:16px;
+    font-size:0.82rem;
+  }
+
+  .compass-item .dot{
+    position:absolute;
+    left:3px;
+    top:2px;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:var(--navy-deep);
+    border:2px solid var(--slate);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .compass-item.done .dot{
+    background:var(--success);
+    border-color:var(--success);
+  }
+  .compass-item.done .dot::after{
+    content:"";
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#fff;
+  }
+
+  .compass-item.active .dot{
+    border-color:var(--gold);
+    background:var(--gold);
+  }
+
+  .compass-item.locked{color:#4C5975;}
+  .compass-item.done a, .compass-item.active a{color:#C7D0E4; text-decoration:none;}
+  .compass-item.done a:hover, .compass-item.active a:hover{color:#fff;}
+  .compass-item.active a{color:#fff; font-weight:600;}
+  .compass-item.locked .label{color:#4C5975; cursor:default;}
+
+  .lock-icon{width:10px; height:10px; opacity:0.6; vertical-align:-1px; margin-left:4px;}
+
+  .reset-link{
+    background:none;
+    border:none;
+    color:#7E8FB3;
+    font-size:0.75rem;
+    padding:0;
+    margin-top:18px;
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:2px;
+    font-family:inherit;
+  }
+  .reset-link:hover{color:#fff;}
+
+  .main{
+    padding:40px 48px 80px;
+    max-width:920px;
+  }
+
+  @media (max-width: 640px){
+    .main{padding:28px 20px 60px;}
+  }
+
+  .scenario-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin:0 0 10px;
+  }
+
+  .scenario-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:2.1rem;
+    line-height:1.1;
+    margin:0 0 12px;
+    color:var(--navy-deep);
+  }
+
+  .scenario-context{
+    font-size:1rem;
+    color:var(--ink-soft);
+    max-width:60ch;
+    margin:0 0 12px;
+    line-height:1.55;
+  }
+
+  .progress-track{
+    display:flex;
+    gap:6px;
+    margin-bottom:32px;
+  }
+
+  .progress-seg{
+    height:4px;
+    flex:1;
+    background:#E1E5EF;
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .progress-seg span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:var(--gold);
+    transition:width 0.4s ease;
+  }
+  .progress-seg.filled span{width:100%;}
+
+  .stage{
+    margin-bottom:26px;
+    scroll-margin-top:24px;
+    animation:reveal 0.35s ease both;
+  }
+
+  @keyframes reveal{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .stage-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:14px;
+  }
+
+  .stage-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--gold);
+    background:var(--gold-soft);
+    padding:2px 8px;
+    border-radius:20px;
+  }
+
+  .stage-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.25rem;
+    color:var(--navy-deep);
+    margin:0;
+  }
+
+  .card{
+    background:var(--paper-card);
+    border:1px solid #E4E7EF;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px 22px;
+  }
+
+  .line-say{
+    font-size:1.02rem;
+    line-height:1.6;
+    color:var(--ink);
+    font-style:italic;
+    border-left:3px solid var(--gold);
+    padding-left:16px;
+    margin:0;
+  }
+
+  .qa-list{
+    list-style:none;
+    margin:14px 0 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .qa-list li{
+    font-size:0.95rem;
+    color:var(--ink);
+    padding-left:20px;
+    position:relative;
+    line-height:1.5;
+  }
+
+  .qa-list li::before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color:var(--slate);
+  }
+
+  .arg-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap:14px;
+  }
+
+  .arg-card{
+    background:var(--paper-card);
+    border:1px solid #E4E7EF;
+    border-radius:var(--radius);
+    padding:18px 18px 16px;
+    box-shadow:var(--shadow);
+  }
+
+  .arg-card h4{
+    font-family:'Fraunces', serif;
+    font-size:1rem;
+    font-weight:600;
+    margin:0 0 8px;
+    color:var(--navy-deep);
+  }
+
+  .arg-card p{
+    font-size:0.9rem;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:0;
+  }
+
+  .arg-card .stat{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--success);
+    background:var(--success-bg);
+    display:inline-block;
+    padding:3px 9px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+
+  .obj-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap:16px;
+    perspective:1200px;
+  }
+
+  .obj-card{
+    position:relative;
+    min-height:190px;
+    cursor:pointer;
+  }
+
+  .obj-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    min-height:190px;
+    transition:transform 0.5s cubic-bezier(.4,.2,.2,1);
+    transform-style:preserve-3d;
+  }
+
+  .obj-card.flipped .obj-inner{
+    transform:rotateY(180deg);
+  }
+
+  .obj-face{
+    position:absolute;
+    inset:0;
+    border-radius:var(--radius);
+    padding:20px;
+    backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:var(--shadow);
+  }
+
+  .obj-front{
+    background:var(--alert-bg);
+    border:1px solid #EAC7B0;
+  }
+
+  .obj-back{
+    background:var(--success-bg);
+    border:1px solid #BFDBCB;
+    transform:rotateY(180deg);
+  }
+
+  .obj-kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    margin:0 0 10px;
+  }
+
+  .obj-front .obj-kicker{color:var(--alert);}
+  .obj-back .obj-kicker{color:var(--success);}
+
+  .obj-quote{
+    font-size:1rem;
+    font-style:italic;
+    line-height:1.45;
+    margin:0 0 auto;
+    color:var(--ink);
+  }
+
+  .obj-rebuttal{
+    font-size:0.92rem;
+    line-height:1.5;
+    color:var(--ink);
+    margin:0 0 auto;
+  }
+
+  .obj-hint{
+    font-size:0.74rem;
+    color:var(--ink-soft);
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .obj-hint svg{width:13px; height:13px; flex-shrink:0;}
+
+  .close-card{
+    background:var(--navy-deep);
+    color:#EDEFF4;
+    border-radius:var(--radius);
+    padding:24px 26px;
+    box-shadow:var(--shadow);
+  }
+
+  .close-card .stage-title{color:#fff;}
+
+  .close-line{
+    font-family:'Fraunces', serif;
+    font-size:1.2rem;
+    font-style:italic;
+    line-height:1.5;
+    margin:0 0 14px;
+    color:#fff;
+  }
+
+  .close-signal{
+    font-size:0.85rem;
+    color:#A9B4CE;
+    margin:0;
+  }
+
+  .close-signal strong{color:var(--gold-soft); font-weight:600;}
+
+  .advance-row{
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .advance-btn{
+    background:var(--navy-deep);
+    color:#fff;
+    border:none;
+    padding:11px 20px;
+    border-radius:10px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.88rem;
+    font-weight:600;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:background 0.15s ease;
+  }
+  .advance-btn:hover{background:var(--navy-mid);}
+  .advance-btn svg{width:14px; height:14px;}
+
+  .advance-note{
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+
+  .restart-row{
+    margin-top:20px;
+  }
+
+  .restart-btn{
+    background:transparent;
+    border:1px solid #D8DCE6;
+    color:var(--ink-soft);
+    padding:9px 16px;
+    border-radius:10px;
+    font-family:inherit;
+    font-size:0.82rem;
+    cursor:pointer;
+  }
+  .restart-btn:hover{border-color:var(--slate); color:var(--ink);}
+
+  .foot-note{
+    margin-top:44px;
+    padding-top:18px;
+    border-top:1px solid #DCE0EA;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <p class="brandmark">Sala de Atención</p>
+    <p class="brand-sub">Guion de argumentación</p>
+
+    <p class="nav-label">Elegí la conversación</p>
+    <ul class="scenario-list" id="scenario-list" role="tablist" aria-label="Escenarios de conversación"></ul>
+
+    <div class="compass">
+      <p class="compass-title">Ruta de la conversación</p>
+      <p class="compass-hint">Se habilita a medida que avanza la charla.</p>
+      <ul class="compass-list" id="compass-list"></ul>
+      <button class="reset-link" id="reset-btn" type="button">Reiniciar esta conversación</button>
+    </div>
+  </aside>
+
+  <main class="main" id="main-content"></main>
+</div>
+
+<script>
+const SCENARIOS = [
+  {
+    id: "refinanciacion",
+    tag: "01",
+    title: "Refinanciación",
+    context: "Cliente con varias cuotas activas o señales de mora, que necesita ordenar su carga financiera mensual.",
+    apertura: "Veo que tenés varios productos activos con nosotros. Quiero mostrarte una alternativa que podría bajarte la cuota mensual y ordenarte todo en un solo lugar.",
+    diagnostico: [
+      "¿Cuánto estás pagando hoy en total entre todas tus cuotas?",
+      "¿Hay algún mes del año donde se te complica más llegar?",
+      "¿Tenés deuda en otras entidades que te gustaría juntar en una sola?"
+    ],
+    argumentos: [
+      { stat:"↓ cuota mensual", title:"Menor cuota", text:"Extendemos el plazo para bajar el monto mensual y liberar flujo de caja del cliente." },
+      { stat:"1 sola cuota", title:"Consolidación", text:"Reunimos deudas dispersas en una sola cuota, un solo vencimiento, un solo lugar de pago." },
+      { stat:"tasa preferencial", title:"Beneficio por antigüedad", text:"Aplicamos condiciones preferenciales según la relación y comportamiento de pago del cliente." }
+    ],
+    objeciones: [
+      { q:"“Ya tengo tasa fija, no quiero tocarla.”", a:"No comparamos solo la tasa nominal — miramos el costo total del crédito (CFT). A veces una tasa más alta pero un plazo mejor pensado baja el costo total real." },
+      { q:"“Me da paja el papeleo.”", a:"El proceso es digital y toma minutos. Te muestro ahora mismo qué documentación se necesita, sin compromiso." },
+      { q:"“No confío en que me convenga.”", a:"Te armo la simulación con números concretos, antes y después, para que decidas vos mismo con la info completa en mano." }
+    ],
+    cierre: "Te armo la simulación ahora mismo, sin compromiso, ¿dale?",
+    senal: "El cliente pregunta por montos o plazos concretos, o repite \"cuánto me quedaría pagando\"."
+  },
+  {
+    id: "prestamos",
+    tag: "02",
+    title: "Colocación de préstamos",
+    context: "Cliente con buen comportamiento de pago y capacidad de endeudamiento no utilizada, sin necesidad urgente declarada.",
+    apertura: "Por tu perfil calificás para un préstamo preaprobado. ¿Tenés algún proyecto en mente donde te podría servir?",
+    diagnostico: [
+      "¿Estás pensando en algún gasto grande próximamente (auto, remodelación, viaje, estudios)?",
+      "¿Cómo estás manejando los imprevistos hoy — tenés margen o ya está todo comprometido?",
+      "¿Alguna vez pediste un préstamo antes? ¿Cómo fue esa experiencia?"
+    ],
+    argumentos: [
+      { stat:"preaprobado", title:"Proceso rápido", text:"Ya está evaluado el perfil, así que el trámite es más ágil que una solicitud desde cero." },
+      { stat:"tasa cliente", title:"Condición preferencial", text:"Por ser cliente activo, aplica una tasa mejor que la de un cliente nuevo o de otra entidad." },
+      { stat:"plazo flexible", title:"Flexibilidad de plazo", text:"El cliente elige el plazo según su capacidad de pago mensual, no un esquema rígido." }
+    ],
+    objeciones: [
+      { q:"“No lo necesito ahora.”", a:"Dejamos la línea preaprobada activa sin costo si no se usa. Así queda disponible el día que la necesite, sin tener que reiniciar el trámite." },
+      { q:"“Prefiero no endeudarme más.”", a:"Totalmente válido. No es forzar una venta — es información disponible. Reforzamos la relación igual, sin insistir." },
+      { q:"“Vi mejor tasa en otro banco.”", a:"Comparemos el costo total (CFT), no solo la tasa. Sumale los beneficios de canales, atención y otros productos que ya tiene acá." }
+    ],
+    cierre: "¿Querés que te dejemos la línea preaprobada activa por si la necesitás más adelante? No tiene costo si no la usás.",
+    senal: "El cliente empieza a preguntar montos máximos o menciona un proyecto concreto (\"estoy por cambiar el auto\", por ejemplo)."
+  },
+  {
+    id: "tarjeta",
+    tag: "03",
+    title: "Tarjeta de crédito",
+    context: "Cliente sin tarjeta de crédito propia, con tarjeta de otra entidad, o candidato a upgrade de límite/categoría.",
+    apertura: "¿Estás usando tarjeta de crédito hoy? Te cuento los beneficios que tiene la nuestra para tu perfil.",
+    diagnostico: [
+      "¿Qué tarjeta usás hoy? ¿En qué la usás más — compras, viajes, cuotas?",
+      "¿Te interesan beneficios tipo millas, cashback, o cuotas sin interés?",
+      "¿Cuál es tu principal freno hoy con la tarjeta que ya tenés?"
+    ],
+    argumentos: [
+      { stat:"beneficios activos", title:"Programa de beneficios", text:"Millas, cashback o cuotas sin interés según el perfil y hábito de consumo del cliente." },
+      { stat:"1er año sin costo", title:"Sin costo de mantención", text:"Bonificación de mantención el primer año, condicionada a nivel de uso." },
+      { stat:"límite a medida", title:"Límite acorde al perfil", text:"El cupo se ajusta al comportamiento financiero real del cliente, no un monto genérico." }
+    ],
+    objeciones: [
+      { q:"“Ya tengo una y estoy conforme.”", a:"No buscamos que la reemplace — muchos clientes usan una segunda tarjeta puntualmente por un beneficio específico que la otra no tiene." },
+      { q:"“Me preocupa el costo de mantención.”", a:"Te explico las condiciones exactas y cómo se bonifica según el uso, para que no haya sorpresas." },
+      { q:"“No quiero más tarjetas.”", a:"Perfecto, quedamos ahí. Dejamos la puerta abierta para cuando cambie de opinión, sin insistir hoy." }
+    ],
+    cierre: "Te dejo armada la solicitud, la termino de aprobar y te aviso por WhatsApp en cuanto esté lista, ¿te parece?",
+    senal: "El cliente pregunta por beneficios puntuales (millas, cashback) o compara activamente con la tarjeta que ya tiene."
+  },
+  {
+    id: "cliente-nuevo",
+    tag: "04",
+    title: "Cliente nuevo",
+    context: "Primera relación con el banco — apertura de cuenta o primer producto, sin historial previo en la entidad.",
+    apertura: "Bienvenido. Contame un poco qué estás buscando para ver cómo te podemos acompañar mejor.",
+    diagnostico: [
+      "¿Qué te trae hoy a abrir cuenta con nosotros?",
+      "¿Tenés relación con otro banco actualmente? ¿Qué te gustaría que sea diferente acá?",
+      "¿Qué es lo que más valorás de un banco — atención, canales digitales, costos, cercanía?"
+    ],
+    argumentos: [
+      { stat:"acompañamiento", title:"Ejecutivo asignado", text:"Desde el primer día hay una persona de referencia para resolver dudas, no solo un canal genérico." },
+      { stat:"paquete bienvenida", title:"Producto ancla", text:"Condiciones de entrada pensadas para que la relación arranque con valor tangible desde el día uno." },
+      { stat:"omnicanal", title:"Canales digitales + sucursal", text:"El cliente elige cómo operar — app, sucursal o canal remoto — sin perder continuidad de atención." }
+    ],
+    objeciones: [
+      { q:"“Ya tengo banco y estoy conforme.”", a:"No buscamos que migre todo — muchos clientes usan un segundo banco para un producto puntual que les resuelve algo específico." },
+      { q:"“Me da desconfianza cambiar.”", a:"El proceso es gradual. Podemos empezar con un producto simple y sumar funcionalidades a medida que se sienta cómodo." },
+      { q:"“No tengo tiempo ahora.”", a:"El trámite básico toma minutos. Si prefiere, agendamos un seguimiento para otro momento sin perder el contacto." }
+    ],
+    cierre: "Empecemos con lo básico hoy, y vamos sumando funcionalidades a medida que te sientas cómodo, ¿dale?",
+    senal: "El cliente hace preguntas comparativas (\"¿y esto cómo es distinto a mi banco actual?\") en vez de objeciones de cierre."
+  }
+];
+
+const STAGE_DEFS = [
+  { key:"apertura", label:"Apertura" },
+  { key:"diagnostico", label:"Diagnóstico" },
+  { key:"argumentos", label:"Argumentación" },
+  { key:"objeciones", label:"Objeciones" },
+  { key:"cierre", label:"Cierre" }
+];
+
+let currentId = SCENARIOS[0].id;
+const progress = {};
+SCENARIOS.forEach(s => progress[s.id] = 1);
+
+function iconChevron(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>';
+}
+function iconArrow(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+}
+function iconLock(){
+  return '<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+}
+
+function renderSidebar(){
+  const list = document.getElementById('scenario-list');
+  list.innerHTML = SCENARIOS.map(s => `
+    <li>
+      <button class="scenario-btn ${s.id === currentId ? 'active' : ''}"
+              data-id="${s.id}"
+              role="tab"
+              aria-selected="${s.id === currentId}">
+        <span class="tag">${s.tag}</span>${s.title}
+      </button>
+    </li>
+  `).join('');
+
+  list.querySelectorAll('.scenario-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentId = btn.dataset.id;
+      renderAll();
+      document.getElementById('main-content').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  document.getElementById('reset-btn').onclick = () => {
+    progress[currentId] = 1;
+    renderAll();
+    document.getElementById('main-content').scrollIntoView({behavior:'smooth', block:'start'});
+  };
+}
+
+function renderCompass(){
+  const unlocked = progress[currentId];
+  const compass = document.getElementById('compass-list');
+  compass.innerHTML = STAGE_DEFS.map((def, i) => {
+    const n = i + 1;
+    let stateClass = 'locked';
+    if(n < unlocked) stateClass = 'done';
+    else if(n === unlocked) stateClass = 'active';
+
+    if(stateClass === 'locked'){
+      return `<li class="compass-item locked"><span class="dot"></span><span class="label">${def.label} ${iconLock()}</span></li>`;
+    }
+    return `<li class="compass-item ${stateClass}"><span class="dot"></span><a href="#stage-${def.key}">${def.label}</a></li>`;
+  }).join('');
+}
+
+function renderMain(){
+  const s = SCENARIOS.find(x => x.id === currentId);
+  const unlocked = progress[s.id];
+  const main = document.getElementById('main-content');
+
+  let stagesHtml = '';
+
+  STAGE_DEFS.forEach((def, i) => {
+    const n = i + 1;
+    if(n > unlocked) return;
+    const isCurrent = (n === unlocked);
+    stagesHtml += renderStage(def.key, n, s, isCurrent);
+  });
+
+  const progressSegs = STAGE_DEFS.map((_, i) => {
+    const n = i + 1;
+    return `<div class="progress-seg ${n < unlocked ? 'filled' : (n === unlocked ? 'filled' : '')}"><span style="width:${n <= unlocked ? '100%' : '0%'}"></span></div>`;
+  }).join('');
+
+  main.innerHTML = `
+    <p class="scenario-eyebrow">Escenario ${s.tag}</p>
+    <h1 class="scenario-title">${s.title}</h1>
+    <p class="scenario-context">${s.context}</p>
+    <div class="progress-track">${progressSegs}</div>
+    ${stagesHtml}
+    <p class="foot-note">Guion de referencia rápida para uso durante la atención presencial. No reemplaza el criterio del ejecutivo ni las políticas vigentes de riesgo y cumplimiento.</p>
+  `;
+
+  attachInteractions(s);
+}
+
+function renderStage(key, n, s, isCurrent){
+  const isLastStage = n === STAGE_DEFS.length;
+  const nextLabel = !isLastStage ? STAGE_DEFS[n].label : null;
+
+  let body = '';
+  let advanceRow = '';
+
+  if(key === 'apertura'){
+    body = `<div class="card"><p class="line-say">"${s.apertura}"</p></div>`;
+    if(isCurrent) advanceRow = advanceButton(n, `Ya abrí la charla → ir a ${nextLabel}`);
+  }
+
+  if(key === 'diagnostico'){
+    body = `<div class="card"><ul class="qa-list">${s.diagnostico.map(q => `<li>${q}</li>`).join('')}</ul></div>`;
+    if(isCurrent) advanceRow = advanceButton(n, `Ya tengo el diagnóstico → ir a ${nextLabel}`);
+  }
+
+  if(key === 'argumentos'){
+    body = `<div class="arg-grid">${s.argumentos.map(a => `
+      <div class="arg-card">
+        <span class="stat">${a.stat}</span>
+        <h4>${a.title}</h4>
+        <p>${a.text}</p>
+      </div>`).join('')}</div>`;
+    if(isCurrent) advanceRow = advanceButton(n, `Ya presenté el argumento → ir a ${nextLabel}`);
+  }
+
+  if(key === 'objeciones'){
+    body = `<div class="obj-grid">${s.objeciones.map((o, i) => `
+      <div class="obj-card" data-idx="${i}" tabindex="0" role="button" aria-pressed="false" aria-label="Objeción: ${o.q}. Tocar para ver la respuesta.">
+        <div class="obj-inner">
+          <div class="obj-face obj-front">
+            <p class="obj-kicker">Objeción</p>
+            <p class="obj-quote">${o.q}</p>
+            <p class="obj-hint">${iconChevron()} Tocá para ver la respuesta</p>
+          </div>
+          <div class="obj-face obj-back">
+            <p class="obj-kicker">Respuesta</p>
+            <p class="obj-rebuttal">${o.a}</p>
+            <p class="obj-hint">${iconChevron()} Tocá para volver</p>
+          </div>
+        </div>
+      </div>`).join('')}</div>`;
+    if(isCurrent) advanceRow = advanceButton(n, `Resolví las objeciones → ir a ${nextLabel}`);
+  }
+
+  if(key === 'cierre'){
+    body = `<div class="close-card">
+      <p class="close-line">"${s.cierre}"</p>
+      <p class="close-signal"><strong>Señal de que es momento de cerrar:</strong> ${s.senal}</p>
+    </div>
+    <div class="restart-row"><button class="restart-btn" id="restart-inline-btn" type="button">Conversación cerrada — reiniciar guion</button></div>`;
+  }
+
+  return `
+    <section class="stage" id="stage-${key}">
+      <div class="stage-head">
+        <span class="stage-num">${n}</span>
+        <h2 class="stage-title">${STAGE_DEFS[n-1].label}</h2>
+      </div>
+      ${body}
+      ${advanceRow}
+    </section>
+  `;
+}
+
+function advanceButton(n, label){
+  return `
+    <div class="advance-row">
+      <button class="advance-btn" data-advance="${n}">${label} ${iconArrow()}</button>
+    </div>
+  `;
+}
+
+function attachInteractions(s){
+  document.querySelectorAll('[data-advance]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const n = parseInt(btn.dataset.advance, 10);
+      if(progress[s.id] === n){
+        progress[s.id] = n + 1;
+        renderAll();
+        const nextKey = STAGE_DEFS[n] ? STAGE_DEFS[n].key : null;
+        if(nextKey){
+          setTimeout(() => {
+            const el = document.getElementById('stage-' + nextKey);
+            if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+          }, 30);
+        }
+      }
+    });
+  });
+
+  const restartInline = document.getElementById('restart-inline-btn');
+  if(restartInline){
+    restartInline.addEventListener('click', () => {
+      progress[s.id] = 1;
+      renderAll();
+      document.getElementById('main-content').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+
+  document.querySelectorAll('.obj-card').forEach(card => {
+    const flip = () => {
+      const isFlipped = card.classList.toggle('flipped');
+      card.setAttribute('aria-pressed', isFlipped);
+    };
+    card.addEventListener('click', flip);
+    card.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        flip();
+      }
+    });
+  });
+}
+
+function renderAll(){
+  renderSidebar();
+  renderCompass();
+  renderMain();
+}
+
+renderAll();
+</script>
+
+</body>
+</html>
