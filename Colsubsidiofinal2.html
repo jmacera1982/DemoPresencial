@@ -340,8 +340,21 @@
   <!-- LANDING -->
   <main class="landing-wrap">
 
+    <!-- PANTALLA 1: portal simple (Agendar / Consultar) -->
+    <div class="portal-card" id="pantallaPortal">
+      <div class="portal-icon"><i class="bi bi-calendar-heart"></i></div>
+      <div class="portal-title">Portal de Citas</div>
+      <p class="portal-sub">¿Qué deseas hacer hoy?</p>
+      <button class="portal-btn portal-btn-primary" onclick="mostrarVistaVirtual()">
+        <i class="bi bi-calendar-plus"></i> Agendar cita
+      </button>
+      <button class="portal-btn portal-btn-secondary" onclick="abrirConsultarCita()">
+        <i class="bi bi-search"></i> Consultar cita
+      </button>
+    </div>
+
     <!-- FLUJO DE 5 PASOS (página completa, sin pop-up) -->
-    <div id="flujoCita" class="flow-wrap" style="display:flex;">
+    <div id="flujoCita" class="flow-wrap" style="display:none;">
       <div class="flow-card">
 
         <!-- Barra de 5 pasos (siempre visible) -->
@@ -390,9 +403,6 @@
         <div class="side-actions">
           <button class="portal-btn portal-btn-primary" onclick="iniciarSolicitudCita()">
             <i class="bi bi-calendar-check"></i> Seguir presencial de todas formas
-          </button>
-          <button class="portal-btn portal-btn-secondary" onclick="abrirConsultarCita()">
-            <i class="bi bi-search"></i> Consultar cita
           </button>
         </div>
       </section>
@@ -484,6 +494,19 @@
       </div>
     </div>
   </main>
+
+  <!-- ===== POPUP DE BIENVENIDA (informativo) ===== -->
+  <div id="bienvenidaModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:560px;text-align:center;">
+      <button class="modal-close" onclick="cerrarBienvenida()">&times;</button>
+      <div class="bienvenida-icon"><i class="bi bi-camera-video-fill"></i></div>
+      <h2 class="bienvenida-title">¡Ahora habilitamos trámites rápido por videollamada!</h2>
+      <p class="bienvenida-text">En la parte izquierda encontrarás los trámites que puedes realizar de forma virtual, sin salir de casa. Selecciona el trámite y se te asignará un turno virtual para atenderte por videollamada.</p>
+      <button class="portal-btn portal-btn-primary" style="max-width:340px;margin:1.5rem auto 0;" onclick="cerrarBienvenida()">
+        <i class="bi bi-check-lg"></i> Entendido
+      </button>
+    </div>
+  </div>
 
   <!-- ===== MODAL CONSULTAR CITA ===== -->
   <div id="consultarModal" class="modal-overlay">
@@ -596,9 +619,10 @@
       cargarTramites();
     }
     window.iniciarSolicitudCita = iniciarSolicitudCita;
-    // Finalizar / volver al inicio (canal)
+    // Finalizar / volver al portal inicial
     function cerrarCita(){
-      document.getElementById('flujoCita').style.display = 'flex';
+      document.getElementById('flujoCita').style.display = 'none';
+      document.getElementById('pantallaPortal').style.display = '';
       mostrarPaso('canal');
     }
     window.cerrarCita = cerrarCita;
@@ -848,6 +872,7 @@
       document.getElementById('videollamadaModal').classList.remove('show');
       // Volver a una vista limpia: ocultar anuncio y regresar al canal
       document.getElementById('anuncioAtencion').style.display = 'none';
+      document.getElementById('pantallaPortal').style.display = 'none';
       document.getElementById('flujoCita').style.display = 'flex';
       mostrarPaso('canal');
     }
@@ -857,6 +882,8 @@
       const cont = document.getElementById('videollamadaContent');
       const modal = document.getElementById('videollamadaModal');
       // La página principal pasa a un anuncio limpio (sin ver los trámites detrás)
+      document.getElementById('bienvenidaModal').classList.remove('show');
+      document.getElementById('pantallaPortal').style.display = 'none';
       document.getElementById('flujoCita').style.display = 'none';
       document.getElementById('anuncioAtencion').style.display = 'flex';
       modal.classList.add('show');
@@ -937,9 +964,6 @@
       document.getElementById('bienvenidaModal').classList.add('show');
     }
     window.mostrarVistaVirtual = mostrarVistaVirtual;
-
-    // Esta versión inicia directamente en la página de canal (sin menú ni pop-up)
-    mostrarPaso('canal');
   })();
   </script>
 
