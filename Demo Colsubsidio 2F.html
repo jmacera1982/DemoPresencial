@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Colsubsidio · Agenda tu cita</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      /* Escala de azules Colsubsidio */
+      --numia-azul: #003087;        /* azul principal Colsubsidio */
+      --numia-azul-2: #1f56b0;      /* azul medio */
+      --numia-azul-dark: #001E5A;   /* azul profundo */
+      --numia-azul-soft: #e8eefc;   /* azul muy claro (fondos) */
+      --numia-amarillo: #FFD200;    /* amarillo Colsubsidio (acentos del logo) */
+      --numia-muted: #6b7280;
+      --numia-border: #dbe3f4;
+      --numia-bg: #f4f7fd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Hanken Grotesk', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--numia-bg);
+      color: #333;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Header (Colsubsidio) ===== */
+    .numia-header {
+      background: #ffffff;
+      border-bottom: 4px solid var(--numia-amarillo);
+    }
+    .brand-logo { height: 46px; width: auto; display: block; }
+
+    /* ===== Portal simplificado ===== */
+    .portal-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+    .portal-card {
+      width: 100%; max-width: 440px;
+      background: #fff; border-radius: 1.5rem;
+      box-shadow: 0 18px 50px rgba(0,48,135,0.14);
+      padding: 2.75rem 2rem 2.5rem; text-align: center;
+    }
+    .portal-icon {
+      width: 76px; height: 76px; margin: 0 auto 1.25rem; border-radius: 20px;
+      background: linear-gradient(135deg, #001E5A 0%, #003087 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 2.2rem;
+    }
+    .portal-title { font-weight: 800; color: var(--numia-azul); font-size: 1.55rem; margin-bottom: 0.35rem; }
+    .portal-sub { color: var(--numia-muted); font-size: 0.98rem; margin-bottom: 2rem; }
+    .portal-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      width: 100%; padding: 1.25rem 1.4rem; border-radius: 0.9rem;
+      font-weight: 700; font-size: 1.2rem; border: none; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .portal-btn + .portal-btn { margin-top: 1rem; }
+    .portal-btn-primary {
+      background: linear-gradient(135deg, #003087, #1f56b0); color: #fff;
+      box-shadow: 0 10px 25px rgba(0,48,135,0.25);
+    }
+    .portal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(0,48,135,0.35); }
+    .portal-btn-secondary { background: #fff; color: var(--numia-azul); border: 2px solid var(--numia-azul); }
+    .portal-btn-secondary:hover { background: #eef2fc; transform: translateY(-2px); }
+
+    /* ===== Modal genérico ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1050;
+      background: rgba(6,10,39,0.5); overflow-y: auto; padding: 3vh 1rem;
+    }
+    .modal-overlay.show { display: block; }
+    .modal-box {
+      background: #fff; border-radius: 1.25rem; width: 100%; max-width: 720px;
+      margin: 0 auto; padding: 2rem; position: relative;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: modalIn 0.28s ease-out;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(-16px) scale(.97); } to { opacity: 1; transform: none; } }
+    .modal-close {
+      position: absolute; right: 18px; top: 16px; font-size: 26px; line-height: 1;
+      cursor: pointer; color: var(--numia-muted); background: none; border: none;
+      width: 34px; height: 34px; border-radius: 50%; transition: all .2s;
+    }
+    .modal-close:hover { background: #f3f4f6; color: #374151; }
+    .titulo { text-align: center; color: var(--numia-azul); font-weight: 800; margin: .25rem 0 1.25rem; }
+
+    /* ===== Wizard de pasos ===== */
+    .wizard-steps { display: flex; justify-content: center; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .wizard-step {
+      display: flex; align-items: center; gap: .4rem; font-size: .82rem; font-weight: 600;
+      color: #9ca3af; padding: .3rem .7rem; border-radius: 20px; background: #f3f4f6;
+    }
+    .wizard-step.active { color: #fff; background: linear-gradient(135deg, #003087, #1f56b0); }
+    .wizard-step.done { color: var(--numia-azul); background: #e6ecf9; }
+    .wizard-step .step-num {
+      width: 20px; height: 20px; border-radius: 50%; display: inline-flex;
+      align-items: center; justify-content: center; font-size: .72rem; background: rgba(255,255,255,0.25);
+    }
+    .paso { display: none; }
+    .paso.active { display: block; }
+
+    /* ===== Cards de selección (trámite / sucursal) ===== */
+    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 10px; max-height: 340px; overflow-y: auto; padding-right: 2px; }
+    .opt-card {
+      background: #fff; border: 2px solid var(--numia-border); border-radius: 12px;
+      padding: 16px; cursor: pointer; transition: all .25s ease;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .opt-card:hover { border-color: var(--numia-azul); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,48,135,0.15); }
+    .opt-card.selected { border-color: var(--numia-azul); background: linear-gradient(135deg, #003087, #1f56b0); color: #fff; box-shadow: 0 8px 25px rgba(0,48,135,0.3); }
+    .opt-card .opt-icon { font-size: 1.5rem; color: var(--numia-azul); flex-shrink: 0; }
+    .opt-card.selected .opt-icon { color: #fff; }
+    .opt-name { font-weight: 700; font-size: .98rem; }
+    .opt-status { font-size: .8rem; color: var(--numia-muted); }
+    .opt-card.selected .opt-status { color: rgba(255,255,255,.9); }
+    .loading-card, .error-card, .info-card {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 18px; border-radius: 12px; text-align: center; font-size: .92rem;
+    }
+    .loading-card { color: var(--numia-muted); font-style: italic; }
+    .error-card { background: #fef2f2; border: 2px solid #fecaca; color: #dc2626; }
+    .info-card { background: #eff6ff; border: 2px solid #bfdbfe; color: #1d4ed8; }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .field-label { display: block; font-weight: 600; font-size: .9rem; color: #374151; margin-bottom: .5rem; }
+    .input-field {
+      width: 100%; padding: .75rem 1rem; border: 2px solid var(--numia-border);
+      border-radius: .6rem; background: #fff; color: #333; transition: all .2s; font-size: .95rem;
+      font-family: inherit;
+    }
+    .input-field:focus { border-color: var(--numia-azul); box-shadow: 0 0 0 3px rgba(0,48,135,.12); outline: none; }
+
+    /* ===== Horarios ===== */
+    .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px,1fr)); gap: .5rem; max-height: 240px; overflow-y: auto; }
+    .slot-btn {
+      border: 1px solid var(--numia-border); background: #fff; border-radius: 10px;
+      font-weight: 600; padding: .5rem .3rem; cursor: pointer; transition: all .2s;
+    }
+    .slot-btn:hover { background: #eef2fc; border-color: var(--numia-azul); }
+    .slot-btn.active { background: var(--numia-azul); color: #fff; border-color: var(--numia-azul); }
+
+    /* ===== Landing (virtual + presencial) ===== */
+    .landing-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:2.5rem 1rem; }
+    /* Contenedor del flujo de 5 pasos (página completa) */
+    .flow-wrap { flex:1; width:100%; align-self:flex-start; display:flex; align-items:flex-start; justify-content:center; padding:2rem 1rem 3rem; }
+    .flow-card {
+      width:100%; max-width:1060px; background:#fff; border-radius:1.35rem;
+      box-shadow:0 16px 44px rgba(0,48,135,.12); padding:2rem 2rem 2.25rem;
+      min-height:600px; display:flex; flex-direction:column;
+    }
+    .flow-card .landing-grid { max-width:none; }
+    /* El contenido de cada paso ocupa el mismo alto -> la barra y los márgenes no se mueven */
+    .flow-card .paso.active { flex:1; display:flex; flex-direction:column; }
+    .flow-card .wizard-nav { margin-top:auto; }
+    /* Anuncio limpio "Serás atendido en breve" */
+    .anuncio-wrap { flex:1; width:100%; display:flex; align-items:center; justify-content:center; padding:2.5rem 1rem; }
+    .anuncio-card { width:100%; max-width:520px; background:#fff; border-radius:1.5rem; box-shadow:0 18px 50px rgba(0,48,135,.14); padding:3rem 2rem; text-align:center; }
+    .anuncio-icon {
+      width:92px; height:92px; margin:0 auto 1.5rem; border-radius:24px;
+      background:linear-gradient(135deg,#003087,#1f56b0); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:2.8rem;
+    }
+    .anuncio-title { color:var(--numia-azul); font-weight:800; font-size:1.9rem; margin-bottom:.5rem; }
+    .anuncio-serv { color:var(--numia-muted); font-size:1.15rem; margin-bottom:1.5rem; }
+    .landing-grid { display:grid; grid-template-columns:1.35fr 1fr; gap:1.5rem; width:100%; max-width:1040px; }
+    .landing-group { border-radius:1.25rem; padding:1.75rem; box-shadow:0 12px 34px rgba(0,48,135,.10); }
+    .group-virtual { background:linear-gradient(180deg,#eef3fc 0%,#e2eaf9 100%); border:1px solid #d3ddf3; }
+    .group-side { background:linear-gradient(180deg,#f7f9fd 0%,#eef2fb 100%); border:1px solid #dde5f5; display:flex; flex-direction:column; justify-content:center; }
+    .group-head { display:flex; gap:.75rem; align-items:flex-start; margin-bottom:1.15rem; }
+    .group-head > i { font-size:2.2rem; color:var(--numia-azul); line-height:1; }
+    .group-title { font-weight:800; color:var(--numia-azul); font-size:1.45rem; }
+    .group-sub { color:var(--numia-muted); font-size:1rem; margin-top:.2rem; }
+    .side-actions { display:flex; flex-direction:column; gap:1rem; }
+    @media (max-width:800px){ .landing-grid { grid-template-columns:1fr; } }
+
+    /* ===== Matriz "Trámites sin salir de casa" ===== */
+    .virtual-intro { text-align:center; color:var(--numia-muted); font-size:.95rem; margin-bottom:1.1rem; }
+    .virtual-matrix { display:grid; grid-template-columns:repeat(2,1fr); gap:.85rem; margin-bottom:1.25rem; }
+    .virtual-item {
+      display:flex; align-items:center; gap:.85rem; padding:1.1rem 1.1rem;
+      background:var(--numia-azul-soft); border:1px solid var(--numia-border);
+      border-radius:.85rem; font-size:1.1rem; color:#243b6b; font-weight:700; line-height:1.25;
+    }
+    .virtual-check {
+      flex-shrink:0; width:24px; height:24px; border-radius:50%;
+      background:linear-gradient(135deg,#10b981,#059669); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:.9rem;
+    }
+    .virtual-item.clickable { cursor:pointer; transition:all .2s ease; background:#fff; }
+    .virtual-item.clickable:hover { border-color:var(--numia-azul); transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,48,135,.16); }
+    .virtual-ic {
+      flex-shrink:0; width:44px; height:44px; border-radius:12px;
+      background:linear-gradient(135deg,#003087,#1f56b0); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:1.35rem;
+    }
+    .virtual-actions { display:flex; flex-direction:column; align-items:center; gap:.85rem; margin-top:.5rem; }
+    .btn-canal-digital {
+      background:none; border:none; color:var(--numia-azul); font-weight:700;
+      font-size:.9rem; cursor:pointer; text-decoration:underline; padding:.25rem .5rem;
+      display:inline-flex; align-items:center; gap:.4rem;
+    }
+    .btn-canal-digital:hover { color:var(--numia-azul-dark); }
+    .btn-continuar-visita {
+      width:100%; max-width:420px; display:flex; align-items:center; justify-content:center; gap:.5rem;
+      padding:1rem 1.25rem; border:none; border-radius:.9rem; cursor:pointer;
+      font-weight:700; font-size:1.05rem; color:#fff;
+      background:linear-gradient(135deg,#003087,#1f56b0);
+      box-shadow:0 10px 25px rgba(0,48,135,.25); transition:all .2s ease;
+    }
+    .btn-continuar-visita:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(0,48,135,.35); }
+    @media (max-width:600px){ .virtual-matrix { grid-template-columns:1fr; } }
+
+    /* ===== Sugerencia de documentos ===== */
+    .docs-panel { background: #f8f9ff; border: 2px solid #e8eaff; border-radius: 1rem; padding: 1.75rem; margin: .5rem 0 1.25rem; }
+    .docs-panel h4 { color: var(--numia-azul); font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+    .docs-list { list-style: none; padding: 0; margin: 0; }
+    .docs-list li { display: flex; align-items: flex-start; gap: .7rem; padding: .7rem 0; border-bottom: 1px dashed #d9def5; color: #374151; font-size: .97rem; }
+    .docs-list li:last-child { border-bottom: none; }
+    .docs-list li i { color: var(--numia-azul); font-size: 1.2rem; margin-top: 1px; }
+    .docs-note { font-size: .85rem; color: var(--numia-muted); margin-top: .9rem; font-style: italic; }
+
+    /* ===== Navegación wizard ===== */
+    .wizard-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.25rem; }
+    .btn-nav {
+      display: inline-flex; align-items: center; gap: .4rem; padding: .75rem 1.4rem;
+      border-radius: .7rem; font-weight: 700; font-size: .95rem; cursor: pointer; border: none; transition: all .2s;
+      font-family: inherit;
+    }
+    .btn-nav-primary { background: linear-gradient(135deg, #003087, #1f56b0); color: #fff; }
+    .btn-nav-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,48,135,.3); }
+    .btn-nav-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-nav-secondary { background: #fff; color: #374151; border: 1px solid var(--numia-border); }
+    .btn-nav-secondary:hover { background: #f9fafb; }
+
+    /* ===== Confirmación ===== */
+    .confirm-panel { text-align: center; padding: 1.25rem 1rem .5rem; }
+    .confirm-icon {
+      width: 80px; height: 80px; margin: 0 auto 1.25rem; border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 2.4rem;
+    }
+    .confirm-icon.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .info-grid { max-width: 380px; margin: 1.25rem auto; }
+    .info-row {
+      display: flex; justify-content: space-between; align-items: center; padding: .55rem .85rem;
+      background: linear-gradient(135deg, #f8f9ff, #e6ecf9); border: 1px solid #e0e7ff; border-radius: 8px; margin-bottom: .5rem;
+    }
+    .info-label { font-weight: 600; color: #374151; font-size: .85rem; }
+    .info-value { font-weight: 700; color: var(--numia-azul); font-size: .92rem; }
+
+    /* ===== Popup de bienvenida ===== */
+    .bienvenida-icon {
+      width:84px; height:84px; margin:.25rem auto 1.1rem; border-radius:22px;
+      background:linear-gradient(135deg,#003087,#1f56b0); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:2.4rem;
+    }
+    .bienvenida-title { color:var(--numia-azul); font-weight:800; font-size:1.6rem; line-height:1.25; margin-bottom:.75rem; }
+    .bienvenida-text { color:#374151; font-size:1.15rem; line-height:1.5; }
+
+    /* ===== Videollamada ===== */
+    #videollamadaModal .modal-box { max-width:860px; }
+    .vc-panel { text-align:center; padding:.25rem; }
+    .vc-title {
+      text-align:center; color:var(--numia-azul); font-weight:800;
+      font-size:1.35rem; margin:.25rem 0 1.1rem;
+    }
+    .vc-title span { color:var(--numia-azul-dark); }
+    .vc-spinner, .vc-err {
+      width:78px; height:78px; margin:0 auto 1rem; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; color:#fff; font-size:2.2rem;
+    }
+    .vc-spinner { background:linear-gradient(135deg,#003087,#1f56b0); }
+    .vc-err { background:linear-gradient(135deg,#ef4444,#dc2626); }
+    .vc-frame-wrap {
+      width:100%; max-width:760px; height:520px; margin:0 auto;
+      border-radius:16px; overflow:hidden; border:2px solid var(--numia-border);
+      box-shadow:0 12px 30px rgba(0,48,135,.18);
+    }
+    .vc-frame { width:100%; height:100%; border:none; background:#f4f7fd; display:block; }
+    .vc-waiting {
+      display:flex; align-items:center; gap:.8rem; text-align:left; max-width:600px; margin:0 auto;
+      background:var(--numia-azul-soft); border:1px solid var(--numia-border);
+      border-radius:.9rem; padding:1rem 1.2rem; color:#243b6b;
+    }
+    .vc-waiting i { font-size:1.9rem; color:var(--numia-azul); }
+
+    /* ===== Chatbot Numia (lanzador + panel; el widget se monta aunque inicie oculto) ===== */
+    .chat-launcher {
+      position:fixed; bottom:24px; right:24px; z-index:9990;
+      width:68px; height:68px; border-radius:50%;
+      background:linear-gradient(135deg,#003087,#1f56b0); color:#fff; border:none;
+      font-size:2rem; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; box-shadow:0 10px 28px rgba(0,48,135,.45); transition:.18s;
+    }
+    .chat-launcher:hover { transform:translateY(-3px) scale(1.05); box-shadow:0 14px 34px rgba(0,48,135,.5); }
+    .chat-panel {
+      position:fixed; bottom:104px; right:24px; z-index:9991;
+      width:380px; max-width:calc(100vw - 32px);
+      height:560px; max-height:calc(100vh - 150px);
+      background:#fff; border-radius:16px; overflow:hidden;
+      box-shadow:0 18px 48px rgba(0,0,0,.3); border:1px solid var(--numia-border);
+      /* Oculto sin quitar tamaño, para que el widget se inicialice bien */
+      visibility:hidden; opacity:0; transform:translateY(12px); pointer-events:none;
+      transition:opacity .2s ease, transform .2s ease, visibility .2s;
+    }
+    .chat-panel.show { visibility:visible; opacity:1; transform:none; pointer-events:auto; }
+    .chat-panel .chat-head {
+      background:linear-gradient(135deg,#003087,#1f56b0); color:#fff;
+      padding:.8rem 1rem; display:flex; align-items:center; justify-content:space-between;
+      font-weight:700; font-size:1.05rem;
+    }
+    .chat-panel .chat-head button { background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1; }
+    .chat-panel .chat-body { height:calc(100% - 48px); }
+    journey-builder-chat { display:block; width:100%; height:100%; }
+
+    @media (max-width: 600px) {
+      .modal-box { padding: 1.5rem 1.1rem; }
+      .wizard-step { font-size: .74rem; padding: .25rem .5rem; }
+      .vc-frame-wrap { height:320px; }
+      .virtual-matrix { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="numia-header shadow-sm">
+    <div class="container d-flex align-items-center py-3" style="gap:.7rem;">
+      <img id="brandLogo" class="brand-logo" src="data:image/jpeg;base64,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" alt="Colsubsidio" />
+    </div>
+  </header>
+
+  <!-- LANDING -->
+  <main class="landing-wrap">
+
+    <!-- FLUJO DE 5 PASOS (página completa, sin pop-up) -->
+    <div id="flujoCita" class="flow-wrap" style="display:flex;">
+      <div class="flow-card">
+
+        <!-- Barra de 5 pasos (siempre visible) -->
+        <div class="wizard-steps">
+          <div class="wizard-step" id="wsCanal"><span class="step-num">1</span> Canal de atención</div>
+          <div class="wizard-step" id="wsTramite"><span class="step-num">2</span> Trámite</div>
+          <div class="wizard-step" id="wsDocumentos"><span class="step-num">3</span> Documentos</div>
+          <div class="wizard-step" id="wsAgenda"><span class="step-num">4</span> Agenda</div>
+          <div class="wizard-step" id="wsConfirmacion"><span class="step-num">5</span> Confirmación</div>
+        </div>
+
+      <!-- PASO 1: Canal de atención (virtual + presencial) -->
+      <div id="pasoCanal" class="paso active">
+        <div class="landing-grid">
+
+      <!-- Grupo: trámites virtuales (sombreado) -->
+      <section class="landing-group group-virtual">
+        <div class="group-head">
+          <i class="bi bi-house-check"></i>
+          <div>
+            <div class="group-title">¡Trámites sin salir de casa!</div>
+            <div class="group-sub">Haz clic en un trámite y te atendemos por videollamada ahora mismo.</div>
+          </div>
+        </div>
+        <div class="virtual-matrix">
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Certificados y constancias')"><span class="virtual-ic"><i class="bi bi-file-earmark-text"></i></span> Certificados y constancias</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Consulta de afiliación')"><span class="virtual-ic"><i class="bi bi-person-badge"></i></span> Consulta de afiliación</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Pago de aportes')"><span class="virtual-ic"><i class="bi bi-cash-coin"></i></span> Pago de aportes</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Actualización de datos')"><span class="virtual-ic"><i class="bi bi-pencil-square"></i></span> Actualización de datos</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Solicitud de subsidios')"><span class="virtual-ic"><i class="bi bi-cash-stack"></i></span> Solicitud de subsidios</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Consulta de cesantías')"><span class="virtual-ic"><i class="bi bi-piggy-bank"></i></span> Consulta de cesantías</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Descarga de facturas')"><span class="virtual-ic"><i class="bi bi-receipt"></i></span> Descarga de facturas</div>
+          <div class="virtual-item clickable" onclick="iniciarVideollamada('Recreación y turismo')"><span class="virtual-ic"><i class="bi bi-tree"></i></span> Recreación y turismo</div>
+        </div>
+      </section>
+
+      <!-- Grupo: presencial / consultar (sombreado) -->
+      <section class="landing-group group-side">
+        <div class="group-head">
+          <i class="bi bi-geo-alt"></i>
+          <div>
+            <div class="group-title">¿Prefieres ir a la sede?</div>
+            <div class="group-sub">También puedes agendar tu atención presencial.</div>
+          </div>
+        </div>
+        <div class="side-actions">
+          <button class="portal-btn portal-btn-primary" onclick="iniciarSolicitudCita()">
+            <i class="bi bi-calendar-check"></i> Seguir presencial de todas formas
+          </button>
+          <button class="portal-btn portal-btn-secondary" onclick="abrirConsultarCita()">
+            <i class="bi bi-search"></i> Consultar cita
+          </button>
+        </div>
+      </section>
+
+        </div><!-- /landing-grid -->
+      </div><!-- /pasoCanal -->
+
+      <!-- PASO 2: Trámite -->
+      <div id="pasoTramites" class="paso">
+        <h3 class="titulo">Selecciona el trámite</h3>
+        <div id="tramitesCards" class="cards-grid">
+          <div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Cargando trámites...</span></div>
+        </div>
+        <div class="wizard-nav">
+          <button class="btn-nav btn-nav-secondary" onclick="mostrarPaso('canal')"><i class="bi bi-arrow-left"></i> Atrás</button>
+        </div>
+      </div>
+
+      <!-- PASO 3: Documentos -->
+      <div id="pasoDocumentos" class="paso">
+        <h3 class="titulo">Documentos a llevar</h3>
+        <div class="docs-panel">
+          <h4><i class="bi bi-clipboard-check"></i> Recuerda traer contigo</h4>
+          <ul class="docs-list">
+            <li><i class="bi bi-person-badge"></i> <span>Cédula de ciudadanía (documento de identidad)</span></li>
+            <li><i class="bi bi-card-heading"></i> <span>Carnet de afiliación</span></li>
+            <li><i class="bi bi-cash-coin"></i> <span>Comprobante de pago del trámite <em>(si aplica)</em></span></li>
+          </ul>
+          <p class="docs-note">Presenta estos documentos el día de tu cita para agilizar tu atención.</p>
+        </div>
+        <div class="wizard-nav">
+          <button class="btn-nav btn-nav-secondary" onclick="mostrarPaso('tramites')"><i class="bi bi-arrow-left"></i> Atrás</button>
+          <button class="btn-nav btn-nav-primary" onclick="mostrarPaso('agenda')">Continuar <i class="bi bi-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- PASO 4: Agenda -->
+      <div id="pasoAgenda" class="paso">
+        <h3 class="titulo">Selecciona fecha y hora</h3>
+
+        <div class="mb-3">
+          <label class="field-label">Sucursal</label>
+          <div id="sucursalCards" class="cards-grid" style="max-height:200px;">
+            <div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Selecciona un trámite primero</span></div>
+          </div>
+        </div>
+
+        <div class="mb-3" id="bloqueFecha" style="display:none;">
+          <label class="field-label">Fecha</label>
+          <input type="date" id="citaFecha" class="input-field" />
+        </div>
+
+        <div class="mb-3" id="bloqueHorarios" style="display:none;">
+          <label class="field-label">Horarios disponibles</label>
+          <div id="slots" class="slots-grid"></div>
+          <div id="slotsMsg"></div>
+        </div>
+
+        <div id="bloqueDatos" style="display:none;">
+          <hr>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="field-label">Nombre</label><input id="cliNombre" class="input-field" placeholder="Nombre"></div>
+            <div class="col-md-6"><label class="field-label">Apellido</label><input id="cliApellido" class="input-field" placeholder="Apellido"></div>
+            <div class="col-md-6"><label class="field-label">Documento (RUT)</label><input id="cliRut" class="input-field" placeholder="12.345.678-9"></div>
+            <div class="col-md-6"><label class="field-label">Email</label><input id="cliMail" type="email" class="input-field" placeholder="correo@dominio.com"></div>
+          </div>
+        </div>
+
+        <div class="wizard-nav">
+          <button class="btn-nav btn-nav-secondary" onclick="mostrarPaso('documentos')"><i class="bi bi-arrow-left"></i> Atrás</button>
+          <button class="btn-nav btn-nav-primary" id="btnConfirmar" onclick="confirmarCita()" disabled>Confirmar cita <i class="bi bi-check-lg"></i></button>
+        </div>
+      </div>
+
+      <!-- PASO 5: Confirmación -->
+      <div id="pasoConfirmacion" class="paso">
+        <div id="confirmContent"></div>
+      </div>
+
+      </div><!-- /flow-card -->
+    </div><!-- /flujoCita -->
+
+    <!-- ANUNCIO limpio antes/durante la videollamada -->
+    <div id="anuncioAtencion" class="anuncio-wrap" style="display:none;">
+      <div class="anuncio-card">
+        <div class="anuncio-icon"><i class="bi bi-camera-video-fill"></i></div>
+        <h2 class="anuncio-title">Serás atendido en breve</h2>
+        <div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Conectando con un asesor…</span></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== MODAL CONSULTAR CITA ===== -->
+  <div id="consultarModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:520px;">
+      <button class="modal-close" onclick="document.getElementById('consultarModal').classList.remove('show')">&times;</button>
+      <h3 class="titulo">Consultar cita</h3>
+      <label class="field-label">Número de identificación</label>
+      <input type="text" id="consultarDni" class="input-field" placeholder="Ingresa tu documento" />
+      <button class="portal-btn portal-btn-primary" style="margin-top:1.25rem;" onclick="buscarCita()">
+        <i class="bi bi-search"></i> Buscar mi cita
+      </button>
+      <div id="consultarResultado" style="margin-top:1.25rem;"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL VIDEOLLAMADA ===== -->
+  <div id="videollamadaModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:640px;">
+      <button class="modal-close" onclick="cerrarVideollamada()">&times;</button>
+      <div id="videollamadaContent"></div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    /* ===== Config Debmedia (compañía configurada en este HTML) ===== */
+    const API_TOKEN  = 's9ZmCOGzuRz0OlxtZyJYIvnG7WQVBtnLlNFrHD2U';
+    const SVC_LIST   = 'https://citas2.debmedia.com/api/v2/reducedSchedules';
+    const AVAIL_BASE = 'https://citas2.debmedia.com/api/v2/schedules';
+    const APPT_URL   = 'https://citas2.debmedia.com/api/v2/appointments';
+
+    /* ===== Config Debmedia videollamada (turnos / enqueue) ===== */
+    const VC_TOKEN   = 'm7NCbNDBShZOV83fu6RGJV1DbkhSkWI6JSTxmT2e';
+    const VC_QUEUE   = '6183';
+    const VC_BRANCH  = '11';
+    const VC_ENQUEUE = `https://filavirtual2.debmedia.com/api/v1/queue/${VC_QUEUE}/branch/${VC_BRANCH}/enqueue`;
+
+    const pad = n => String(n).padStart(2,'0');
+
+    /* Icono relevante segun el nombre del tramite (con fallback sin repeticiones) */
+    const ICON_KEYWORDS = [
+      { re:/afili/i,                         icon:'bi-person-plus' },
+      { re:/subsid|cuota monet/i,            icon:'bi-cash-stack' },
+      { re:/cesant/i,                        icon:'bi-piggy-bank' },
+      { re:/cr[eé]dit|pr[eé]stam/i,          icon:'bi-bank2' },
+      { re:/tarjeta/i,                       icon:'bi-credit-card-2-front' },
+      { re:/vivienda|hipotec|casa|hogar/i,   icon:'bi-house-heart' },
+      { re:/salud|m[eé]dic|eps|cl[ií]nic|cita m/i, icon:'bi-heart-pulse' },
+      { re:/odont|dental/i,                  icon:'bi-emoji-smile' },
+      { re:/droguer|farmac|medicament/i,     icon:'bi-capsule' },
+      { re:/educa|colegio|curso|capacit/i,   icon:'bi-mortarboard' },
+      { re:/recrea|turism|viaj|hotel|piscina/i, icon:'bi-tree' },
+      { re:/empleo|trabajo|hoja de vida|laboral/i, icon:'bi-briefcase' },
+      { re:/adulto mayor|pension/i,          icon:'bi-person-wheelchair' },
+      { re:/mascota|veterin/i,               icon:'bi-heart' },
+      { re:/supermerc|mercad|super/i,        icon:'bi-cart' },
+      { re:/dep[oó]sit/i,                    icon:'bi-wallet2' },
+      { re:/pago|factur|recaud/i,            icon:'bi-receipt' },
+      { re:/certific|constan|documento/i,    icon:'bi-file-earmark-text' },
+      { re:/cuenta|apertura/i,               icon:'bi-journal-check' },
+      { re:/general|atenci[oó]n|asesor|informac|consulta/i, icon:'bi-headset' }
+    ];
+    const ICON_FALLBACK = ['bi-clipboard2-check','bi-calendar2-week','bi-people','bi-building','bi-ui-checks','bi-bookmark-star','bi-diagram-3','bi-shield-check'];
+    function iconoParaTramite(name, idx){
+      const n = String(name || '');
+      for(const k of ICON_KEYWORDS){ if(k.re.test(n)) return k.icon; }
+      return ICON_FALLBACK[idx % ICON_FALLBACK.length];
+    }
+
+    let schedules = [];          // servicios/agendas de la compañía
+    let sel = { scheduleId:null, scheduleName:'', branchId:null, branchName:'', slot:null };
+
+    /* ---------- Navegación del wizard ---------- */
+    const PASOS = ['canal','tramites','documentos','agenda','confirmacion'];
+    const MAP = {
+      canal:        { div:'pasoCanal',        ws:'wsCanal' },
+      tramites:     { div:'pasoTramites',     ws:'wsTramite' },
+      documentos:   { div:'pasoDocumentos',   ws:'wsDocumentos' },
+      agenda:       { div:'pasoAgenda',       ws:'wsAgenda' },
+      confirmacion: { div:'pasoConfirmacion', ws:'wsConfirmacion' }
+    };
+    function mostrarPaso(paso){
+      PASOS.forEach(p => document.getElementById(MAP[p].div).classList.toggle('active', p===paso));
+      const idx = PASOS.indexOf(paso);
+      PASOS.forEach((p,i)=>{
+        const el = document.getElementById(MAP[p].ws);
+        el.classList.remove('active','done');
+        if(i<idx) el.classList.add('done');
+        else if(i===idx) el.classList.add('active');
+      });
+    }
+    window.mostrarPaso = mostrarPaso;
+
+    /* ---------- Abrir / cerrar ---------- */
+    function iniciarSolicitudCita(){
+      sel = { scheduleId:null, scheduleName:'', branchId:null, branchName:'', slot:null };
+      document.getElementById('sucursalCards').innerHTML = '<div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Selecciona un trámite primero</span></div>';
+      document.getElementById('bloqueFecha').style.display = 'none';
+      document.getElementById('bloqueHorarios').style.display = 'none';
+      document.getElementById('bloqueDatos').style.display = 'none';
+      document.getElementById('citaFecha').value = '';
+      document.getElementById('slots').innerHTML = '';
+      document.getElementById('slotsMsg').innerHTML = '';
+      document.getElementById('cliNombre').value = '';
+      document.getElementById('cliApellido').value = '';
+      document.getElementById('cliRut').value = '';
+      document.getElementById('cliMail').value = '';
+      document.getElementById('btnConfirmar').disabled = true;
+      mostrarPaso('tramites');
+      cargarTramites();
+    }
+    window.iniciarSolicitudCita = iniciarSolicitudCita;
+    // Finalizar / volver al inicio (canal)
+    function cerrarCita(){
+      document.getElementById('flujoCita').style.display = 'flex';
+      mostrarPaso('canal');
+    }
+    window.cerrarCita = cerrarCita;
+
+    /* ---------- Paso 1: cargar trámites (servicios reales) ---------- */
+    async function cargarTramites(){
+      const cont = document.getElementById('tramitesCards');
+      cont.innerHTML = '<div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Cargando trámites...</span></div>';
+      try {
+        const res = await fetch(SVC_LIST, { headers: { 'x-api-token': API_TOKEN } });
+        if(!res.ok) throw new Error('No se pudieron cargar los trámites ('+res.status+')');
+        schedules = await res.json();
+        if(!Array.isArray(schedules) || schedules.length===0){
+          cont.innerHTML = '<div class="info-card"><i class="bi bi-info-circle"></i> No hay trámites disponibles.</div>';
+          return;
+        }
+        cont.innerHTML = '';
+        schedules.forEach((s, i) => {
+          const card = document.createElement('div');
+          card.className = 'opt-card';
+          card.dataset.id = s.id;
+          card.innerHTML = `
+            <i class="bi ${iconoParaTramite(s.name, i)} opt-icon"></i>
+            <div>
+              <div class="opt-name">${s.name}</div>
+              <div class="opt-status">Disponible</div>
+            </div>`;
+          card.addEventListener('click', ()=> seleccionarTramite(s, card));
+          cont.appendChild(card);
+        });
+      } catch(err){
+        cont.innerHTML = '<div class="error-card"><i class="bi bi-exclamation-triangle"></i> '+err.message+'</div>';
+      }
+    }
+
+    function seleccionarTramite(s, card){
+      document.querySelectorAll('#tramitesCards .opt-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      sel.scheduleId = s.id;
+      sel.scheduleName = s.name;
+      sel.branchId = null; sel.branchName='';
+      // Preparar sucursales para el paso agenda
+      renderSucursales(s);
+      // Avanzar al paso de documentos
+      mostrarPaso('documentos');
+    }
+
+    /* ---------- Paso 3: sucursales del trámite ---------- */
+    function renderSucursales(s){
+      const cont = document.getElementById('sucursalCards');
+      document.getElementById('bloqueFecha').style.display = 'none';
+      document.getElementById('bloqueHorarios').style.display = 'none';
+      document.getElementById('bloqueDatos').style.display = 'none';
+      document.getElementById('btnConfirmar').disabled = true;
+      const branches = Array.isArray(s.branches) ? s.branches : [];
+      if(branches.length===0){
+        cont.innerHTML = '<div class="error-card"><i class="bi bi-exclamation-triangle"></i> Este trámite no tiene sucursales asociadas.</div>';
+        return;
+      }
+      cont.innerHTML = '';
+      const seen = new Set();
+      branches.forEach(b => {
+        if(seen.has(b.id)) return; seen.add(b.id);
+        const card = document.createElement('div');
+        card.className = 'opt-card';
+        card.dataset.id = b.id;
+        card.innerHTML = `
+          <i class="bi bi-building opt-icon"></i>
+          <div>
+            <div class="opt-name">${b.name}</div>
+            <div class="opt-status">Disponible</div>
+          </div>`;
+        card.addEventListener('click', ()=> seleccionarSucursal(b, card));
+        cont.appendChild(card);
+      });
+    }
+
+    function seleccionarSucursal(b, card){
+      document.querySelectorAll('#sucursalCards .opt-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      sel.branchId = b.id;
+      sel.branchName = b.name;
+      sel.slot = null;
+      document.getElementById('btnConfirmar').disabled = true;
+      document.getElementById('slots').innerHTML = '';
+      document.getElementById('slotsMsg').innerHTML = '';
+      document.getElementById('bloqueDatos').style.display = 'none';
+      // Habilitar fecha
+      const fecha = document.getElementById('citaFecha');
+      const today = new Date();
+      fecha.min = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+      fecha.value = '';
+      document.getElementById('bloqueFecha').style.display = 'block';
+      document.getElementById('bloqueHorarios').style.display = 'none';
+    }
+
+    document.getElementById('citaFecha').addEventListener('change', cargarHorarios);
+
+    async function cargarHorarios(){
+      const dateStr = document.getElementById('citaFecha').value;
+      const slotsWrap = document.getElementById('slots');
+      const msg = document.getElementById('slotsMsg');
+      sel.slot = null;
+      document.getElementById('btnConfirmar').disabled = true;
+      document.getElementById('bloqueDatos').style.display = 'none';
+      slotsWrap.innerHTML = ''; msg.innerHTML = '';
+      if(!sel.scheduleId || !sel.branchId || !dateStr) return;
+      document.getElementById('bloqueHorarios').style.display = 'block';
+      msg.innerHTML = '<div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Consultando disponibilidad...</span></div>';
+      try {
+        const url = `${AVAIL_BASE}/${encodeURIComponent(sel.scheduleId)}/branch/${encodeURIComponent(sel.branchId)}/availability?strDate=${encodeURIComponent(dateStr)}`;
+        const res = await fetch(url, { headers: { 'x-api-token': API_TOKEN } });
+        if(!res.ok) throw new Error('No se pudo obtener disponibilidad ('+res.status+')');
+        const data = await res.json();
+        const slots = Array.isArray(data) ? data : (Array.isArray(data.slots) ? data.slots : []);
+        msg.innerHTML = '';
+        if(slots.length===0){
+          msg.innerHTML = '<div class="info-card"><i class="bi bi-info-circle"></i> No hay horarios disponibles para esta fecha.</div>';
+          return;
+        }
+        slots.forEach(slot => {
+          const hora = slot.zonedStartDate.substring(11,16);
+          const btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'slot-btn'; btn.textContent = hora;
+          btn.addEventListener('click', ()=>{
+            slotsWrap.querySelectorAll('.slot-btn').forEach(x=>x.classList.remove('active'));
+            btn.classList.add('active');
+            sel.slot = { startAt: slot.zonedStartDate, defaultDuration: (slot.defaultDuration||0) };
+            document.getElementById('bloqueDatos').style.display = 'block';
+            document.getElementById('btnConfirmar').disabled = false;
+          });
+          slotsWrap.appendChild(btn);
+        });
+      } catch(err){
+        msg.innerHTML = '<div class="error-card"><i class="bi bi-exclamation-triangle"></i> '+err.message+'</div>';
+      }
+    }
+
+    /* ---------- endAt con el mismo offset que startAt ---------- */
+    function minutesOffsetFromSuffix(suffix){
+      const m = suffix.match(/^([+-])(\d{2})(\d{2})$/);
+      if(!m) return 0;
+      const sign = m[1]==='-' ? -1 : 1;
+      return sign * (parseInt(m[2],10)*60 + parseInt(m[3],10));
+    }
+    function buildEndAtLikeStart(startAtStr, addMinutes){
+      const offsetMatch = startAtStr.match(/([+-]\d{4}|Z)$/);
+      const offsetSuffix = offsetMatch ? offsetMatch[1] : 'Z';
+      const offsetMin = offsetSuffix==='Z' ? 0 : minutesOffsetFromSuffix(offsetSuffix);
+      const msStart = new Date(startAtStr).getTime();
+      const msEnd = msStart + (addMinutes*60000);
+      const d = new Date(msEnd + offsetMin*60000);
+      const Y=d.getUTCFullYear(), M=d.getUTCMonth()+1, D=d.getUTCDate(), H=d.getUTCHours(), m=d.getUTCMinutes(), S=d.getUTCSeconds();
+      return `${Y}-${pad(M)}-${pad(D)}T${pad(H)}:${pad(m)}:${pad(S)}${offsetSuffix}`;
+    }
+
+    /* ---------- Paso 4: confirmar (POST a Debmedia) ---------- */
+    async function confirmarCita(){
+      const nombre = document.getElementById('cliNombre').value.trim();
+      const apellido = document.getElementById('cliApellido').value.trim();
+      const rut = document.getElementById('cliRut').value.trim();
+      const mail = document.getElementById('cliMail').value.trim();
+      if(!sel.slot){ alert('Selecciona un horario primero.'); return; }
+      if(!nombre || !apellido || !rut){ alert('Completa Nombre, Apellido y Documento.'); return; }
+
+      const btn = document.getElementById('btnConfirmar');
+      btn.disabled = true; const old = btn.innerHTML; btn.innerHTML = 'Confirmando...';
+
+      const startAt = sel.slot.startAt;
+      const endAt = buildEndAtLikeStart(startAt, sel.slot.defaultDuration || 0);
+      const body = {
+        branch: { id: Number(sel.branchId) },
+        schedule: { id: Number(sel.scheduleId) },
+        startAt, endAt,
+        customer: { firstName: nombre, lastName: apellido, dni: String(rut), email: mail || undefined },
+        reason: 'Solicitud de Cita'
+      };
+
+      try {
+        const res = await fetch(APPT_URL, {
+          method: 'POST',
+          headers: { 'x-api-token': API_TOKEN, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const out = await res.json().catch(()=> ({}));
+        if(!res.ok) throw new Error(out?.message || 'Error al crear la cita ('+res.status+')');
+        const hora = startAt.substring(11,16);
+        const fecha = document.getElementById('citaFecha').value;
+        document.getElementById('confirmContent').innerHTML = `
+          <div class="confirm-panel">
+            <div class="confirm-icon"><i class="bi bi-check-lg"></i></div>
+            <h3 class="titulo" style="text-transform:none;">¡Tu cita fue agendada!</h3>
+            <p style="color:#6b7280;">Hemos confirmado tu cita correctamente.</p>
+            <div class="info-grid">
+              <div class="info-row"><span class="info-label">N° de cita</span><span class="info-value">${out.id || '(recibido)'}</span></div>
+              <div class="info-row"><span class="info-label">Trámite</span><span class="info-value">${sel.scheduleName}</span></div>
+              <div class="info-row"><span class="info-label">Sucursal</span><span class="info-value">${sel.branchName}</span></div>
+              <div class="info-row"><span class="info-label">Fecha</span><span class="info-value">${fecha} ${hora}</span></div>
+            </div>
+            <button class="portal-btn portal-btn-primary" style="max-width:320px;margin:.5rem auto 0;" onclick="cerrarCita()">
+              <i class="bi bi-house"></i> Finalizar
+            </button>
+          </div>`;
+        mostrarPaso('confirmacion');
+      } catch(err){
+        document.getElementById('confirmContent').innerHTML = `
+          <div class="confirm-panel">
+            <div class="confirm-icon error"><i class="bi bi-x-lg"></i></div>
+            <h3 class="titulo" style="text-transform:none;">No pudimos agendar tu cita</h3>
+            <p style="color:#6b7280;">${err.message}</p>
+            <button class="btn-nav btn-nav-secondary" style="margin:.5rem auto 0;" onclick="mostrarPaso('agenda')">
+              <i class="bi bi-arrow-left"></i> Volver a intentar
+            </button>
+          </div>`;
+        mostrarPaso('confirmacion');
+      } finally {
+        btn.disabled = false; btn.innerHTML = old;
+      }
+    }
+    window.confirmarCita = confirmarCita;
+
+    /* ---------- Consultar cita (demo) ---------- */
+    function abrirConsultarCita(){
+      document.getElementById('consultarResultado').innerHTML = '';
+      document.getElementById('consultarDni').value = '';
+      document.getElementById('consultarModal').classList.add('show');
+    }
+    window.abrirConsultarCita = abrirConsultarCita;
+    function buscarCita(){
+      const dni = document.getElementById('consultarDni').value.trim();
+      const cont = document.getElementById('consultarResultado');
+      if(!dni){ cont.innerHTML = '<div class="error-card"><i class="bi bi-exclamation-triangle"></i> Ingresa tu número de identificación.</div>'; return; }
+      cont.innerHTML = '<div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Buscando tus citas...</span></div>';
+      setTimeout(()=>{
+        cont.innerHTML = `
+          <div class="info-grid" style="max-width:none;">
+            <div class="info-row"><span class="info-label">Documento</span><span class="info-value">${dni}</span></div>
+            <div class="info-row"><span class="info-label">Estado</span><span class="info-value" style="color:#059669;">Confirmada</span></div>
+          </div>
+          <p style="color:#6b7280;font-size:.88rem;margin-top:.75rem;text-align:center;">Presenta tu documento el día de la cita.</p>`;
+      }, 700);
+    }
+    window.buscarCita = buscarCita;
+
+    /* ===== Videollamada (enqueue a Debmedia) ===== */
+    function cerrarVideollamada(){
+      document.getElementById('videollamadaModal').classList.remove('show');
+      // Volver a una vista limpia: ocultar anuncio y regresar al canal
+      document.getElementById('anuncioAtencion').style.display = 'none';
+      document.getElementById('flujoCita').style.display = 'flex';
+      mostrarPaso('canal');
+    }
+    window.cerrarVideollamada = cerrarVideollamada;
+
+    async function iniciarVideollamada(servicio){
+      const cont = document.getElementById('videollamadaContent');
+      const modal = document.getElementById('videollamadaModal');
+      // La página principal pasa a un anuncio limpio (sin ver los trámites detrás)
+      document.getElementById('flujoCita').style.display = 'none';
+      document.getElementById('anuncioAtencion').style.display = 'flex';
+      modal.classList.add('show');
+      cont.innerHTML = `
+        <div class="vc-panel">
+          <div class="vc-spinner"><i class="bi bi-camera-video"></i></div>
+          <h3 class="vc-title">Te atenderemos para el trámite <span>${servicio}</span></h3>
+          <div class="loading-card"><i class="bi bi-arrow-clockwise spin"></i><span>Generando tu videollamada…</span></div>
+        </div>`;
+
+      const body = {
+        firstName: "Nicolás",
+        lastName: "Zafra",
+        dni: "1032450987",
+        email: "nicolas.zafra@correo.com",
+        phone: "3001234567",
+        extraFields: [ { showable: [ { in: "workstation", format: "both" } ], Detalle: "El cliente solicita ser atendido para: " + servicio } ],
+        customerExtraFields: [ { showable: [ { in: "workstation", format: "both" } ], Detalle: "El cliente solicita ser atendido para: " + servicio } ]
+      };
+
+      try {
+        const res = await fetch(VC_ENQUEUE, {
+          method: 'POST',
+          headers: { 'x-api-token': VC_TOKEN, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const out = await res.json().catch(()=> ({}));
+        if(!res.ok) throw new Error(out?.message || ('Error al generar la videollamada ('+res.status+')'));
+
+        // Debmedia devuelve la URL de la videollamada del cliente en videoCallUrl
+        let vcUrl = out.videoCallUrl || out.videocallUrl || out.videoUrl || (out.turn && out.turn.videoCallUrl) || '';
+        if(vcUrl){
+          vcUrl += (vcUrl.includes('?') ? '&' : '?') + 'videocallUser=mobile';
+          cont.innerHTML = `
+            <div class="vc-panel">
+              <h3 class="vc-title">Te atenderemos para el trámite <span>${servicio}</span></h3>
+              <div class="vc-frame-wrap">
+                <iframe class="vc-frame" src="${vcUrl}" allow="camera; microphone; autoplay; fullscreen" allowfullscreen></iframe>
+              </div>
+            </div>`;
+        } else {
+          cont.innerHTML = `
+            <div class="vc-panel">
+              <h3 class="vc-title">Te atenderemos para el trámite <span>${servicio}</span></h3>
+              <div class="vc-waiting"><i class="bi bi-people"></i>
+                <div><strong>Estás en la sala de espera.</strong><br>Un asesor te contactará por videollamada en breve.</div>
+              </div>
+            </div>`;
+        }
+      } catch(err){
+        cont.innerHTML = `
+          <div class="vc-panel">
+            <div class="vc-err"><i class="bi bi-x-lg"></i></div>
+            <h3 class="vc-title">No pudimos generar la videollamada</h3>
+            <p style="color:#6b7280;text-align:center;">${err.message}</p>
+            <button class="portal-btn portal-btn-secondary" style="max-width:320px;margin:.5rem auto 0;" onclick="iniciarVideollamada('${servicio.replace(/'/g,"\\'")}')">
+              <i class="bi bi-arrow-clockwise"></i> Reintentar
+            </button>
+          </div>`;
+      }
+    }
+    window.iniciarVideollamada = iniciarVideollamada;
+
+    // Cerrar modales al hacer clic fuera
+    document.querySelectorAll('.modal-overlay').forEach(ov=>{
+      ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('show'); });
+    });
+
+    // Popup de bienvenida (informativo)
+    function cerrarBienvenida(){ document.getElementById('bienvenidaModal').classList.remove('show'); }
+    window.cerrarBienvenida = cerrarBienvenida;
+
+    // Entrar al flujo de 5 pasos en el Paso 1 (Canal de atención)
+    function mostrarVistaVirtual(){
+      document.getElementById('pantallaPortal').style.display = 'none';
+      document.getElementById('flujoCita').style.display = 'flex';
+      mostrarPaso('canal');
+      document.getElementById('bienvenidaModal').classList.add('show');
+    }
+    window.mostrarVistaVirtual = mostrarVistaVirtual;
+
+    // Esta versión inicia directamente en la página de canal (sin menú ni pop-up)
+    mostrarPaso('canal');
+  })();
+  </script>
+
+  <!-- ===== Chatbot Numia Journey Builder ===== -->
+  <button class="chat-launcher" id="chatLauncher" title="Chatea con BOT Colsubsidio">
+    <i class="bi bi-chat-dots-fill"></i>
+  </button>
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <span><i class="bi bi-robot"></i> BOT Colsubsidio</span>
+      <button id="chatClose" title="Minimizar">&times;</button>
+    </div>
+    <div class="chat-body">
+      <journey-builder-chat
+        window_title="Colsubsidio"
+        flow_id="d9b03cae-8099-45b9-a5f3-88489befff12"
+        host_url="https://api.journeybuilder.numia.co"
+        api_key="sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM">
+      </journey-builder-chat>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/debmedia/numiajb-widget@1.0.17/dist/build/static/js/bundle.min.js"></script>
+  <script>
+    (function(){
+      const panel = document.getElementById('chatPanel');
+      document.getElementById('chatLauncher').addEventListener('click', ()=> panel.classList.toggle('show'));
+      document.getElementById('chatClose').addEventListener('click', ()=> panel.classList.remove('show'));
+    })();
+  </script>
+</body>
+</html>
