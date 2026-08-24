@@ -1,10 +1,12 @@
 # Checklist de atención — Extraccionista (toma de muestra)
 
 **Fuente:** PT-040-001 Rev.5 — Protocolo para la atención a cliente/pacientes en toma de muestra  
-**Versión interactiva:** `checklist-atencion-extraccionista.html` (etapas con avance visible, resumen de pendientes)  
+**Versión interactiva:** `checklist-atencion-extraccionista.html` — asistente paso a paso: muestra un solo paso a la vez y habilita el siguiente al confirmar el actual, con cierre de etapa y resumen final.  
 **Vigencia:** copia de trabajo; verificar en SGO SUITE antes de usar.
 
 Los pasos están agrupados en cuatro etapas del proceso: **Recepción → Antes de extraer → Durante la extracción → Cierre y despedida.**
+
+Este documento es la referencia completa de los 23 puntos; sirve para consulta, impresión o para pegarlo en el sistema de gestión.
 
 **Recordatorios permanentes:** nunca deje al paciente solo en la toma (si debe ausentarse, explique el motivo). Si tiene dudas del proceso, pida al paciente esperar unos minutos y, discretamente, consulte la instrucción de trabajo o pida apoyo a una Bioanalista con más experiencia.
 
@@ -27,7 +29,7 @@ Los pasos están agrupados en cuatro etapas del proceso: **Recepción → Antes 
 - [ ] **Cómo se siente.** Pregunte cómo se ha sentido y responda con empatía.  
   *“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”*
 - [ ] **Spray anestésico.** Pregunte al paciente si quiere que lo usen.
-- [ ] **Validar pruebas y observaciones médicas.** Si hay indicación médica, valide los requisitos específicos para la toma. Si el médico indica el lugar de la punción y/o la hora de la prueba o cultivo, siga la indicación sin cuestionar al paciente y **registre en el sistema** que fue autorizado por su médico.
+- [ ] **Validar pruebas y observaciones médicas.** *(Solo si el paciente trae indicación médica.)* Valide los requisitos específicos para la toma. Si el médico indica el lugar de la punción y/o la hora de la prueba o cultivo, siga la indicación sin cuestionar al paciente y **registre en el sistema** que fue autorizado por su médico.
 
 ## Etapa 3 · Durante la extracción
 
@@ -36,7 +38,7 @@ Los pasos están agrupados en cuatro etapas del proceso: **Recepción → Antes 
 - [ ] **Promesa de resultados.** Consulte el calendario y comunique con cortesía cuándo estarán listos.  
   *“Señor Carlos, sus resultados estarán listos en 72 horas.”*
 - [ ] **Registro de la promesa.** Coloque fecha y hora exactas de entrega tanto en el recibo como en el sistema automatizado.
-- [ ] **Urgencias.** Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.
+- [ ] **Urgencias.** *(Solo si hay urgencia.)* Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.
 
 ## Etapa 4 · Cierre y despedida
 
