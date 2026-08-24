@@ -1,164 +1,685 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checklist de atención — Extraccionista | PT-040-001 Rev.5</title>
-  <style>
-    :root {
-      --navy: #0b3d6e;
-      --navy-soft: #e8f0f7;
-      --ink: #1a1a1a;
-      --muted: #5a6570;
-      --line: #d5dee6;
-      --ok: #1b7a4a;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      color: var(--ink);
-      background: #f4f6f8;
-      line-height: 1.45;
-    }
-    .page {
-      max-width: 820px;
-      margin: 1.5rem auto;
-      background: #fff;
-      padding: 2rem 2.25rem 2.5rem;
-      box-shadow: 0 2px 16px rgba(0,0,0,.08);
-    }
-    header {
-      border-bottom: 3px solid var(--navy);
-      padding-bottom: .75rem;
-      margin-bottom: 1.25rem;
-    }
-    .meta {
-      font-size: .8rem;
-      color: var(--muted);
-      margin: 0 0 .35rem;
-    }
-    h1 {
-      margin: 0 0 .25rem;
-      font-size: 1.45rem;
-      color: var(--navy);
-    }
-    .subtitle { margin: 0; color: var(--muted); font-size: .95rem; }
-    h2 {
-      font-size: 1.05rem;
-      color: var(--navy);
-      margin: 1.4rem 0 .6rem;
-      background: var(--navy-soft);
-      padding: .4rem .65rem;
-    }
-    .note {
-      font-size: .85rem;
-      color: var(--muted);
-      border-left: 3px solid var(--navy);
-      padding: .4rem .75rem;
-      margin: 0 0 1rem;
-      background: #fafbfc;
-    }
-    ul.checks, ol.steps {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    li.item {
-      display: grid;
-      grid-template-columns: 1.35rem 1fr;
-      gap: .55rem;
-      align-items: start;
-      padding: .45rem 0;
-      border-bottom: 1px solid var(--line);
-    }
-    li.item:last-child { border-bottom: 0; }
-    .box {
-      width: 1.05rem;
-      height: 1.05rem;
-      border: 1.5px solid var(--navy);
-      border-radius: 2px;
-      margin-top: .2rem;
-    }
-    .num {
-      font-weight: 700;
-      color: var(--navy);
-      font-size: .85rem;
-      min-width: 1.6rem;
-    }
-    li.step {
-      display: grid;
-      grid-template-columns: 1.35rem 1.6rem 1fr;
-      gap: .4rem;
-      align-items: start;
-      padding: .55rem 0;
-      border-bottom: 1px solid var(--line);
-    }
-    li.step strong { color: var(--navy); }
-    .hint {
-      display: block;
-      color: var(--muted);
-      font-size: .88rem;
-      margin-top: .2rem;
-    }
-    footer {
-      margin-top: 1.5rem;
-      font-size: .78rem;
-      color: var(--muted);
-      border-top: 1px solid var(--line);
-      padding-top: .75rem;
-    }
-    @media print {
-      body { background: #fff; }
-      .page { box-shadow: none; margin: 0; padding: 0; max-width: none; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Asistente de atención en toma de muestra | PT-040-001 Rev.5</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b3d6e;
+    --navy-2: #1560a8;
+    --navy-soft: #eaf2fa;
+    --ink: #16202a;
+    --muted: #6b7783;
+    --faint: #9aa6b2;
+    --line: #dde5ec;
+    --ok: #17915a;
+    --ok-soft: #e7f6ee;
+    --warn: #a97612;
+    --warn-soft: #fdf4dd;
+    --crit: #b3261e;
+    --crit-soft: #fdeceb;
+    --bg: #eef2f7;
+    --r: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 1.1rem 1rem 3.5rem; }
+
+  /* ---------------- Top bar ---------------- */
+  .topbar {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color: #fff; border-radius: var(--r);
+    padding: .9rem 1.2rem;
+    display: flex; flex-wrap: wrap; gap: .9rem;
+    align-items: center; justify-content: space-between;
+  }
+  .topbar h1 { font-size: 1.05rem; margin: 0; font-weight: 650; }
+  .topbar .sub { margin: .1rem 0 0; font-size: .76rem; opacity: .85; }
+  .pills { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .pill {
+    background: rgba(255,255,255,.16); border-radius: 999px;
+    padding: .35rem .75rem; font-size: .82rem;
+    display: flex; align-items: center; gap: .4rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .pill .bar { width: 96px; height: 6px; background: rgba(255,255,255,.3); border-radius: 999px; overflow: hidden; }
+  .pill .bar span { display: block; height: 100%; width: 0; background: #fff; transition: width .4s ease; }
+
+  /* ---------------- Layout ---------------- */
+  .grid { display: grid; grid-template-columns: 288px minmax(0, 1fr); gap: 1rem; margin-top: 1rem; align-items: start; }
+  .grid > * { min-width: 0; }
+
+  /* ---------------- Rail ---------------- */
+  .rail { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; position: sticky; top: 1rem; }
+  .rail-head { padding: .8rem 1rem .5rem; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
+  .stage { border-top: 1px solid var(--line); }
+  .stage-btn {
+    width: 100%; text-align: left; font: inherit; cursor: pointer;
+    background: none; border: 0; padding: .7rem 1rem;
+    display: grid; grid-template-columns: 1.6rem 1fr auto; gap: .55rem; align-items: center;
+  }
+  .stage-btn:hover { background: #f7fafc; }
+  .stage .mark {
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    display: grid; place-items: center;
+    background: #f0f3f7; color: var(--faint);
+    font-size: .78rem; font-weight: 700; border: 1.5px solid var(--line);
+  }
+  .stage .nm { font-size: .88rem; font-weight: 600; color: var(--muted); }
+  .stage .ct { font-size: .72rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .stage.current { background: #f7fbff; }
+  .stage.current .mark { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .stage.current .nm { color: var(--navy); }
+  .stage.done .mark { background: var(--ok); color: #fff; border-color: var(--ok); }
+  .stage.done .nm { color: var(--ok); }
+  .substeps { list-style: none; margin: 0; padding: 0 1rem .75rem 1.05rem; }
+  .substeps li {
+    display: grid; grid-template-columns: 1rem 1fr; gap: .5rem;
+    font-size: .8rem; color: var(--faint); padding: .17rem 0; align-items: start;
+  }
+  .substeps li i { font-size: .82rem; margin-top: .18rem; }
+  .substeps li.done { color: var(--ok); }
+  .substeps li.now { color: var(--navy); font-weight: 650; }
+  .substeps li.skip { color: var(--warn); }
+  .substeps li.lock { opacity: .8; }
+  .substeps li button {
+    all: unset; cursor: pointer; text-align: left; color: inherit; font: inherit;
+    text-decoration: underline dotted transparent;
+  }
+  .substeps li button:hover { text-decoration-color: currentColor; }
+
+  /* ---------------- Main card ---------------- */
+  .main { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; }
+  .crumb {
+    padding: .7rem 1.35rem; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+    background: #fbfcfe; font-size: .78rem; color: var(--muted);
+  }
+  .crumb .stage-now { display: flex; align-items: center; gap: .45rem; font-weight: 650; color: var(--navy); }
+  .crumb .stage-now i { font-size: 1rem; }
+
+  /* Completed trail */
+  .trail { padding: .4rem 1.35rem 0; }
+  .trail-toggle {
+    all: unset; cursor: pointer; font-size: .78rem; color: var(--muted);
+    display: inline-flex; align-items: center; gap: .35rem; padding: .45rem 0;
+  }
+  .trail-toggle:hover { color: var(--navy); }
+  .trail ul { list-style: none; margin: 0 0 .4rem; padding: 0; }
+  .trail li {
+    display: grid; grid-template-columns: 1rem 1fr auto; gap: .55rem;
+    font-size: .84rem; color: var(--muted); padding: .28rem 0; align-items: center;
+    border-bottom: 1px dashed var(--line);
+  }
+  .trail li i.st { color: var(--ok); }
+  .trail li.skipped i.st { color: var(--warn); }
+  .trail li .undo { all: unset; cursor: pointer; font-size: .74rem; color: var(--navy-2); }
+  .trail li .undo:hover { text-decoration: underline; }
+
+  /* Active step */
+  .active { padding: 1.1rem 1.35rem 1.2rem; }
+  .step-no {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--navy-2); background: var(--navy-soft);
+    padding: .22rem .6rem; border-radius: 999px;
+  }
+  .active h2 { font-size: 1.22rem; margin: .55rem 0 .3rem; color: var(--ink); line-height: 1.3; }
+  .active .do { font-size: .98rem; color: #37424e; margin: 0; }
+  .active .hint {
+    margin: .6rem 0 0; font-size: .87rem; color: var(--muted);
+    border-left: 3px solid var(--line); padding-left: .7rem;
+  }
+  .say {
+    margin: .8rem 0 0; background: var(--navy-soft); color: var(--navy);
+    border-radius: 10px; padding: .6rem .8rem; font-size: .92rem;
+  }
+  .say i { opacity: .7; margin-right: .35rem; }
+  .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .7rem; }
+  .flag {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    padding: .2rem .5rem; border-radius: 6px; background: var(--warn-soft); color: var(--warn);
+    display: inline-flex; align-items: center; gap: .3rem;
+  }
+  .flag.crit { background: var(--crit-soft); color: var(--crit); }
+  .flag.ok { background: var(--ok-soft); color: var(--ok); }
+
+  .confirm {
+    margin-top: 1.1rem; display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
+  }
+  .btn {
+    font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
+    border-radius: 10px; padding: .6rem 1.05rem;
+    border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+    display: inline-flex; align-items: center; gap: .45rem;
+  }
+  .btn:hover { border-color: var(--navy-2); color: var(--navy); }
+  .btn.go { background: var(--ok); border-color: var(--ok); color: #fff; font-size: 1rem; padding: .7rem 1.3rem; }
+  .btn.go:hover { background: #14804f; border-color: #14804f; color: #fff; }
+  .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .btn.primary:hover { background: var(--navy-2); border-color: var(--navy-2); color: #fff; }
+  .btn.ghost { border-style: dashed; color: var(--muted); }
+  .kbd {
+    font-size: .72rem; color: var(--faint); margin-left: .2rem;
+  }
+
+  /* Upcoming (locked) */
+  .upcoming { border-top: 1px solid var(--line); padding: .8rem 1.35rem 1.1rem; background: #fbfcfe; }
+  .upcoming h3 { font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin: 0 0 .45rem; }
+  .upcoming ul { list-style: none; margin: 0; padding: 0; }
+  .upcoming li {
+    display: grid; grid-template-columns: 1rem 1fr; gap: .55rem;
+    font-size: .85rem; color: var(--faint); padding: .25rem 0; align-items: center;
+    cursor: not-allowed; user-select: none;
+  }
+  .upcoming li b { font-weight: 600; color: var(--muted); }
+  .upcoming .stagetag { font-size: .72rem; color: var(--faint); }
+
+  /* Interstitial + summary */
+  .panel { padding: 1.6rem 1.35rem; text-align: center; }
+  .panel .big {
+    width: 66px; height: 66px; border-radius: 50%; margin: 0 auto .8rem;
+    display: grid; place-items: center; font-size: 1.9rem;
+    background: var(--ok-soft); color: var(--ok);
+  }
+  .panel h2 { margin: 0 0 .3rem; font-size: 1.2rem; color: var(--navy); }
+  .panel p { margin: 0 auto; max-width: 46ch; color: var(--muted); font-size: .92rem; }
+  .panel .acts { margin-top: 1.15rem; display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+
+  .ring { position: relative; width: 108px; height: 108px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto .9rem; }
+  .ring::before { content: ""; position: absolute; inset: 12px; background: #fff; border-radius: 50%; }
+  .ring b { position: relative; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+  .stats { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin: .2rem 0 .4rem; }
+  .stat { font-size: .82rem; color: var(--muted); }
+  .stat b { display: block; font-size: 1.15rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pending { list-style: none; padding: 0; margin: 1rem auto 0; max-width: 620px; text-align: left; }
+  .pending li { font-size: .87rem; padding: .38rem 0; border-bottom: 1px dashed var(--line); color: var(--muted); }
+  .pending li i { margin-right: .4rem; }
+  .pending li.p i { color: var(--crit); }
+  .pending li.s i { color: var(--warn); }
+  .pending li b { color: var(--ink); }
+
+  .aside {
+    margin-top: 1rem; background: #fff; border-radius: var(--r);
+    border-left: 4px solid var(--navy); padding: .8rem 1.1rem;
+    font-size: .82rem; color: var(--muted);
+  }
+  .aside b { color: var(--ink); }
+  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+  footer.src { font-size: .74rem; color: var(--faint); margin-top: 1.1rem; text-align: center; }
+
+  #printAll { display: none; }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .main { order: 1; }
+    .rail { order: 2; position: static; }
+    .topbar { flex-direction: column; align-items: flex-start; }
+    .crumb { flex-direction: column; align-items: flex-start; gap: .2rem; }
+    .active h2 { font-size: 1.1rem; }
+    .btn, .btn.go { width: 100%; justify-content: center; }
+    .kbd { display: none; }
+  }
+  @media print {
+    body { background: #fff; }
+    .topbar, .grid, .toolbar, .aside { display: none !important; }
+    #printAll { display: block !important; }
+    #printAll h1 { font-size: 1.15rem; color: #000; }
+    #printAll h3 { margin: 1rem 0 .3rem; font-size: 1rem; }
+    #printAll ul { list-style: none; padding: 0; }
+    #printAll li { padding: .3rem 0; border-bottom: 1px solid #ddd; font-size: .9rem; }
+    #printAll li::before { content: "\2610  "; }
+  }
+</style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <p class="meta">Amadita Laboratorio Clínico · PT-040-001 Rev.5 · Copia de trabajo (verificar vigencia en SGO SUITE)</p>
-      <h1>Checklist de atención al cliente/paciente en toma de muestra</h1>
-      <p class="subtitle">Uso del extraccionista: marcar cada ítem durante o al cierre de la atención.</p>
-    </header>
+<div class="wrap">
 
-    <p class="note">Si tiene dudas del proceso, pida al paciente esperar unos minutos y, de forma discreta, consulte la instrucción de trabajo o pida apoyo a una Bioanalista con más experiencia. Nunca deje al paciente solo en toma de muestra; si debe ausentarse, explíquele brevemente el motivo.</p>
-
-    <h2>A. Antes de iniciar (imagen profesional y conducta)</h2>
-    <ul class="checks">
-      <li class="item"><span class="box"></span><span>Imagen corporal profesional y segura (postura erguida; sin gestos de aburrimiento, desesperación o mal humor).</span></li>
-      <li class="item"><span class="box"></span><span>Trato de respeto: sin tuteo, calificativos ni apodos. Personas con discapacidad: amabilidad, respeto y empatía.</span></li>
-      <li class="item"><span class="box"></span><span>Sin celular ni auriculares en el área de atención.</span></li>
-      <li class="item"><span class="box"></span><span>No comer, beber, masticar chicle ni realizar cuidado personal frente al cliente.</span></li>
-      <li class="item"><span class="box"></span><span>No socializar temas personales. Atención exclusiva al paciente en curso (si se acerca otro, indicar que le atenderá al terminar; si el anterior regresa, pedir permiso para completar esa solicitud).</span></li>
-      <li class="item"><span class="box"></span><span>Área limpia y organizada: algodones en envases correctos, insumos ordenados en canastas, desinfección entre pacientes, EPP (guantes; bata azul y gorro cuando la prueba lo requiera).</span></li>
-    </ul>
-
-    <h2>B. Pasos de la atención (en orden)</h2>
-    <ol class="steps">
-      <li class="step"><span class="box"></span><span class="num">1.</span><span><strong>Bienvenida e identificación.</strong> Salude según el horario y dé la bienvenida a Amadita Laboratorio Clínico. Diga su nombre y ofrezca ayuda.<span class="hint">Ej.: “Buenos días, bienvenido a Amadita. Mi nombre es Laura García, ¿cómo puedo servirle?”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">2.</span><span><strong>Privacidad.</strong> Ofrezca cerrar la puerta antes de iniciar la toma.</span></li>
-      <li class="step"><span class="box"></span><span class="num">3.</span><span><strong>Asiento y documentos.</strong> Invite a sentarse, solicite documentos para validar datos e indague si hay facturación anterior con toma pendiente.</span></li>
-      <li class="step"><span class="box"></span><span class="num">4.</span><span><strong>Atención personalizada.</strong> Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.) al menos dos veces durante el proceso.</span></li>
-      <li class="step"><span class="box"></span><span class="num">5.</span><span><strong>Interés por cómo se siente.</strong> Pregunte “¿Cómo se ha sentido en el día de hoy?” y responda con empatía.<span class="hint">Ej.: “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">6.</span><span><strong>Spray anestésico.</strong> Pregunte si desea que se use spray anestésico.</span></li>
-      <li class="step"><span class="box"></span><span class="num">7.</span><span><strong>Validar pruebas y observaciones médicas.</strong> Con indicación médica, valide requisitos específicos de la toma. Si el médico indica sitio de punción y/o hora de la prueba o cultivo: seguir la indicación sin cuestionar y registrar en el sistema que fue autorizado por su médico.</span></li>
-      <li class="step"><span class="box"></span><span class="num">8.</span><span><strong>Toma de muestra y promesa de resultados.</strong> Ejecute la toma según IT-002-001 (condición de prueba y condiciones de riesgo). Consulte el calendario y comunique con cortesía cuándo estarán listos los resultados. Confirme comprensión. Anote fecha y hora exactas de entrega en el recibo y en el sistema. Si hay urgencia, señalice la(s) muestra(s) y el sistema para prioridad del área técnica.<span class="hint">Ej.: “Señor Carlos, sus resultados estarán listos en 72 horas.”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">9.</span><span><strong>Portal de resultados.</strong> Entregue usuario y contraseña (etiqueta). Explique que la clave cambia en cada facturación por seguridad. Notifique cuáles resultados se retiran en físico (ej. HIV, prueba de paternidad).</span></li>
-      <li class="step"><span class="box"></span><span class="num">10.</span><span><strong>Nuevo formato visual.</strong> Informe el cambio de formato, aclare que no afecta la interpretación clínica y confirme que comprendió, incluida la promesa de entrega.</span></li>
-      <li class="step"><span class="box"></span><span class="num">11.</span><span><strong>Validar comprensión y dudas.</strong> Dé espacio para inquietudes sobre el proceso, el servicio o la fecha de entrega.<span class="hint">Ej.: “¿Tiene alguna inquietud hasta el momento, señor Carlos?”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">12.</span><span><strong>Canales alternos.</strong> Invite a usar la APP u otros canales para ver resultados al instante y evitar un segundo viaje a sucursal. Recuerde las pruebas que no se visualizan en canales alternos y deben recogerse en físico.<span class="hint">Ej.: “Señor Carlos, sus resultados estarán listos en 72 horas; puede visualizarlos desde nuestra APP.”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">13.</span><span><strong>Ofrecer algo más.</strong> Antes de despedirse, cubra necesidades restantes.<span class="hint">Ej.: “¿Desea tomar agua?” / “¿Algo más en lo que le pueda servir?”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">14.</span><span><strong>Despedida institucional.</strong> Agradezca la preferencia y use la frase: “¡Nos complace servirle!”<span class="hint">Ej.: “Gracias por elegir Amadita, nos complace servirle, pase feliz resto del día.”</span></span></li>
-      <li class="step"><span class="box"></span><span class="num">15.</span><span><strong>Cierre de área.</strong> Verifique limpieza, orden, EPP e insumos; desinfecte entre pacientes.</span></li>
-    </ol>
-
-    <h2>C. Recordatorio de auditoría</h2>
-    <p class="note">Estos lineamientos aplican a todo el personal, sin distinción de antigüedad. En los primeros 3 meses no aplican las medidas disciplinarias del PT-040-005.</p>
-
-    <footer>
-      Fuente: Protocolo para la atención a cliente/pacientes en toma de muestra (PT-040-001 Rev.5). Si este documento se imprime o descarga es copia no controlada; verificar vigencia en SGO SUITE antes de su uso.
-    </footer>
+  <div class="topbar">
+    <div>
+      <h1>Asistente de atención en toma de muestra</h1>
+      <p class="sub">Amadita Laboratorio Clínico · PT-040-001 Rev.5 · los pasos se habilitan a medida que avanza la atención</p>
+    </div>
+    <div class="pills">
+      <div class="pill" title="Tiempo de la atención"><i class="bi bi-stopwatch"></i><span id="clock">00:00</span></div>
+      <div class="pill" title="Avance total"><i class="bi bi-list-check"></i><div class="bar"><span id="globalBar"></span></div><b id="globalPct">0%</b></div>
+    </div>
   </div>
+
+  <div class="grid">
+    <aside class="rail">
+      <div class="rail-head">Etapas del proceso</div>
+      <div id="rail"></div>
+    </aside>
+
+    <section class="main" id="main"></section>
+  </div>
+
+  <div class="aside">
+    <b>Siempre presente.</b> Nunca deje al paciente solo en la toma; si debe ausentarse, explique brevemente el motivo.
+    Si tiene dudas del proceso, pida al paciente esperar unos minutos y, discretamente, consulte la instrucción de trabajo o pida apoyo a una Bioanalista con más experiencia.
+    Se realizan auditorías a todo el personal sin distinción de antigüedad; dentro de los primeros 3 meses no aplican las medidas disciplinarias del PT-040-005.
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" id="printBtn"><i class="bi bi-printer"></i> Imprimir checklist completo</button>
+    <button class="btn" id="resetBtn"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar atención</button>
+  </div>
+
+  <footer class="src">
+    Fuente: PT-040-001 Rev.5 — Protocolo para la atención a cliente/pacientes en toma de muestra. Toma de muestra según IT-002-001.<br>
+    Si este documento se descarga o imprime es copia no controlada; verifique su vigencia en SGO SUITE antes de su uso.
+  </footer>
+
+  <div id="printAll"></div>
+</div>
+
+<script>
+const STAGES = [
+  {
+    name: "Recepción", icon: "bi-door-open",
+    goal: "Reciba al paciente, asegure la privacidad y valide sus datos.",
+    items: [
+      { id: "r0", title: "Presencia y conducta", do: "Preséntese con imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.",
+        hint: "Trato respetuoso en todo momento: sin tuteo, apodos ni calificativos, tampoco al dirigirse a personas con discapacidad." },
+      { id: "r1", title: "Bienvenida e identificación", do: "Salude según el horario, dé la bienvenida a Amadita e identifíquese por su nombre.",
+        say: "“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”" },
+      { id: "r2", title: "Privacidad", do: "Ofrezca cerrar la puerta antes de empezar con la toma de muestra.",
+        hint: "Evita distracciones y el paciente se siente más a gusto durante el proceso." },
+      { id: "r3", title: "Asiento y documentos", do: "Invite al paciente a tomar asiento y solicite amablemente los documentos para validar la información.",
+        hint: "Indague si existe una facturación anterior con toma de muestra pendiente." },
+      { id: "r4", title: "Atención personalizada", do: "Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.). Debe hacerlo al menos dos veces durante toda la atención.",
+        flag: "Se repite en todo el proceso" },
+      { id: "r5", title: "Atención exclusiva", do: "No atienda otras llamadas ni personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar." }
+    ]
+  },
+  {
+    name: "Antes de extraer", icon: "bi-clipboard2-pulse",
+    goal: "Prepare el área, conecte con el paciente y valide qué se le va a tomar.",
+    items: [
+      { id: "a0", title: "Área y bioseguridad", do: "Verifique el área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y la desinfección hecha desde el paciente anterior.",
+        flag: "Bioseguridad" },
+      { id: "a1", title: "Protección personal", do: "Colóquese guantes, gorro y bata azul cuando la prueba lo requiera.",
+        flag: "Bioseguridad" },
+      { id: "a2", title: "Cómo se siente el paciente", do: "Pregunte cómo se ha sentido y muestre empatía con su respuesta.",
+        say: "“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”" },
+      { id: "a3", title: "Spray anestésico", do: "Pregunte al paciente si quiere que usen el spray anestésico." },
+      { id: "a4", title: "Validar pruebas y observaciones médicas", do: "Valide las pruebas a realizar. Si el paciente tiene indicación médica, revise los requisitos específicos para la toma.",
+        hint: "Si el médico indica el lugar de la punción y/o la hora de la prueba o cultivo, siga la indicación sin cuestionar al paciente y registre en el sistema que fue autorizado por su médico.",
+        flag: "Registro en sistema", cond: "El paciente no trae indicación médica" }
+    ]
+  },
+  {
+    name: "Durante la extracción", icon: "bi-droplet-half",
+    goal: "Ejecute la toma según la instrucción de trabajo y deje la promesa de entrega registrada.",
+    items: [
+      { id: "d0", title: "Toma de muestra según IT-002-001", do: "Realice el proceso de toma de muestra siguiendo la instrucción de trabajo IT-002-001, verificando condición de prueba y condiciones de riesgo.",
+        flag: "IT-002-001" },
+      { id: "d1", title: "Nunca deje al paciente solo", do: "Permanezca con el paciente durante toda la toma. Si debe ausentarse, explíquele brevemente las razones.",
+        flagCrit: "Crítico" },
+      { id: "d2", title: "Promesa de resultados", do: "Consulte el calendario e informe con cortesía cuándo estarán listos los resultados. Asegúrese de que el paciente lo comprendió.",
+        say: "“Señor Carlos, sus resultados estarán listos en 72 horas.”" },
+      { id: "d3", title: "Registrar la promesa", do: "Coloque la fecha y hora exactas de entrega tanto en el recibo como en el sistema automatizado.",
+        flag: "Registro en sistema" },
+      { id: "d4", title: "Prioridad por urgencia", do: "Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.",
+        cond: "No hay urgencia" }
+    ]
+  },
+  {
+    name: "Cierre y despedida", icon: "bi-emoji-smile",
+    goal: "Explique cómo verá sus resultados, resuelva dudas, despida con cortesía y deje el área lista.",
+    items: [
+      { id: "c0", title: "Portal de resultados", do: "Entregue usuario y contraseña (ubicados en la etiqueta) y explique que la clave cambia en cada facturación por motivos de seguridad.",
+        hint: "Notifique los resultados que deben retirarse en físico (ej.: HIV, prueba de paternidad)." },
+      { id: "c1", title: "Nuevo formato visual", do: "Informe al paciente sobre el nuevo formato visual de los resultados y aclare que no afecta su interpretación clínica." },
+      { id: "c2", title: "Validar comprensión y dudas", do: "Confirme que comprendió la información y la promesa de entrega, y dele la oportunidad de expresar sus inquietudes.",
+        say: "“¿Tiene alguna inquietud hasta el momento, señor Carlos?”" },
+      { id: "c3", title: "Canales alternos", do: "Invítelo a descargar la APP o usar los demás canales para ver sus resultados al instante y evitar volver a la sucursal.",
+        hint: "Tome en cuenta las pruebas que no se visualizan por los canales alternos y deben recogerse en físico.",
+        say: "“Puede visualizarlos desde nuestra APP, desde cualquier dispositivo móvil para mayor comodidad.”" },
+      { id: "c4", title: "¿Algo más en lo que servirle?", do: "Antes de despedirse, asegúrese de haber cubierto todas las necesidades del paciente.",
+        say: "“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”" },
+      { id: "c5", title: "Despedida institucional", do: "Agradezca al paciente por preferir nuestros servicios y use la frase que nos identifica.",
+        say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" },
+      { id: "c6", title: "Cierre del área", do: "Deje el área limpia y organizada, con los insumos en orden, y realice la desinfección correspondiente antes del próximo paciente.",
+        flag: "Bioseguridad" }
+    ]
+  }
+];
+
+const STEPS = [];
+STAGES.forEach((s, si) => s.items.forEach((it, ii) => STEPS.push({ ...it, stage: si, nth: ii })));
+const TOTAL = STEPS.length;
+const KEY = "asistenteTomaMuestra.v2";
+
+let st = load();
+let view = "wizard";
+let interStage = 0;
+let trailOpen = false;
+let ticker = null;
+let viewChangedAt = 0;
+
+function setView(v) { if (v !== view) viewChangedAt = Date.now(); view = v; }
+function goWizard() { setView("wizard"); render(); }
+
+function blank() { return { status: {}, cursor: 0, startedAt: null }; }
+function load() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (!raw || typeof raw !== "object") return blank();
+    const s = blank();
+    STEPS.forEach(x => { if (raw.status && (raw.status[x.id] === "done" || raw.status[x.id] === "skip")) s.status[x.id] = raw.status[x.id]; });
+    s.cursor = Math.min(TOTAL, Math.max(0, Number(raw.cursor) || 0));
+    s.startedAt = raw.startedAt || null;
+    return s;
+  } catch { return blank(); }
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} }
+
+const doneCount = () => STEPS.filter(x => st.status[x.id] === "done").length;
+const closedCount = () => STEPS.filter(x => st.status[x.id]).length;
+const stageClosed = si => STAGES[si].items.filter(i => st.status[i.id]).length;
+const stageIsClosed = si => stageClosed(si) === STAGES[si].items.length;
+const currentStage = () => st.cursor >= TOTAL ? STAGES.length - 1 : STEPS[st.cursor].stage;
+
+/* ---------------- actions ---------------- */
+function confirmStep(kind) {
+  if (st.cursor >= TOTAL) return;
+  if (!st.startedAt) { st.startedAt = Date.now(); startTicker(); }
+  const step = STEPS[st.cursor];
+  st.status[step.id] = kind;
+  st.cursor++;
+  save();
+
+  if (st.cursor >= TOTAL) {
+    setView("summary");
+    stopTicker();
+  } else if (STEPS[st.cursor].stage !== step.stage) {
+    setView("stageDone");
+    interStage = step.stage;
+  }
+  render();
+}
+function backOne() {
+  if (st.cursor === 0) return;
+  st.cursor--;
+  delete st.status[STEPS[st.cursor].id];
+  setView("wizard");
+  save();
+  render();
+}
+function undoFrom(i) {
+  for (let k = i; k < TOTAL; k++) delete st.status[STEPS[k].id];
+  st.cursor = i;
+  setView("wizard");
+  save();
+  render();
+}
+function resetAll() {
+  st = blank();
+  setView("wizard");
+  trailOpen = false;
+  stopTicker();
+  save();
+  render();
+}
+
+/* ---------------- clock ---------------- */
+function fmt(ms) {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+}
+function paintClock() {
+  document.getElementById("clock").textContent = st.startedAt ? fmt(Date.now() - st.startedAt) : "00:00";
+}
+function startTicker() { stopTicker(); ticker = setInterval(paintClock, 1000); paintClock(); }
+function stopTicker() { if (ticker) clearInterval(ticker); ticker = null; paintClock(); }
+
+/* ---------------- render ---------------- */
+function render() {
+  paintProgress();
+  renderRail();
+  renderMain();
+  renderPrint();
+}
+
+function paintProgress() {
+  const pct = Math.round((closedCount() / TOTAL) * 100);
+  document.getElementById("globalBar").style.width = pct + "%";
+  document.getElementById("globalPct").textContent = pct + "%";
+}
+
+function renderRail() {
+  const cs = currentStage();
+  const rail = document.getElementById("rail");
+  rail.innerHTML = "";
+  STAGES.forEach((s, si) => {
+    const box = document.createElement("div");
+    const isCurrent = si === cs && view !== "summary";
+    box.className = "stage" + (stageIsClosed(si) ? " done" : "") + (isCurrent ? " current" : "");
+    const mark = stageIsClosed(si) ? '<i class="bi bi-check-lg"></i>' : si + 1;
+    box.innerHTML = `
+      <button class="stage-btn" type="button">
+        <span class="mark">${mark}</span>
+        <span class="nm">${s.name}</span>
+        <span class="ct">${stageClosed(si)}/${s.items.length}</span>
+      </button>`;
+    const firstIdx = STEPS.findIndex(x => x.stage === si);
+    box.querySelector(".stage-btn").onclick = () => {
+      if (stageClosed(si) > 0 || st.cursor > firstIdx) undoFrom(firstIdx);
+    };
+
+    if (isCurrent) {
+      const ul = document.createElement("ul");
+      ul.className = "substeps";
+      s.items.forEach((it, ii) => {
+        const gi = firstIdx + ii;
+        const status = st.status[it.id];
+        const isNow = gi === st.cursor && view === "wizard";
+        const cls = status === "done" ? "done" : status === "skip" ? "skip" : isNow ? "now" : "lock";
+        const ico = status === "done" ? "bi-check-circle-fill"
+                  : status === "skip" ? "bi-slash-circle"
+                  : isNow ? "bi-record-circle" : "bi-lock";
+        const li = document.createElement("li");
+        li.className = cls;
+        li.innerHTML = `<i class="bi ${ico}"></i><span>${status ? `<button type="button" title="Volver a este paso">${it.title}</button>` : it.title}</span>`;
+        const b = li.querySelector("button");
+        if (b) b.onclick = () => undoFrom(gi);
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    }
+    rail.appendChild(box);
+  });
+}
+
+function renderMain() {
+  const main = document.getElementById("main");
+  if (view === "summary") return renderSummary(main);
+  if (view === "stageDone") return renderStageDone(main);
+  renderWizard(main);
+}
+
+function renderWizard(main) {
+  const step = STEPS[st.cursor];
+  const stage = STAGES[step.stage];
+  const inStage = stage.items.length;
+
+  main.innerHTML = `
+    <div class="crumb">
+      <span class="stage-now"><i class="bi ${stage.icon}"></i> Etapa ${step.stage + 1} de ${STAGES.length}: ${stage.name}</span>
+      <span>Paso ${step.nth + 1} de ${inStage} de esta etapa · ${closedCount()} de ${TOTAL} en total</span>
+    </div>
+    <div class="trail" id="trail"></div>
+    <div class="active">
+      <span class="step-no"><i class="bi bi-arrow-right-short"></i> Paso ${st.cursor + 1} de ${TOTAL}</span>
+      <h2>${step.title}</h2>
+      <p class="do">${step.do}</p>
+      ${step.say ? `<p class="say"><i class="bi bi-chat-quote-fill"></i>${step.say}</p>` : ""}
+      ${step.hint ? `<p class="hint">${step.hint}</p>` : ""}
+      <div class="flags">
+        ${step.flag ? `<span class="flag"><i class="bi bi-exclamation-triangle-fill"></i>${step.flag}</span>` : ""}
+        ${step.flagCrit ? `<span class="flag crit"><i class="bi bi-shield-exclamation"></i>${step.flagCrit}</span>` : ""}
+      </div>
+      <div class="confirm">
+        <button class="btn go" id="okBtn" type="button"><i class="bi bi-check2-circle"></i> Hecho, continuar</button>
+        ${step.cond ? `<button class="btn ghost" id="skipBtn"><i class="bi bi-slash-circle"></i> No aplica: ${step.cond}</button>` : ""}
+        ${st.cursor > 0 ? `<button class="btn" id="backBtn"><i class="bi bi-arrow-left"></i> Paso anterior</button>` : ""}
+        <span class="kbd">Enter para confirmar</span>
+      </div>
+    </div>
+    <div class="upcoming" id="upcoming"></div>`;
+
+  document.getElementById("okBtn").onclick = () => confirmStep("done");
+  const sk = document.getElementById("skipBtn");
+  if (sk) sk.onclick = () => confirmStep("skip");
+  const bk = document.getElementById("backBtn");
+  if (bk) bk.onclick = backOne;
+
+  renderTrail();
+  renderUpcoming();
+}
+
+function renderTrail() {
+  const host = document.getElementById("trail");
+  if (!host) return;
+  const done = STEPS.slice(0, st.cursor);
+  if (!done.length) { host.innerHTML = ""; return; }
+  host.innerHTML = `
+    <button class="trail-toggle" type="button" id="trailToggle">
+      <i class="bi bi-chevron-${trailOpen ? "down" : "right"}"></i>
+      ${done.length} paso(s) ya confirmados en esta atención
+    </button>
+    ${trailOpen ? '<ul id="trailList"></ul>' : ""}`;
+  document.getElementById("trailToggle").onclick = () => { trailOpen = !trailOpen; renderTrail(); };
+  if (!trailOpen) return;
+  const ul = document.getElementById("trailList");
+  done.forEach((x, i) => {
+    const skipped = st.status[x.id] === "skip";
+    const li = document.createElement("li");
+    if (skipped) li.className = "skipped";
+    li.innerHTML = `
+      <i class="bi st ${skipped ? "bi-slash-circle" : "bi-check-circle-fill"}"></i>
+      <span>${STAGES[x.stage].name} · ${x.title}${skipped ? " (no aplicó)" : ""}</span>
+      <button class="undo" type="button">Volver aquí</button>`;
+    li.querySelector(".undo").onclick = () => undoFrom(i);
+    ul.appendChild(li);
+  });
+}
+
+function renderUpcoming() {
+  const host = document.getElementById("upcoming");
+  if (!host) return;
+  const next = STEPS.slice(st.cursor + 1, st.cursor + 4);
+  if (!next.length) {
+    host.innerHTML = `<h3>Siguiente</h3><ul><li><i class="bi bi-flag"></i><b>Resumen de la atención</b></li></ul>`;
+    return;
+  }
+  host.innerHTML = `<h3>Se habilitan después de confirmar</h3><ul>${
+    next.map(x => `<li title="Se habilita al confirmar el paso actual"><i class="bi bi-lock"></i><span><b>${x.title}</b> <span class="stagetag">· ${STAGES[x.stage].name}</span></span></li>`).join("")
+  }</ul>`;
+}
+
+function renderStageDone(main) {
+  const s = STAGES[interStage];
+  const nxt = STAGES[interStage + 1];
+  const skipped = s.items.filter(i => st.status[i.id] === "skip").length;
+  main.innerHTML = `
+    <div class="crumb">
+      <span class="stage-now"><i class="bi bi-check2-all"></i> Etapa ${interStage + 1} completada</span>
+      <span>${closedCount()} de ${TOTAL} pasos en total</span>
+    </div>
+    <div class="panel">
+      <div class="big"><i class="bi bi-check-lg"></i></div>
+      <h2>${s.name}: etapa completada</h2>
+      <p>${skipped ? `${s.items.length - skipped} paso(s) confirmados y ${skipped} marcado(s) como no aplica. ` : `Los ${s.items.length} pasos de la etapa fueron confirmados. `}
+      Continúe con <b>${nxt.name}</b>: ${nxt.goal.charAt(0).toLowerCase() + nxt.goal.slice(1)}</p>
+      <div class="acts">
+        <button class="btn primary" id="contBtn"><i class="bi ${nxt.icon}"></i> Continuar con ${nxt.name}</button>
+        <button class="btn" id="revBtn"><i class="bi bi-arrow-left"></i> Revisar etapa anterior</button>
+      </div>
+    </div>`;
+  document.getElementById("contBtn").onclick = goWizard;
+  document.getElementById("revBtn").onclick = () => undoFrom(STEPS.findIndex(x => x.stage === interStage));
+}
+
+function renderSummary(main) {
+  const done = doneCount();
+  const skipped = STEPS.filter(x => st.status[x.id] === "skip");
+  const pct = Math.round((done / TOTAL) * 100);
+  const elapsed = st.startedAt ? fmt(Date.now() - st.startedAt) : "—";
+
+  main.innerHTML = `
+    <div class="crumb">
+      <span class="stage-now"><i class="bi bi-clipboard-check"></i> Atención finalizada</span>
+      <span>${done} de ${TOTAL} pasos confirmados</span>
+    </div>
+    <div class="panel">
+      <div class="ring" id="ring"><b>${pct}%</b></div>
+      <h2>${skipped.length ? "Atención completada con excepciones" : "Atención completada"}</h2>
+      <div class="stats">
+        <div class="stat"><b>${done}</b> confirmados</div>
+        <div class="stat"><b>${skipped.length}</b> no aplicaron</div>
+        <div class="stat"><b>${elapsed}</b> duración</div>
+      </div>
+      <p>${skipped.length
+        ? "Revise los pasos marcados como no aplica antes de cerrar el turno del paciente."
+        : "Recorrió las cuatro etapas del protocolo sin omitir pasos."}</p>
+      <ul class="pending" id="pendingList"></ul>
+      <div class="acts">
+        <button class="btn primary" id="newBtn"><i class="bi bi-person-plus"></i> Atender nuevo paciente</button>
+        <button class="btn" id="reviewBtn"><i class="bi bi-arrow-left"></i> Revisar último paso</button>
+      </div>
+    </div>`;
+
+  const ring = document.getElementById("ring");
+  ring.style.background = `conic-gradient(${pct === 100 ? "var(--ok)" : "var(--navy-2)"} ${pct * 3.6}deg, var(--line) 0deg)`;
+  ring.style.color = pct === 100 ? "var(--ok)" : "var(--navy)";
+
+  const list = document.getElementById("pendingList");
+  skipped.forEach(x => {
+    const li = document.createElement("li");
+    li.className = "s";
+    li.innerHTML = `<i class="bi bi-slash-circle"></i><b>${STAGES[x.stage].name}:</b> ${x.title} — no aplicó (${x.cond})`;
+    list.appendChild(li);
+  });
+
+  document.getElementById("newBtn").onclick = resetAll;
+  document.getElementById("reviewBtn").onclick = () => undoFrom(TOTAL - 1);
+}
+
+function renderPrint() {
+  const host = document.getElementById("printAll");
+  host.innerHTML = `<h1>Checklist de atención en toma de muestra — PT-040-001 Rev.5</h1>` +
+    STAGES.map((s, si) => `<h3>Etapa ${si + 1}: ${s.name}</h3><ul>${
+      s.items.map(i => `<li><b>${i.title}.</b> ${i.do}</li>`).join("")
+    }</ul>`).join("");
+}
+
+// El cierre de etapa y el resumen solo avanzan con clic: son puntos de control
+// y una tecla sostenida no debe saltarlos ni confirmar pasos en cadena.
+document.addEventListener("keydown", e => {
+  if (view !== "wizard") return;
+  if (e.target.matches("input, textarea, button")) return;
+  if (e.repeat || Date.now() - viewChangedAt < 700) return;
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); confirmStep("done"); }
+  if (e.key === "Backspace") { e.preventDefault(); backOne(); }
+});
+
+document.getElementById("printBtn").onclick = () => window.print();
+document.getElementById("resetBtn").onclick = resetAll;
+
+if (st.cursor >= TOTAL) setView("summary");
+if (st.startedAt && view !== "summary") startTicker();
+render();
+</script>
 </body>
 </html>
