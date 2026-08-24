@@ -82,7 +82,7 @@
     font-size: .78rem; font-weight: 700;
   }
   .stage-btn .name { font-size: .84rem; font-weight: 650; color: var(--ink); line-height: 1.25; }
-  .stage-btn .mini { height: 5px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .stage-btn .mini { display: block; height: 5px; background: var(--line); border-radius: 999px; overflow: hidden; }
   .stage-btn .mini span { display: block; height: 100%; width: 0; background: var(--navy-2); border-radius: 999px; transition: width .35s ease; }
   .stage-btn .count { font-size: .72rem; margin-top: .3rem; display: block; }
   .stage-btn[aria-current="true"] {
@@ -183,7 +183,18 @@
   .summary.on { display: block; }
   .summary h2 { margin: 0 0 .2rem; color: var(--navy); font-size: 1.1rem; }
   .ring-row { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; margin: .9rem 0 1rem; }
-  .ring { width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: var(--navy); }
+  .ring {
+    position: relative;
+    width: 104px; height: 104px; flex: 0 0 auto;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 700; color: var(--navy);
+  }
+  .ring::before {
+    content: ""; position: absolute; inset: 12px;
+    background: #fff; border-radius: 50%;
+  }
+  .ring b { position: relative; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
   .pending { list-style: none; padding: 0; margin: .5rem 0 0; }
   .pending li { font-size: .88rem; padding: .35rem 0; border-bottom: 1px dashed var(--line); }
   .pending li i { color: var(--warn); margin-right: .4rem; }
@@ -438,9 +449,10 @@ function showSummary() {
   document.getElementById("summary").classList.add("on");
 
   const ring = document.getElementById("ring");
-  ring.textContent = pct + "%";
+  ring.innerHTML = `<b>${pct}%</b>`;
   ring.style.background = `conic-gradient(${pct === 100 ? "var(--ok)" : "var(--navy-2)"} ${pct * 3.6}deg, var(--line) 0deg)`;
-  ring.style.boxShadow = "inset 0 0 0 10px #fff";
+  if (pct === 100) ring.style.color = "var(--ok)";
+  else ring.style.color = "var(--navy)";
 
   const pending = [];
   STAGES.forEach(s => s.items.forEach(i => { if (!state[i.id]) pending.push({ stage: s.name, item: i }); }));
