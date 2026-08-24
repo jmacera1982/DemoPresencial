@@ -263,7 +263,7 @@ const TOTAL = ALL.length;
 const KEY = "checklistTomaMuestra.v3";
 
 let st = load();
-let stage = firstOpenStage();
+let stage = 0;
 let view = "stages";
 let ticker = null;
 
@@ -470,6 +470,7 @@ function scrollTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 document.getElementById("printBtn").onclick = () => window.print();
 document.getElementById("resetBtn").onclick = resetAll;
 
+stage = firstOpenStage();
 if (st.startedAt) startTicker();
 render();
 </script>
