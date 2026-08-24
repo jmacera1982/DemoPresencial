@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Asistente de atención en toma de muestra | PT-040-001 Rev.5</title>
+<title>Checklist de atención en toma de muestra | PT-040-001 Rev.5</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <style>
   :root {
@@ -27,215 +27,145 @@
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    line-height: 1.5;
+    background: var(--bg); color: var(--ink); line-height: 1.45;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 1.1rem 1rem 3.5rem; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 1.1rem 1rem 3rem; }
 
-  /* ---------------- Top bar ---------------- */
+  /* ---------- top ---------- */
   .topbar {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-    color: #fff; border-radius: var(--r);
-    padding: .9rem 1.2rem;
-    display: flex; flex-wrap: wrap; gap: .9rem;
-    align-items: center; justify-content: space-between;
+    color: #fff; border-radius: var(--r); padding: .85rem 1.15rem;
+    display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; justify-content: space-between;
   }
   .topbar h1 { font-size: 1.05rem; margin: 0; font-weight: 650; }
-  .topbar .sub { margin: .1rem 0 0; font-size: .76rem; opacity: .85; }
-  .pills { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .topbar .sub { margin: .1rem 0 0; font-size: .75rem; opacity: .85; }
+  .pills { display: flex; gap: .45rem; flex-wrap: wrap; }
   .pill {
-    background: rgba(255,255,255,.16); border-radius: 999px;
-    padding: .35rem .75rem; font-size: .82rem;
-    display: flex; align-items: center; gap: .4rem;
-    font-variant-numeric: tabular-nums;
+    background: rgba(255,255,255,.16); border-radius: 999px; padding: .3rem .7rem;
+    font-size: .8rem; display: flex; align-items: center; gap: .4rem; font-variant-numeric: tabular-nums;
   }
-  .pill .bar { width: 96px; height: 6px; background: rgba(255,255,255,.3); border-radius: 999px; overflow: hidden; }
-  .pill .bar span { display: block; height: 100%; width: 0; background: #fff; transition: width .4s ease; }
+  .pill .bar { width: 90px; height: 6px; background: rgba(255,255,255,.3); border-radius: 999px; overflow: hidden; }
+  .pill .bar span { display: block; height: 100%; width: 0; background: #fff; transition: width .35s ease; }
 
-  /* ---------------- Layout ---------------- */
-  .grid { display: grid; grid-template-columns: 288px minmax(0, 1fr); gap: 1rem; margin-top: 1rem; align-items: start; }
-  .grid > * { min-width: 0; }
-
-  /* ---------------- Rail ---------------- */
-  .rail { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; position: sticky; top: 1rem; }
-  .rail-head { padding: .8rem 1rem .5rem; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
-  .stage { border-top: 1px solid var(--line); }
-  .stage-btn {
-    width: 100%; text-align: left; font: inherit; cursor: pointer;
-    background: none; border: 0; padding: .7rem 1rem;
-    display: grid; grid-template-columns: 1.6rem 1fr auto; gap: .55rem; align-items: center;
+  /* ---------- stage tabs ---------- */
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: .85rem 0; }
+  .tab {
+    font: inherit; text-align: left; cursor: pointer; background: #fff;
+    border: 1.5px solid var(--line); border-radius: 12px; padding: .55rem .65rem .6rem;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
   }
-  .stage-btn:hover { background: #f7fafc; }
-  .stage .mark {
-    width: 1.6rem; height: 1.6rem; border-radius: 50%;
-    display: grid; place-items: center;
+  .tab:hover { transform: translateY(-1px); border-color: var(--navy-2); }
+  .tab .l1 { display: flex; align-items: center; gap: .4rem; margin-bottom: .3rem; }
+  .tab .mk {
+    width: 1.35rem; height: 1.35rem; flex: 0 0 auto; border-radius: 50%;
+    display: grid; place-items: center; font-size: .74rem; font-weight: 700;
     background: #f0f3f7; color: var(--faint);
-    font-size: .78rem; font-weight: 700; border: 1.5px solid var(--line);
   }
-  .stage .nm { font-size: .88rem; font-weight: 600; color: var(--muted); }
-  .stage .ct { font-size: .72rem; color: var(--faint); font-variant-numeric: tabular-nums; }
-  .stage.current { background: #f7fbff; }
-  .stage.current .mark { background: var(--navy); color: #fff; border-color: var(--navy); }
-  .stage.current .nm { color: var(--navy); }
-  .stage.done .mark { background: var(--ok); color: #fff; border-color: var(--ok); }
-  .stage.done .nm { color: var(--ok); }
-  .substeps { list-style: none; margin: 0; padding: 0 1rem .75rem 1.05rem; }
-  .substeps li {
-    display: grid; grid-template-columns: 1rem 1fr; gap: .5rem;
-    font-size: .8rem; color: var(--faint); padding: .17rem 0; align-items: start;
-  }
-  .substeps li i { font-size: .82rem; margin-top: .18rem; }
-  .substeps li.done { color: var(--ok); }
-  .substeps li.now { color: var(--navy); font-weight: 650; }
-  .substeps li.skip { color: var(--warn); }
-  .substeps li.lock { opacity: .8; }
-  .substeps li button {
-    all: unset; cursor: pointer; text-align: left; color: inherit; font: inherit;
-    text-decoration: underline dotted transparent;
-  }
-  .substeps li button:hover { text-decoration-color: currentColor; }
+  .tab .nm { font-size: .82rem; font-weight: 650; color: var(--ink); line-height: 1.2; }
+  .tab .mini { display: block; height: 5px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .tab .mini span { display: block; height: 100%; width: 0; background: var(--navy-2); transition: width .3s ease; }
+  .tab .ct { display: block; font-size: .71rem; color: var(--faint); margin-top: .28rem; font-variant-numeric: tabular-nums; }
+  .tab[aria-current="true"] { border-color: var(--navy); box-shadow: 0 5px 16px rgba(11,61,110,.15); }
+  .tab[aria-current="true"] .mk { background: var(--navy); color: #fff; }
+  .tab.done { border-color: var(--ok); }
+  .tab.done .mk { background: var(--ok); color: #fff; }
+  .tab.done .mini span { background: var(--ok); }
 
-  /* ---------------- Main card ---------------- */
-  .main { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; }
-  .crumb {
-    padding: .7rem 1.35rem; border-bottom: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: space-between; gap: .75rem;
-    background: #fbfcfe; font-size: .78rem; color: var(--muted);
-  }
-  .crumb .stage-now { display: flex; align-items: center; gap: .45rem; font-weight: 650; color: var(--navy); }
-  .crumb .stage-now i { font-size: 1rem; }
+  /* ---------- card ---------- */
+  .card { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; }
+  .card-head { padding: .95rem 1.25rem .8rem; border-bottom: 1px solid var(--line); display: flex; gap: .8rem; align-items: flex-start; }
+  .card-head .ic { font-size: 1.45rem; color: var(--navy-2); line-height: 1.1; }
+  .card-head h2 { margin: 0; font-size: 1.05rem; color: var(--navy); }
+  .card-head p { margin: .12rem 0 0; font-size: .85rem; color: var(--muted); }
 
-  /* Completed trail */
-  .trail { padding: .4rem 1.35rem 0; }
-  .trail-toggle {
-    all: unset; cursor: pointer; font-size: .78rem; color: var(--muted);
-    display: inline-flex; align-items: center; gap: .35rem; padding: .45rem 0;
+  ul.steps { list-style: none; margin: 0; padding: .2rem .5rem .35rem; }
+  ul.steps > li { border-bottom: 1px solid var(--line); }
+  ul.steps > li:last-child { border-bottom: 0; }
+  .row { display: grid; grid-template-columns: 1.4rem 1fr; gap: .65rem; padding: .55rem .75rem; cursor: pointer; align-items: start; }
+  .row:hover { background: #f8fbfd; }
+  .row input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .tick {
+    width: 1.2rem; height: 1.2rem; margin-top: .1rem; border: 1.8px solid var(--navy-2);
+    border-radius: 5px; display: grid; place-items: center; color: transparent; font-size: .78rem;
+    transition: background .15s, border-color .15s, color .15s;
   }
-  .trail-toggle:hover { color: var(--navy); }
-  .trail ul { list-style: none; margin: 0 0 .4rem; padding: 0; }
-  .trail li {
-    display: grid; grid-template-columns: 1rem 1fr auto; gap: .55rem;
-    font-size: .84rem; color: var(--muted); padding: .28rem 0; align-items: center;
-    border-bottom: 1px dashed var(--line);
-  }
-  .trail li i.st { color: var(--ok); }
-  .trail li.skipped i.st { color: var(--warn); }
-  .trail li .undo { all: unset; cursor: pointer; font-size: .74rem; color: var(--navy-2); }
-  .trail li .undo:hover { text-decoration: underline; }
-
-  /* Active step */
-  .active { padding: 1.1rem 1.35rem 1.2rem; }
-  .step-no {
-    display: inline-flex; align-items: center; gap: .4rem;
-    font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-    color: var(--navy-2); background: var(--navy-soft);
-    padding: .22rem .6rem; border-radius: 999px;
-  }
-  .active h2 { font-size: 1.22rem; margin: .55rem 0 .3rem; color: var(--ink); line-height: 1.3; }
-  .active .do { font-size: .98rem; color: #37424e; margin: 0; }
-  .active .hint {
-    margin: .6rem 0 0; font-size: .87rem; color: var(--muted);
-    border-left: 3px solid var(--line); padding-left: .7rem;
-  }
-  .say {
-    margin: .8rem 0 0; background: var(--navy-soft); color: var(--navy);
-    border-radius: 10px; padding: .6rem .8rem; font-size: .92rem;
-  }
-  .say i { opacity: .7; margin-right: .35rem; }
-  .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .7rem; }
+  .row input:checked + .tick { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .row input:focus-visible + .tick { outline: 3px solid rgba(21,96,168,.35); outline-offset: 2px; }
+  .ttl { font-size: .95rem; font-weight: 600; }
+  .row input:checked ~ .txt .ttl { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(107,119,131,.5); }
+  .det { display: block; font-size: .85rem; color: var(--muted); margin-top: .1rem; }
+  .say { display: block; font-size: .84rem; color: var(--navy); background: var(--navy-soft); border-radius: 7px; padding: .25rem .5rem; margin-top: .3rem; }
+  .say i { opacity: .7; margin-right: .3rem; }
   .flag {
-    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
-    padding: .2rem .5rem; border-radius: 6px; background: var(--warn-soft); color: var(--warn);
-    display: inline-flex; align-items: center; gap: .3rem;
+    display: inline-flex; align-items: center; gap: .25rem; font-size: .68rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .03em; padding: .1rem .38rem; border-radius: 5px;
+    background: var(--warn-soft); color: var(--warn); margin-left: .35rem; vertical-align: 1px;
   }
   .flag.crit { background: var(--crit-soft); color: var(--crit); }
-  .flag.ok { background: var(--ok-soft); color: var(--ok); }
-
-  .confirm {
-    margin-top: 1.1rem; display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
+  li.skipped .ttl { color: var(--warn); text-decoration: line-through; text-decoration-color: rgba(169,118,18,.5); }
+  li.skipped .tick { border-color: var(--warn); border-style: dashed; }
+  .na {
+    all: unset; cursor: pointer; font-size: .76rem; color: var(--navy-2);
+    margin-top: .25rem; display: inline-flex; align-items: center; gap: .25rem;
   }
+  .na:hover { text-decoration: underline; }
+  .na.on { color: var(--warn); font-weight: 600; }
+
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: .7rem;
+    padding: .8rem 1.25rem 1rem; border-top: 1px solid var(--line); background: #fbfcfe; flex-wrap: wrap;
+  }
+  .foot-note { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .btn {
-    font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
-    border-radius: 10px; padding: .6rem 1.05rem;
-    border: 1.5px solid var(--line); background: #fff; color: var(--ink);
-    display: inline-flex; align-items: center; gap: .45rem;
+    font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; border-radius: 10px;
+    padding: .55rem 1rem; border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+    display: inline-flex; align-items: center; gap: .4rem;
   }
   .btn:hover { border-color: var(--navy-2); color: var(--navy); }
-  .btn.go { background: var(--ok); border-color: var(--ok); color: #fff; font-size: 1rem; padding: .7rem 1.3rem; }
-  .btn.go:hover { background: #14804f; border-color: #14804f; color: #fff; }
   .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
   .btn.primary:hover { background: var(--navy-2); border-color: var(--navy-2); color: #fff; }
-  .btn.ghost { border-style: dashed; color: var(--muted); }
-  .kbd {
-    font-size: .72rem; color: var(--faint); margin-left: .2rem;
-  }
+  .btn.ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .btn.ok:hover { background: #14804f; border-color: #14804f; color: #fff; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
 
-  /* Upcoming (locked) */
-  .upcoming { border-top: 1px solid var(--line); padding: .8rem 1.35rem 1.1rem; background: #fbfcfe; }
-  .upcoming h3 { font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin: 0 0 .45rem; }
-  .upcoming ul { list-style: none; margin: 0; padding: 0; }
-  .upcoming li {
-    display: grid; grid-template-columns: 1rem 1fr; gap: .55rem;
-    font-size: .85rem; color: var(--faint); padding: .25rem 0; align-items: center;
-    cursor: not-allowed; user-select: none;
-  }
-  .upcoming li b { font-weight: 600; color: var(--muted); }
-  .upcoming .stagetag { font-size: .72rem; color: var(--faint); }
-
-  /* Interstitial + summary */
-  .panel { padding: 1.6rem 1.35rem; text-align: center; }
-  .panel .big {
-    width: 66px; height: 66px; border-radius: 50%; margin: 0 auto .8rem;
-    display: grid; place-items: center; font-size: 1.9rem;
-    background: var(--ok-soft); color: var(--ok);
-  }
-  .panel h2 { margin: 0 0 .3rem; font-size: 1.2rem; color: var(--navy); }
-  .panel p { margin: 0 auto; max-width: 46ch; color: var(--muted); font-size: .92rem; }
-  .panel .acts { margin-top: 1.15rem; display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
-
-  .ring { position: relative; width: 108px; height: 108px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto .9rem; }
+  /* ---------- summary ---------- */
+  .panel { padding: 1.5rem 1.25rem; text-align: center; }
+  .ring { position: relative; width: 106px; height: 106px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto .85rem; }
   .ring::before { content: ""; position: absolute; inset: 12px; background: #fff; border-radius: 50%; }
   .ring b { position: relative; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-  .stats { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin: .2rem 0 .4rem; }
-  .stat { font-size: .82rem; color: var(--muted); }
-  .stat b { display: block; font-size: 1.15rem; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .pending { list-style: none; padding: 0; margin: 1rem auto 0; max-width: 620px; text-align: left; }
-  .pending li { font-size: .87rem; padding: .38rem 0; border-bottom: 1px dashed var(--line); color: var(--muted); }
-  .pending li i { margin-right: .4rem; }
+  .panel h2 { margin: 0 0 .25rem; font-size: 1.15rem; color: var(--navy); }
+  .panel p { margin: 0 auto; max-width: 48ch; color: var(--muted); font-size: .9rem; }
+  .stats { display: flex; gap: 1.3rem; justify-content: center; flex-wrap: wrap; margin: .5rem 0 .3rem; }
+  .stat { font-size: .8rem; color: var(--muted); }
+  .stat b { display: block; font-size: 1.1rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pending { list-style: none; padding: 0; margin: .9rem auto 0; max-width: 620px; text-align: left; }
+  .pending li { font-size: .86rem; padding: .35rem 0; border-bottom: 1px dashed var(--line); color: var(--muted); }
+  .pending li i { margin-right: .35rem; }
   .pending li.p i { color: var(--crit); }
   .pending li.s i { color: var(--warn); }
   .pending li b { color: var(--ink); }
+  .acts { margin-top: 1.1rem; display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; }
 
-  .aside {
-    margin-top: 1rem; background: #fff; border-radius: var(--r);
-    border-left: 4px solid var(--navy); padding: .8rem 1.1rem;
-    font-size: .82rem; color: var(--muted);
-  }
+  .aside { margin-top: .9rem; background: #fff; border-radius: var(--r); border-left: 4px solid var(--navy); padding: .8rem 1.05rem; font-size: .82rem; color: var(--muted); }
   .aside b { color: var(--ink); }
-  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
-  footer.src { font-size: .74rem; color: var(--faint); margin-top: 1.1rem; text-align: center; }
-
+  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .85rem; }
+  footer.src { font-size: .74rem; color: var(--faint); margin-top: 1rem; text-align: center; }
   #printAll { display: none; }
 
-  @media (max-width: 900px) {
-    .grid { grid-template-columns: minmax(0, 1fr); }
-    .main { order: 1; }
-    .rail { order: 2; position: static; }
+  @media (max-width: 720px) {
+    .tabs { grid-template-columns: repeat(2, 1fr); }
     .topbar { flex-direction: column; align-items: flex-start; }
-    .crumb { flex-direction: column; align-items: flex-start; gap: .2rem; }
-    .active h2 { font-size: 1.1rem; }
-    .btn, .btn.go { width: 100%; justify-content: center; }
-    .kbd { display: none; }
+    .card-foot { flex-direction: column; align-items: stretch; }
+    .card-foot .btn { width: 100%; justify-content: center; }
+    .foot-note { text-align: center; }
   }
   @media print {
     body { background: #fff; }
-    .topbar, .grid, .toolbar, .aside { display: none !important; }
+    .topbar, .tabs, .card, .aside, .toolbar { display: none !important; }
     #printAll { display: block !important; }
-    #printAll h1 { font-size: 1.15rem; color: #000; }
-    #printAll h3 { margin: 1rem 0 .3rem; font-size: 1rem; }
+    #printAll h3 { margin: .9rem 0 .25rem; font-size: 1rem; }
     #printAll ul { list-style: none; padding: 0; }
-    #printAll li { padding: .3rem 0; border-bottom: 1px solid #ddd; font-size: .9rem; }
+    #printAll li { padding: .28rem 0; border-bottom: 1px solid #ddd; font-size: .88rem; }
     #printAll li::before { content: "\2610  "; }
   }
 </style>
@@ -245,8 +175,8 @@
 
   <div class="topbar">
     <div>
-      <h1>Asistente de atención en toma de muestra</h1>
-      <p class="sub">Amadita Laboratorio Clínico · PT-040-001 Rev.5 · los pasos se habilitan a medida que avanza la atención</p>
+      <h1>Checklist de atención en toma de muestra</h1>
+      <p class="sub">Amadita Laboratorio Clínico · PT-040-001 Rev.5 · marque los pasos de cada etapa del proceso</p>
     </div>
     <div class="pills">
       <div class="pill" title="Tiempo de la atención"><i class="bi bi-stopwatch"></i><span id="clock">00:00</span></div>
@@ -254,14 +184,9 @@
     </div>
   </div>
 
-  <div class="grid">
-    <aside class="rail">
-      <div class="rail-head">Etapas del proceso</div>
-      <div id="rail"></div>
-    </aside>
+  <nav class="tabs" id="tabs" aria-label="Etapas del proceso"></nav>
 
-    <section class="main" id="main"></section>
-  </div>
+  <section class="card" id="card"></section>
 
   <div class="aside">
     <b>Siempre presente.</b> Nunca deje al paciente solo en la toma; si debe ausentarse, explique brevemente el motivo.
@@ -288,355 +213,223 @@ const STAGES = [
     name: "Recepción", icon: "bi-door-open",
     goal: "Reciba al paciente, asegure la privacidad y valide sus datos.",
     items: [
-      { id: "r0", title: "Presencia y conducta", do: "Preséntese con imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.",
-        hint: "Trato respetuoso en todo momento: sin tuteo, apodos ni calificativos, tampoco al dirigirse a personas con discapacidad." },
-      { id: "r1", title: "Bienvenida e identificación", do: "Salude según el horario, dé la bienvenida a Amadita e identifíquese por su nombre.",
-        say: "“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”" },
-      { id: "r2", title: "Privacidad", do: "Ofrezca cerrar la puerta antes de empezar con la toma de muestra.",
-        hint: "Evita distracciones y el paciente se siente más a gusto durante el proceso." },
-      { id: "r3", title: "Asiento y documentos", do: "Invite al paciente a tomar asiento y solicite amablemente los documentos para validar la información.",
-        hint: "Indague si existe una facturación anterior con toma de muestra pendiente." },
-      { id: "r4", title: "Atención personalizada", do: "Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.). Debe hacerlo al menos dos veces durante toda la atención.",
-        flag: "Se repite en todo el proceso" },
-      { id: "r5", title: "Atención exclusiva", do: "No atienda otras llamadas ni personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar." }
+      { id: "r0", title: "Presencia y conducta", det: "Imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados. Trato respetuoso, sin tuteo, apodos ni calificativos." },
+      { id: "r1", title: "Bienvenida e identificación", det: "Salude según el horario, dé la bienvenida a Amadita e identifíquese por su nombre.", say: "“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”" },
+      { id: "r2", title: "Privacidad", det: "Ofrezca cerrar la puerta antes de empezar con la toma de muestra." },
+      { id: "r3", title: "Asiento y documentos", det: "Invite a tomar asiento y solicite los documentos para validar la información. Indague si existe una facturación anterior con toma de muestra pendiente." },
+      { id: "r4", title: "Atención personalizada", det: "Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.) al menos dos veces durante toda la atención." },
+      { id: "r5", title: "Atención exclusiva", det: "No atienda otras llamadas ni personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar." }
     ]
   },
   {
     name: "Antes de extraer", icon: "bi-clipboard2-pulse",
     goal: "Prepare el área, conecte con el paciente y valide qué se le va a tomar.",
     items: [
-      { id: "a0", title: "Área y bioseguridad", do: "Verifique el área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y la desinfección hecha desde el paciente anterior.",
-        flag: "Bioseguridad" },
-      { id: "a1", title: "Protección personal", do: "Colóquese guantes, gorro y bata azul cuando la prueba lo requiera.",
-        flag: "Bioseguridad" },
-      { id: "a2", title: "Cómo se siente el paciente", do: "Pregunte cómo se ha sentido y muestre empatía con su respuesta.",
-        say: "“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”" },
-      { id: "a3", title: "Spray anestésico", do: "Pregunte al paciente si quiere que usen el spray anestésico." },
-      { id: "a4", title: "Validar pruebas y observaciones médicas", do: "Valide las pruebas a realizar. Si el paciente tiene indicación médica, revise los requisitos específicos para la toma.",
-        hint: "Si el médico indica el lugar de la punción y/o la hora de la prueba o cultivo, siga la indicación sin cuestionar al paciente y registre en el sistema que fue autorizado por su médico.",
-        flag: "Registro en sistema", cond: "El paciente no trae indicación médica" }
+      { id: "a0", title: "Área y bioseguridad", det: "Área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y desinfección hecha desde el paciente anterior.", flag: "Bioseguridad" },
+      { id: "a1", title: "Protección personal", det: "Guantes, gorro y bata azul cuando la prueba lo requiera.", flag: "Bioseguridad" },
+      { id: "a2", title: "Cómo se siente el paciente", det: "Pregunte cómo se ha sentido y muestre empatía con su respuesta.", say: "“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”" },
+      { id: "a3", title: "Spray anestésico", det: "Pregunte al paciente si quiere que usen el spray anestésico." },
+      { id: "a4", title: "Validar pruebas y observaciones médicas", det: "Valide las pruebas a realizar y, si hay indicación médica, sus requisitos. Si el médico indica el lugar de la punción y/o la hora, siga la indicación sin cuestionar y registre en el sistema que fue autorizado por su médico.", flag: "Registro en sistema", cond: "sin indicación médica" }
     ]
   },
   {
     name: "Durante la extracción", icon: "bi-droplet-half",
     goal: "Ejecute la toma según la instrucción de trabajo y deje la promesa de entrega registrada.",
     items: [
-      { id: "d0", title: "Toma de muestra según IT-002-001", do: "Realice el proceso de toma de muestra siguiendo la instrucción de trabajo IT-002-001, verificando condición de prueba y condiciones de riesgo.",
-        flag: "IT-002-001" },
-      { id: "d1", title: "Nunca deje al paciente solo", do: "Permanezca con el paciente durante toda la toma. Si debe ausentarse, explíquele brevemente las razones.",
-        flagCrit: "Crítico" },
-      { id: "d2", title: "Promesa de resultados", do: "Consulte el calendario e informe con cortesía cuándo estarán listos los resultados. Asegúrese de que el paciente lo comprendió.",
-        say: "“Señor Carlos, sus resultados estarán listos en 72 horas.”" },
-      { id: "d3", title: "Registrar la promesa", do: "Coloque la fecha y hora exactas de entrega tanto en el recibo como en el sistema automatizado.",
-        flag: "Registro en sistema" },
-      { id: "d4", title: "Prioridad por urgencia", do: "Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.",
-        cond: "No hay urgencia" }
+      { id: "d0", title: "Toma de muestra según IT-002-001", det: "Siga la instrucción de trabajo IT-002-001, verificando condición de prueba y condiciones de riesgo.", flag: "IT-002-001" },
+      { id: "d1", title: "Nunca deje al paciente solo", det: "Permanezca con el paciente durante toda la toma. Si debe ausentarse, explíquele brevemente las razones.", flagCrit: "Crítico" },
+      { id: "d2", title: "Promesa de resultados", det: "Consulte el calendario e informe con cortesía cuándo estarán listos los resultados, asegurando su comprensión.", say: "“Señor Carlos, sus resultados estarán listos en 72 horas.”" },
+      { id: "d3", title: "Registrar la promesa", det: "Coloque la fecha y hora exactas de entrega en el recibo y en el sistema automatizado.", flag: "Registro en sistema" },
+      { id: "d4", title: "Prioridad por urgencia", det: "Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.", cond: "sin urgencia" }
     ]
   },
   {
     name: "Cierre y despedida", icon: "bi-emoji-smile",
     goal: "Explique cómo verá sus resultados, resuelva dudas, despida con cortesía y deje el área lista.",
     items: [
-      { id: "c0", title: "Portal de resultados", do: "Entregue usuario y contraseña (ubicados en la etiqueta) y explique que la clave cambia en cada facturación por motivos de seguridad.",
-        hint: "Notifique los resultados que deben retirarse en físico (ej.: HIV, prueba de paternidad)." },
-      { id: "c1", title: "Nuevo formato visual", do: "Informe al paciente sobre el nuevo formato visual de los resultados y aclare que no afecta su interpretación clínica." },
-      { id: "c2", title: "Validar comprensión y dudas", do: "Confirme que comprendió la información y la promesa de entrega, y dele la oportunidad de expresar sus inquietudes.",
-        say: "“¿Tiene alguna inquietud hasta el momento, señor Carlos?”" },
-      { id: "c3", title: "Canales alternos", do: "Invítelo a descargar la APP o usar los demás canales para ver sus resultados al instante y evitar volver a la sucursal.",
-        hint: "Tome en cuenta las pruebas que no se visualizan por los canales alternos y deben recogerse en físico.",
-        say: "“Puede visualizarlos desde nuestra APP, desde cualquier dispositivo móvil para mayor comodidad.”" },
-      { id: "c4", title: "¿Algo más en lo que servirle?", do: "Antes de despedirse, asegúrese de haber cubierto todas las necesidades del paciente.",
-        say: "“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”" },
-      { id: "c5", title: "Despedida institucional", do: "Agradezca al paciente por preferir nuestros servicios y use la frase que nos identifica.",
-        say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" },
-      { id: "c6", title: "Cierre del área", do: "Deje el área limpia y organizada, con los insumos en orden, y realice la desinfección correspondiente antes del próximo paciente.",
-        flag: "Bioseguridad" }
+      { id: "c0", title: "Portal de resultados", det: "Entregue usuario y contraseña (en la etiqueta) y explique el cambio de clave en cada facturación por seguridad. Notifique los resultados que se retiran en físico (ej.: HIV, prueba de paternidad)." },
+      { id: "c1", title: "Nuevo formato visual", det: "Informe el nuevo formato visual de los resultados y aclare que no afecta su interpretación clínica." },
+      { id: "c2", title: "Validar comprensión y dudas", det: "Confirme que comprendió la información y la promesa de entrega, y dele espacio para sus inquietudes.", say: "“¿Tiene alguna inquietud hasta el momento, señor Carlos?”" },
+      { id: "c3", title: "Canales alternos", det: "Invítelo a descargar la APP o usar los demás canales para ver sus resultados al instante. Tome en cuenta las pruebas que solo se entregan en físico.", say: "“Puede visualizarlos desde nuestra APP, desde cualquier dispositivo móvil para mayor comodidad.”" },
+      { id: "c4", title: "¿Algo más en lo que servirle?", det: "Antes de despedirse, asegúrese de haber cubierto todas las necesidades del paciente.", say: "“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”" },
+      { id: "c5", title: "Despedida institucional", det: "Agradezca al paciente por preferir nuestros servicios y use la frase que nos identifica.", say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" },
+      { id: "c6", title: "Cierre del área", det: "Deje el área limpia y organizada, con los insumos en orden, y realice la desinfección antes del próximo paciente.", flag: "Bioseguridad" }
     ]
   }
 ];
 
-const STEPS = [];
-STAGES.forEach((s, si) => s.items.forEach((it, ii) => STEPS.push({ ...it, stage: si, nth: ii })));
-const TOTAL = STEPS.length;
-const KEY = "asistenteTomaMuestra.v2";
+const ALL = STAGES.flatMap((s, si) => s.items.map(i => ({ ...i, stage: si })));
+const TOTAL = ALL.length;
+const KEY = "checklistTomaMuestra.v3";
 
 let st = load();
-let view = "wizard";
-let interStage = 0;
-let trailOpen = false;
+let stage = firstOpenStage();
+let view = "stages";
 let ticker = null;
-let viewChangedAt = 0;
 
-function setView(v) { if (v !== view) viewChangedAt = Date.now(); view = v; }
-function goWizard() { setView("wizard"); render(); }
-
-function blank() { return { status: {}, cursor: 0, startedAt: null }; }
+function blank() { return { status: {}, startedAt: null }; }
 function load() {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (!raw || typeof raw !== "object") return blank();
+    if (!raw) return blank();
     const s = blank();
-    STEPS.forEach(x => { if (raw.status && (raw.status[x.id] === "done" || raw.status[x.id] === "skip")) s.status[x.id] = raw.status[x.id]; });
-    s.cursor = Math.min(TOTAL, Math.max(0, Number(raw.cursor) || 0));
+    ALL.forEach(x => { const v = raw.status && raw.status[x.id]; if (v === "done" || v === "skip") s.status[x.id] = v; });
     s.startedAt = raw.startedAt || null;
     return s;
   } catch { return blank(); }
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} }
 
-const doneCount = () => STEPS.filter(x => st.status[x.id] === "done").length;
-const closedCount = () => STEPS.filter(x => st.status[x.id]).length;
-const stageClosed = si => STAGES[si].items.filter(i => st.status[i.id]).length;
-const stageIsClosed = si => stageClosed(si) === STAGES[si].items.length;
-const currentStage = () => st.cursor >= TOTAL ? STAGES.length - 1 : STEPS[st.cursor].stage;
+const closedIn = si => STAGES[si].items.filter(i => st.status[i.id]).length;
+const stageFull = si => closedIn(si) === STAGES[si].items.length;
+const closedAll = () => ALL.filter(x => st.status[x.id]).length;
+const doneAll = () => ALL.filter(x => st.status[x.id] === "done").length;
+function firstOpenStage() {
+  const i = STAGES.findIndex((s, si) => !stageFull(si));
+  return i === -1 ? STAGES.length - 1 : i;
+}
 
-/* ---------------- actions ---------------- */
-function confirmStep(kind) {
-  if (st.cursor >= TOTAL) return;
+function mark(id, value) {
   if (!st.startedAt) { st.startedAt = Date.now(); startTicker(); }
-  const step = STEPS[st.cursor];
-  st.status[step.id] = kind;
-  st.cursor++;
+  if (value) st.status[id] = value; else delete st.status[id];
   save();
-
-  if (st.cursor >= TOTAL) {
-    setView("summary");
-    stopTicker();
-  } else if (STEPS[st.cursor].stage !== step.stage) {
-    setView("stageDone");
-    interStage = step.stage;
-  }
-  render();
-}
-function backOne() {
-  if (st.cursor === 0) return;
-  st.cursor--;
-  delete st.status[STEPS[st.cursor].id];
-  setView("wizard");
-  save();
-  render();
-}
-function undoFrom(i) {
-  for (let k = i; k < TOTAL; k++) delete st.status[STEPS[k].id];
-  st.cursor = i;
-  setView("wizard");
-  save();
-  render();
+  paintProgress();
+  renderTabs();
+  renderStage();
 }
 function resetAll() {
   st = blank();
-  setView("wizard");
-  trailOpen = false;
+  stage = 0;
+  view = "stages";
   stopTicker();
   save();
   render();
 }
 
-/* ---------------- clock ---------------- */
 function fmt(ms) {
   const t = Math.max(0, Math.floor(ms / 1000));
   return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
 }
-function paintClock() {
-  document.getElementById("clock").textContent = st.startedAt ? fmt(Date.now() - st.startedAt) : "00:00";
-}
+function paintClock() { document.getElementById("clock").textContent = st.startedAt ? fmt(Date.now() - st.startedAt) : "00:00"; }
 function startTicker() { stopTicker(); ticker = setInterval(paintClock, 1000); paintClock(); }
 function stopTicker() { if (ticker) clearInterval(ticker); ticker = null; paintClock(); }
 
-/* ---------------- render ---------------- */
-function render() {
-  paintProgress();
-  renderRail();
-  renderMain();
-  renderPrint();
-}
+function render() { paintProgress(); renderTabs(); renderCard(); renderPrint(); }
+function renderCard() { view === "summary" ? renderSummary() : renderStage(); }
 
 function paintProgress() {
-  const pct = Math.round((closedCount() / TOTAL) * 100);
+  const pct = Math.round((closedAll() / TOTAL) * 100);
   document.getElementById("globalBar").style.width = pct + "%";
   document.getElementById("globalPct").textContent = pct + "%";
 }
 
-function renderRail() {
-  const cs = currentStage();
-  const rail = document.getElementById("rail");
-  rail.innerHTML = "";
+function renderTabs() {
+  const nav = document.getElementById("tabs");
+  nav.innerHTML = "";
   STAGES.forEach((s, si) => {
-    const box = document.createElement("div");
-    const isCurrent = si === cs && view !== "summary";
-    box.className = "stage" + (stageIsClosed(si) ? " done" : "") + (isCurrent ? " current" : "");
-    const mark = stageIsClosed(si) ? '<i class="bi bi-check-lg"></i>' : si + 1;
-    box.innerHTML = `
-      <button class="stage-btn" type="button">
-        <span class="mark">${mark}</span>
+    const n = closedIn(si), t = s.items.length;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "tab" + (stageFull(si) ? " done" : "");
+    if (si === stage && view === "stages") b.setAttribute("aria-current", "true");
+    b.innerHTML = `
+      <span class="l1">
+        <span class="mk">${stageFull(si) ? '<i class="bi bi-check-lg"></i>' : si + 1}</span>
         <span class="nm">${s.name}</span>
-        <span class="ct">${stageClosed(si)}/${s.items.length}</span>
-      </button>`;
-    const firstIdx = STEPS.findIndex(x => x.stage === si);
-    box.querySelector(".stage-btn").onclick = () => {
-      if (stageClosed(si) > 0 || st.cursor > firstIdx) undoFrom(firstIdx);
-    };
-
-    if (isCurrent) {
-      const ul = document.createElement("ul");
-      ul.className = "substeps";
-      s.items.forEach((it, ii) => {
-        const gi = firstIdx + ii;
-        const status = st.status[it.id];
-        const isNow = gi === st.cursor && view === "wizard";
-        const cls = status === "done" ? "done" : status === "skip" ? "skip" : isNow ? "now" : "lock";
-        const ico = status === "done" ? "bi-check-circle-fill"
-                  : status === "skip" ? "bi-slash-circle"
-                  : isNow ? "bi-record-circle" : "bi-lock";
-        const li = document.createElement("li");
-        li.className = cls;
-        li.innerHTML = `<i class="bi ${ico}"></i><span>${status ? `<button type="button" title="Volver a este paso">${it.title}</button>` : it.title}</span>`;
-        const b = li.querySelector("button");
-        if (b) b.onclick = () => undoFrom(gi);
-        ul.appendChild(li);
-      });
-      box.appendChild(ul);
-    }
-    rail.appendChild(box);
+      </span>
+      <span class="mini"><span style="width:${(n / t) * 100}%"></span></span>
+      <span class="ct">${n} de ${t} pasos</span>`;
+    b.onclick = () => { stage = si; view = "stages"; render(); scrollTop(); };
+    nav.appendChild(b);
   });
 }
 
-function renderMain() {
-  const main = document.getElementById("main");
-  if (view === "summary") return renderSummary(main);
-  if (view === "stageDone") return renderStageDone(main);
-  renderWizard(main);
-}
+function renderStage() {
+  const s = STAGES[stage];
+  const card = document.getElementById("card");
+  const n = closedIn(stage), t = s.items.length;
+  const last = stage === STAGES.length - 1;
 
-function renderWizard(main) {
-  const step = STEPS[st.cursor];
-  const stage = STAGES[step.stage];
-  const inStage = stage.items.length;
-
-  main.innerHTML = `
-    <div class="crumb">
-      <span class="stage-now"><i class="bi ${stage.icon}"></i> Etapa ${step.stage + 1} de ${STAGES.length}: ${stage.name}</span>
-      <span>Paso ${step.nth + 1} de ${inStage} de esta etapa · ${closedCount()} de ${TOTAL} en total</span>
-    </div>
-    <div class="trail" id="trail"></div>
-    <div class="active">
-      <span class="step-no"><i class="bi bi-arrow-right-short"></i> Paso ${st.cursor + 1} de ${TOTAL}</span>
-      <h2>${step.title}</h2>
-      <p class="do">${step.do}</p>
-      ${step.say ? `<p class="say"><i class="bi bi-chat-quote-fill"></i>${step.say}</p>` : ""}
-      ${step.hint ? `<p class="hint">${step.hint}</p>` : ""}
-      <div class="flags">
-        ${step.flag ? `<span class="flag"><i class="bi bi-exclamation-triangle-fill"></i>${step.flag}</span>` : ""}
-        ${step.flagCrit ? `<span class="flag crit"><i class="bi bi-shield-exclamation"></i>${step.flagCrit}</span>` : ""}
-      </div>
-      <div class="confirm">
-        <button class="btn go" id="okBtn" type="button"><i class="bi bi-check2-circle"></i> Hecho, continuar</button>
-        ${step.cond ? `<button class="btn ghost" id="skipBtn"><i class="bi bi-slash-circle"></i> No aplica: ${step.cond}</button>` : ""}
-        ${st.cursor > 0 ? `<button class="btn" id="backBtn"><i class="bi bi-arrow-left"></i> Paso anterior</button>` : ""}
-        <span class="kbd">Enter para confirmar</span>
+  card.innerHTML = `
+    <div class="card-head">
+      <i class="ic bi ${s.icon}"></i>
+      <div>
+        <h2>Etapa ${stage + 1} de ${STAGES.length}: ${s.name}</h2>
+        <p>${s.goal}</p>
       </div>
     </div>
-    <div class="upcoming" id="upcoming"></div>`;
+    <ul class="steps" id="stepList"></ul>
+    <div class="card-foot">
+      <button class="btn" id="prevBtn" ${stage === 0 ? "disabled" : ""}><i class="bi bi-arrow-left"></i> Etapa anterior</button>
+      <span class="foot-note">${n} de ${t} en esta etapa · ${closedAll()} de ${TOTAL} en total</span>
+      <button class="btn ${n === t ? "ok" : "primary"}" id="nextBtn">
+        ${last ? 'Ver resumen <i class="bi bi-clipboard-check"></i>' : `Continuar con ${STAGES[stage + 1].name} <i class="bi bi-arrow-right"></i>`}
+      </button>
+    </div>`;
 
-  document.getElementById("okBtn").onclick = () => confirmStep("done");
-  const sk = document.getElementById("skipBtn");
-  if (sk) sk.onclick = () => confirmStep("skip");
-  const bk = document.getElementById("backBtn");
-  if (bk) bk.onclick = backOne;
-
-  renderTrail();
-  renderUpcoming();
-}
-
-function renderTrail() {
-  const host = document.getElementById("trail");
-  if (!host) return;
-  const done = STEPS.slice(0, st.cursor);
-  if (!done.length) { host.innerHTML = ""; return; }
-  host.innerHTML = `
-    <button class="trail-toggle" type="button" id="trailToggle">
-      <i class="bi bi-chevron-${trailOpen ? "down" : "right"}"></i>
-      ${done.length} paso(s) ya confirmados en esta atención
-    </button>
-    ${trailOpen ? '<ul id="trailList"></ul>' : ""}`;
-  document.getElementById("trailToggle").onclick = () => { trailOpen = !trailOpen; renderTrail(); };
-  if (!trailOpen) return;
-  const ul = document.getElementById("trailList");
-  done.forEach((x, i) => {
-    const skipped = st.status[x.id] === "skip";
+  const ul = document.getElementById("stepList");
+  s.items.forEach(it => {
+    const status = st.status[it.id];
     const li = document.createElement("li");
-    if (skipped) li.className = "skipped";
+    if (status === "skip") li.className = "skipped";
     li.innerHTML = `
-      <i class="bi st ${skipped ? "bi-slash-circle" : "bi-check-circle-fill"}"></i>
-      <span>${STAGES[x.stage].name} · ${x.title}${skipped ? " (no aplicó)" : ""}</span>
-      <button class="undo" type="button">Volver aquí</button>`;
-    li.querySelector(".undo").onclick = () => undoFrom(i);
+      <label class="row">
+        <input type="checkbox" ${status === "done" ? "checked" : ""}>
+        <span class="tick"><i class="bi bi-check-lg"></i></span>
+        <span class="txt">
+          <span class="ttl">${it.title}${it.flag ? `<span class="flag"><i class="bi bi-exclamation-triangle-fill"></i>${it.flag}</span>` : ""}${it.flagCrit ? `<span class="flag crit"><i class="bi bi-shield-exclamation"></i>${it.flagCrit}</span>` : ""}</span>
+          <span class="det">${it.det}</span>
+          ${it.say ? `<span class="say"><i class="bi bi-chat-quote-fill"></i>${it.say}</span>` : ""}
+        </span>
+      </label>`;
+    li.querySelector("input").onchange = e => mark(it.id, e.target.checked ? "done" : null);
+
+    if (it.cond) {
+      const na = document.createElement("button");
+      na.type = "button";
+      na.className = "na" + (status === "skip" ? " on" : "");
+      na.style.margin = "0 0 .5rem 2.8rem";
+      na.innerHTML = `<i class="bi bi-slash-circle"></i> ${status === "skip" ? `Marcado como no aplica (${it.cond})` : `No aplica: paciente ${it.cond}`}`;
+      na.onclick = () => mark(it.id, status === "skip" ? null : "skip");
+      li.appendChild(na);
+    }
     ul.appendChild(li);
   });
+
+  document.getElementById("prevBtn").onclick = () => { if (stage > 0) { stage--; render(); scrollTop(); } };
+  document.getElementById("nextBtn").onclick = () => {
+    if (stage === STAGES.length - 1) { view = "summary"; render(); }
+    else { stage++; render(); }
+    scrollTop();
+  };
 }
 
-function renderUpcoming() {
-  const host = document.getElementById("upcoming");
-  if (!host) return;
-  const next = STEPS.slice(st.cursor + 1, st.cursor + 4);
-  if (!next.length) {
-    host.innerHTML = `<h3>Siguiente</h3><ul><li><i class="bi bi-flag"></i><b>Resumen de la atención</b></li></ul>`;
-    return;
-  }
-  host.innerHTML = `<h3>Se habilitan después de confirmar</h3><ul>${
-    next.map(x => `<li title="Se habilita al confirmar el paso actual"><i class="bi bi-lock"></i><span><b>${x.title}</b> <span class="stagetag">· ${STAGES[x.stage].name}</span></span></li>`).join("")
-  }</ul>`;
-}
-
-function renderStageDone(main) {
-  const s = STAGES[interStage];
-  const nxt = STAGES[interStage + 1];
-  const skipped = s.items.filter(i => st.status[i.id] === "skip").length;
-  main.innerHTML = `
-    <div class="crumb">
-      <span class="stage-now"><i class="bi bi-check2-all"></i> Etapa ${interStage + 1} completada</span>
-      <span>${closedCount()} de ${TOTAL} pasos en total</span>
-    </div>
-    <div class="panel">
-      <div class="big"><i class="bi bi-check-lg"></i></div>
-      <h2>${s.name}: etapa completada</h2>
-      <p>${skipped ? `${s.items.length - skipped} paso(s) confirmados y ${skipped} marcado(s) como no aplica. ` : `Los ${s.items.length} pasos de la etapa fueron confirmados. `}
-      Continúe con <b>${nxt.name}</b>: ${nxt.goal.charAt(0).toLowerCase() + nxt.goal.slice(1)}</p>
-      <div class="acts">
-        <button class="btn primary" id="contBtn"><i class="bi ${nxt.icon}"></i> Continuar con ${nxt.name}</button>
-        <button class="btn" id="revBtn"><i class="bi bi-arrow-left"></i> Revisar etapa anterior</button>
-      </div>
-    </div>`;
-  document.getElementById("contBtn").onclick = goWizard;
-  document.getElementById("revBtn").onclick = () => undoFrom(STEPS.findIndex(x => x.stage === interStage));
-}
-
-function renderSummary(main) {
-  const done = doneCount();
-  const skipped = STEPS.filter(x => st.status[x.id] === "skip");
-  const pct = Math.round((done / TOTAL) * 100);
+function renderSummary() {
+  const card = document.getElementById("card");
+  const done = doneAll();
+  const skipped = ALL.filter(x => st.status[x.id] === "skip");
+  const missing = ALL.filter(x => !st.status[x.id]);
+  const pct = Math.round((closedAll() / TOTAL) * 100);
   const elapsed = st.startedAt ? fmt(Date.now() - st.startedAt) : "—";
+  stopTicker();
 
-  main.innerHTML = `
-    <div class="crumb">
-      <span class="stage-now"><i class="bi bi-clipboard-check"></i> Atención finalizada</span>
-      <span>${done} de ${TOTAL} pasos confirmados</span>
-    </div>
+  card.innerHTML = `
     <div class="panel">
       <div class="ring" id="ring"><b>${pct}%</b></div>
-      <h2>${skipped.length ? "Atención completada con excepciones" : "Atención completada"}</h2>
+      <h2>${missing.length ? "Atención con pasos sin marcar" : skipped.length ? "Atención completada con excepciones" : "Atención completada"}</h2>
       <div class="stats">
         <div class="stat"><b>${done}</b> confirmados</div>
         <div class="stat"><b>${skipped.length}</b> no aplicaron</div>
+        <div class="stat"><b>${missing.length}</b> sin marcar</div>
         <div class="stat"><b>${elapsed}</b> duración</div>
       </div>
-      <p>${skipped.length
-        ? "Revise los pasos marcados como no aplica antes de cerrar el turno del paciente."
-        : "Recorrió las cuatro etapas del protocolo sin omitir pasos."}</p>
+      <p>${missing.length
+        ? "Complete los pasos pendientes antes de cerrar el turno del paciente."
+        : "Recorrió las cuatro etapas del protocolo."}</p>
       <ul class="pending" id="pendingList"></ul>
       <div class="acts">
         <button class="btn primary" id="newBtn"><i class="bi bi-person-plus"></i> Atender nuevo paciente</button>
-        <button class="btn" id="reviewBtn"><i class="bi bi-arrow-left"></i> Revisar último paso</button>
+        <button class="btn" id="backBtn"><i class="bi bi-arrow-left"></i> Volver a las etapas</button>
       </div>
     </div>`;
 
@@ -645,40 +438,39 @@ function renderSummary(main) {
   ring.style.color = pct === 100 ? "var(--ok)" : "var(--navy)";
 
   const list = document.getElementById("pendingList");
+  missing.forEach(x => {
+    const li = document.createElement("li");
+    li.className = "p";
+    li.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i><b>${STAGES[x.stage].name}:</b> ${x.title} — sin marcar`;
+    li.style.cursor = "pointer";
+    li.onclick = () => { stage = x.stage; view = "stages"; render(); scrollTop(); };
+    list.appendChild(li);
+  });
   skipped.forEach(x => {
     const li = document.createElement("li");
     li.className = "s";
-    li.innerHTML = `<i class="bi bi-slash-circle"></i><b>${STAGES[x.stage].name}:</b> ${x.title} — no aplicó (${x.cond})`;
+    li.innerHTML = `<i class="bi bi-slash-circle"></i><b>${STAGES[x.stage].name}:</b> ${x.title} — no aplicó (paciente ${x.cond})`;
     list.appendChild(li);
   });
 
   document.getElementById("newBtn").onclick = resetAll;
-  document.getElementById("reviewBtn").onclick = () => undoFrom(TOTAL - 1);
+  document.getElementById("backBtn").onclick = () => { view = "stages"; stage = firstOpenStage(); render(); scrollTop(); };
 }
 
 function renderPrint() {
-  const host = document.getElementById("printAll");
-  host.innerHTML = `<h1>Checklist de atención en toma de muestra — PT-040-001 Rev.5</h1>` +
+  document.getElementById("printAll").innerHTML =
+    `<h1>Checklist de atención en toma de muestra — PT-040-001 Rev.5</h1>` +
     STAGES.map((s, si) => `<h3>Etapa ${si + 1}: ${s.name}</h3><ul>${
-      s.items.map(i => `<li><b>${i.title}.</b> ${i.do}</li>`).join("")
+      s.items.map(i => `<li><b>${i.title}.</b> ${i.det}</li>`).join("")
     }</ul>`).join("");
 }
 
-// El cierre de etapa y el resumen solo avanzan con clic: son puntos de control
-// y una tecla sostenida no debe saltarlos ni confirmar pasos en cadena.
-document.addEventListener("keydown", e => {
-  if (view !== "wizard") return;
-  if (e.target.matches("input, textarea, button")) return;
-  if (e.repeat || Date.now() - viewChangedAt < 700) return;
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); confirmStep("done"); }
-  if (e.key === "Backspace") { e.preventDefault(); backOne(); }
-});
+function scrollTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 
 document.getElementById("printBtn").onclick = () => window.print();
 document.getElementById("resetBtn").onclick = resetAll;
 
-if (st.cursor >= TOTAL) setView("summary");
-if (st.startedAt && view !== "summary") startTicker();
+if (st.startedAt) startTicker();
 render();
 </script>
 </body>

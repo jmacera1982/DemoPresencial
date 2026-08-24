@@ -1,7 +1,7 @@
 # Checklist de atención — Extraccionista (toma de muestra)
 
 **Fuente:** PT-040-001 Rev.5 — Protocolo para la atención a cliente/pacientes en toma de muestra  
-**Versión interactiva:** `checklist-atencion-extraccionista.html` — asistente paso a paso: muestra un solo paso a la vez y habilita el siguiente al confirmar el actual, con cierre de etapa y resumen final.  
+**Versión interactiva:** `checklist-atencion-extraccionista.html` — una etapa por pantalla con todos sus pasos visibles y marcables, avance por etapa y resumen final.  
 **Vigencia:** copia de trabajo; verificar en SGO SUITE antes de usar.
 
 Los pasos están agrupados en cuatro etapas del proceso: **Recepción → Antes de extraer → Durante la extracción → Cierre y despedida.**
