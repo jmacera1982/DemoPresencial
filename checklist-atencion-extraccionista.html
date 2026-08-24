@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Checklist interactivo de atención — Toma de muestra | PT-040-001 Rev.5</title>
+<title>Asistente de atención en toma de muestra | PT-040-001 Rev.5</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <style>
   :root {
@@ -11,16 +11,19 @@
     --navy-2: #1560a8;
     --navy-soft: #eaf2fa;
     --ink: #16202a;
-    --muted: #66727e;
+    --muted: #6b7783;
+    --faint: #9aa6b2;
     --line: #dde5ec;
     --ok: #17915a;
-    --ok-soft: #e6f5ee;
-    --warn: #b8860b;
-    --bg: #f1f4f8;
-    --radius: 14px;
+    --ok-soft: #e7f6ee;
+    --warn: #a97612;
+    --warn-soft: #fdf4dd;
+    --crit: #b3261e;
+    --crit-soft: #fdeceb;
+    --bg: #eef2f7;
+    --r: 14px;
   }
   * { box-sizing: border-box; }
-  html, body { height: 100%; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -28,187 +31,205 @@
     color: var(--ink);
     line-height: 1.5;
   }
-  .wrap { max-width: 940px; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 1.1rem 1rem 3.5rem; }
 
-  /* ---------- Header ---------- */
+  /* ---------------- Top bar ---------------- */
   .topbar {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-    color: #fff;
-    border-radius: var(--radius);
-    padding: 1.1rem 1.35rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-    justify-content: space-between;
+    color: #fff; border-radius: var(--r);
+    padding: .9rem 1.2rem;
+    display: flex; flex-wrap: wrap; gap: .9rem;
+    align-items: center; justify-content: space-between;
   }
-  .topbar h1 { font-size: 1.15rem; margin: 0 0 .15rem; font-weight: 650; }
-  .topbar p { margin: 0; font-size: .8rem; opacity: .85; }
-  .global {
-    display: flex; align-items: center; gap: .75rem;
-    background: rgba(255,255,255,.14);
-    padding: .5rem .8rem; border-radius: 999px;
+  .topbar h1 { font-size: 1.05rem; margin: 0; font-weight: 650; }
+  .topbar .sub { margin: .1rem 0 0; font-size: .76rem; opacity: .85; }
+  .pills { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .pill {
+    background: rgba(255,255,255,.16); border-radius: 999px;
+    padding: .35rem .75rem; font-size: .82rem;
+    display: flex; align-items: center; gap: .4rem;
+    font-variant-numeric: tabular-nums;
   }
-  .global .bar { width: 130px; height: 7px; background: rgba(255,255,255,.28); border-radius: 999px; overflow: hidden; }
-  .global .bar span { display: block; height: 100%; width: 0; background: #fff; border-radius: 999px; transition: width .35s ease; }
-  .global b { font-variant-numeric: tabular-nums; font-size: .9rem; }
+  .pill .bar { width: 96px; height: 6px; background: rgba(255,255,255,.3); border-radius: 999px; overflow: hidden; }
+  .pill .bar span { display: block; height: 100%; width: 0; background: #fff; transition: width .4s ease; }
 
-  /* ---------- Stage stepper ---------- */
-  .stepper {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: .6rem;
-    margin: 1rem 0 1.1rem;
-  }
+  /* ---------------- Layout ---------------- */
+  .grid { display: grid; grid-template-columns: 288px 1fr; gap: 1rem; margin-top: 1rem; align-items: start; }
+
+  /* ---------------- Rail ---------------- */
+  .rail { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; position: sticky; top: 1rem; }
+  .rail-head { padding: .8rem 1rem .5rem; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
+  .stage { border-top: 1px solid var(--line); }
   .stage-btn {
-    position: relative;
-    text-align: left;
-    background: #fff;
-    border: 1.5px solid var(--line);
-    border-radius: var(--radius);
-    padding: .7rem .8rem .8rem;
-    cursor: pointer;
-    font: inherit;
-    color: var(--muted);
-    transition: border-color .2s, box-shadow .2s, transform .12s;
+    width: 100%; text-align: left; font: inherit; cursor: pointer;
+    background: none; border: 0; padding: .7rem 1rem;
+    display: grid; grid-template-columns: 1.6rem 1fr auto; gap: .55rem; align-items: center;
   }
-  .stage-btn:hover { transform: translateY(-1px); border-color: var(--navy-2); }
-  .stage-btn .row1 { display: flex; align-items: center; gap: .45rem; margin-bottom: .3rem; }
-  .stage-btn .dot {
-    width: 1.5rem; height: 1.5rem; flex: 0 0 auto;
-    border-radius: 50%;
+  .stage-btn:hover { background: #f7fafc; }
+  .stage .mark {
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
     display: grid; place-items: center;
-    background: var(--navy-soft); color: var(--navy);
-    font-size: .78rem; font-weight: 700;
+    background: #f0f3f7; color: var(--faint);
+    font-size: .78rem; font-weight: 700; border: 1.5px solid var(--line);
   }
-  .stage-btn .name { font-size: .84rem; font-weight: 650; color: var(--ink); line-height: 1.25; }
-  .stage-btn .mini { display: block; height: 5px; background: var(--line); border-radius: 999px; overflow: hidden; }
-  .stage-btn .mini span { display: block; height: 100%; width: 0; background: var(--navy-2); border-radius: 999px; transition: width .35s ease; }
-  .stage-btn .count { font-size: .72rem; margin-top: .3rem; display: block; }
-  .stage-btn[aria-current="true"] {
-    border-color: var(--navy);
-    box-shadow: 0 6px 18px rgba(11,61,110,.16);
+  .stage .nm { font-size: .88rem; font-weight: 600; color: var(--muted); }
+  .stage .ct { font-size: .72rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .stage.current { background: #f7fbff; }
+  .stage.current .mark { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .stage.current .nm { color: var(--navy); }
+  .stage.done .mark { background: var(--ok); color: #fff; border-color: var(--ok); }
+  .stage.done .nm { color: var(--ok); }
+  .substeps { list-style: none; margin: 0; padding: 0 1rem .75rem 1.05rem; }
+  .substeps li {
+    display: grid; grid-template-columns: 1rem 1fr; gap: .5rem;
+    font-size: .8rem; color: var(--faint); padding: .17rem 0; align-items: start;
   }
-  .stage-btn[aria-current="true"] .dot { background: var(--navy); color: #fff; }
-  .stage-btn.done { border-color: var(--ok); }
-  .stage-btn.done .dot { background: var(--ok); color: #fff; }
-  .stage-btn.done .mini span { background: var(--ok); }
+  .substeps li i { font-size: .82rem; margin-top: .18rem; }
+  .substeps li.done { color: var(--ok); }
+  .substeps li.now { color: var(--navy); font-weight: 650; }
+  .substeps li.skip { color: var(--warn); }
+  .substeps li.lock { opacity: .8; }
+  .substeps li button {
+    all: unset; cursor: pointer; text-align: left; color: inherit; font: inherit;
+    text-decoration: underline dotted transparent;
+  }
+  .substeps li button:hover { text-decoration-color: currentColor; }
 
-  /* ---------- Card ---------- */
-  .card {
-    background: #fff;
-    border-radius: var(--radius);
-    box-shadow: 0 4px 20px rgba(16,32,48,.07);
-    overflow: hidden;
-  }
-  .card-head {
-    padding: 1rem 1.35rem .85rem;
-    border-bottom: 1px solid var(--line);
-    display: flex; gap: .85rem; align-items: flex-start;
-  }
-  .card-head i.ico { font-size: 1.5rem; color: var(--navy-2); line-height: 1.2; }
-  .card-head h2 { margin: 0; font-size: 1.08rem; color: var(--navy); }
-  .card-head p { margin: .15rem 0 0; font-size: .85rem; color: var(--muted); }
-
-  .items { list-style: none; margin: 0; padding: .35rem 1.35rem 1rem; }
-  .item { border-bottom: 1px solid var(--line); }
-  .item:last-child { border-bottom: 0; }
-  .item label {
-    display: grid;
-    grid-template-columns: 1.4rem 1fr;
-    gap: .7rem;
-    padding: .7rem .15rem;
-    cursor: pointer;
-    align-items: start;
-  }
-  .item input { position: absolute; opacity: 0; width: 0; height: 0; }
-  .tick {
-    width: 1.25rem; height: 1.25rem;
-    border: 1.8px solid var(--navy-2);
-    border-radius: 5px;
-    display: grid; place-items: center;
-    margin-top: .12rem;
-    color: transparent;
-    font-size: .8rem;
-    transition: background .18s, border-color .18s, color .18s;
-  }
-  .item input:checked + .tick { background: var(--ok); border-color: var(--ok); color: #fff; }
-  .item input:focus-visible + .tick { outline: 3px solid rgba(21,96,168,.35); outline-offset: 2px; }
-  .txt .t { font-size: .95rem; }
-  .txt .t b { color: var(--navy); }
-  .item input:checked ~ .txt .t { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(102,114,126,.5); }
-  .hint { display: block; font-size: .84rem; color: var(--muted); margin-top: .18rem; }
-  .say {
-    display: inline-block; margin-top: .3rem;
-    background: var(--navy-soft); color: var(--navy);
-    font-size: .82rem; padding: .18rem .5rem; border-radius: 6px;
-  }
-  .tag {
-    display: inline-block; font-size: .68rem; font-weight: 700; letter-spacing: .03em;
-    text-transform: uppercase; padding: .1rem .4rem; border-radius: 4px;
-    background: #fdf3d8; color: var(--warn); margin-left: .35rem; vertical-align: 1px;
-  }
-  .tag.crit { background: #fdeaea; color: #b3261e; }
-
-  .card-foot {
+  /* ---------------- Main card ---------------- */
+  .main { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; }
+  .crumb {
+    padding: .7rem 1.35rem; border-bottom: 1px solid var(--line);
     display: flex; align-items: center; justify-content: space-between; gap: .75rem;
-    padding: .85rem 1.35rem 1.1rem;
-    border-top: 1px solid var(--line);
-    background: #fbfcfd;
+    background: #fbfcfe; font-size: .78rem; color: var(--muted);
+  }
+  .crumb .stage-now { display: flex; align-items: center; gap: .45rem; font-weight: 650; color: var(--navy); }
+  .crumb .stage-now i { font-size: 1rem; }
+
+  /* Completed trail */
+  .trail { padding: .4rem 1.35rem 0; }
+  .trail-toggle {
+    all: unset; cursor: pointer; font-size: .78rem; color: var(--muted);
+    display: inline-flex; align-items: center; gap: .35rem; padding: .45rem 0;
+  }
+  .trail-toggle:hover { color: var(--navy); }
+  .trail ul { list-style: none; margin: 0 0 .4rem; padding: 0; }
+  .trail li {
+    display: grid; grid-template-columns: 1rem 1fr auto; gap: .55rem;
+    font-size: .84rem; color: var(--muted); padding: .28rem 0; align-items: center;
+    border-bottom: 1px dashed var(--line);
+  }
+  .trail li i.st { color: var(--ok); }
+  .trail li.skipped i.st { color: var(--warn); }
+  .trail li .undo { all: unset; cursor: pointer; font-size: .74rem; color: var(--navy-2); }
+  .trail li .undo:hover { text-decoration: underline; }
+
+  /* Active step */
+  .active { padding: 1.1rem 1.35rem 1.2rem; }
+  .step-no {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--navy-2); background: var(--navy-soft);
+    padding: .22rem .6rem; border-radius: 999px;
+  }
+  .active h2 { font-size: 1.22rem; margin: .55rem 0 .3rem; color: var(--ink); line-height: 1.3; }
+  .active .do { font-size: .98rem; color: #37424e; margin: 0; }
+  .active .hint {
+    margin: .6rem 0 0; font-size: .87rem; color: var(--muted);
+    border-left: 3px solid var(--line); padding-left: .7rem;
+  }
+  .say {
+    margin: .8rem 0 0; background: var(--navy-soft); color: var(--navy);
+    border-radius: 10px; padding: .6rem .8rem; font-size: .92rem;
+  }
+  .say i { opacity: .7; margin-right: .35rem; }
+  .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .7rem; }
+  .flag {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    padding: .2rem .5rem; border-radius: 6px; background: var(--warn-soft); color: var(--warn);
+    display: inline-flex; align-items: center; gap: .3rem;
+  }
+  .flag.crit { background: var(--crit-soft); color: var(--crit); }
+  .flag.ok { background: var(--ok-soft); color: var(--ok); }
+
+  .confirm {
+    margin-top: 1.1rem; display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
   }
   .btn {
-    font: inherit; font-size: .9rem; font-weight: 600;
-    border-radius: 9px; padding: .55rem 1rem; cursor: pointer;
+    font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
+    border-radius: 10px; padding: .6rem 1.05rem;
     border: 1.5px solid var(--line); background: #fff; color: var(--ink);
-    display: inline-flex; align-items: center; gap: .4rem;
+    display: inline-flex; align-items: center; gap: .45rem;
   }
   .btn:hover { border-color: var(--navy-2); color: var(--navy); }
+  .btn.go { background: var(--ok); border-color: var(--ok); color: #fff; font-size: 1rem; padding: .7rem 1.3rem; }
+  .btn.go:hover { background: #14804f; border-color: #14804f; color: #fff; }
   .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
   .btn.primary:hover { background: var(--navy-2); border-color: var(--navy-2); color: #fff; }
-  .btn:disabled { opacity: .45; cursor: not-allowed; }
-  .foot-note { font-size: .8rem; color: var(--muted); }
+  .btn.ghost { border-style: dashed; color: var(--muted); }
+  .kbd {
+    font-size: .72rem; color: var(--faint); margin-left: .2rem;
+  }
 
-  /* ---------- Reminder / footer ---------- */
+  /* Upcoming (locked) */
+  .upcoming { border-top: 1px solid var(--line); padding: .8rem 1.35rem 1.1rem; background: #fbfcfe; }
+  .upcoming h3 { font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin: 0 0 .45rem; }
+  .upcoming ul { list-style: none; margin: 0; padding: 0; }
+  .upcoming li {
+    display: grid; grid-template-columns: 1rem 1fr; gap: .55rem;
+    font-size: .85rem; color: var(--faint); padding: .25rem 0; align-items: center;
+  }
+  .upcoming li b { font-weight: 600; color: var(--muted); }
+  .upcoming .stagetag { font-size: .72rem; color: var(--faint); }
+
+  /* Interstitial + summary */
+  .panel { padding: 1.6rem 1.35rem; text-align: center; }
+  .panel .big {
+    width: 66px; height: 66px; border-radius: 50%; margin: 0 auto .8rem;
+    display: grid; place-items: center; font-size: 1.9rem;
+    background: var(--ok-soft); color: var(--ok);
+  }
+  .panel h2 { margin: 0 0 .3rem; font-size: 1.2rem; color: var(--navy); }
+  .panel p { margin: 0 auto; max-width: 46ch; color: var(--muted); font-size: .92rem; }
+  .panel .acts { margin-top: 1.15rem; display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+
+  .ring { position: relative; width: 108px; height: 108px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto .9rem; }
+  .ring::before { content: ""; position: absolute; inset: 12px; background: #fff; border-radius: 50%; }
+  .ring b { position: relative; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+  .stats { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin: .2rem 0 .4rem; }
+  .stat { font-size: .82rem; color: var(--muted); }
+  .stat b { display: block; font-size: 1.15rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pending { list-style: none; padding: 0; margin: 1rem auto 0; max-width: 620px; text-align: left; }
+  .pending li { font-size: .87rem; padding: .38rem 0; border-bottom: 1px dashed var(--line); color: var(--muted); }
+  .pending li i { margin-right: .4rem; }
+  .pending li.p i { color: var(--crit); }
+  .pending li.s i { color: var(--warn); }
+  .pending li b { color: var(--ink); }
+
   .aside {
-    margin-top: 1rem; background: #fff; border-radius: var(--radius);
-    border-left: 4px solid var(--navy); padding: .85rem 1.1rem;
-    font-size: .84rem; color: var(--muted);
+    margin-top: 1rem; background: #fff; border-radius: var(--r);
+    border-left: 4px solid var(--navy); padding: .8rem 1.1rem;
+    font-size: .82rem; color: var(--muted);
   }
   .aside b { color: var(--ink); }
-  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
-  footer.src { font-size: .76rem; color: var(--muted); margin-top: 1.25rem; text-align: center; }
+  .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+  footer.src { font-size: .74rem; color: var(--faint); margin-top: 1.1rem; text-align: center; }
 
-  /* ---------- Summary ---------- */
-  .summary { display: none; padding: 1.35rem; }
-  .summary.on { display: block; }
-  .summary h2 { margin: 0 0 .2rem; color: var(--navy); font-size: 1.1rem; }
-  .ring-row { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; margin: .9rem 0 1rem; }
-  .ring {
-    position: relative;
-    width: 104px; height: 104px; flex: 0 0 auto;
-    border-radius: 50%;
-    display: grid; place-items: center;
-    font-weight: 700; color: var(--navy);
-  }
-  .ring::before {
-    content: ""; position: absolute; inset: 12px;
-    background: #fff; border-radius: 50%;
-  }
-  .ring b { position: relative; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
-  .pending { list-style: none; padding: 0; margin: .5rem 0 0; }
-  .pending li { font-size: .88rem; padding: .35rem 0; border-bottom: 1px dashed var(--line); }
-  .pending li i { color: var(--warn); margin-right: .4rem; }
-  .all-ok { color: var(--ok); font-weight: 600; }
+  #printAll { display: none; }
 
-  @media (max-width: 720px) {
-    .stepper { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+    .rail { position: static; }
     .topbar { flex-direction: column; align-items: flex-start; }
   }
   @media print {
     body { background: #fff; }
-    .stepper, .card-foot, .toolbar, .global { display: none !important; }
-    .card { box-shadow: none; }
-    .stage-print { display: block !important; }
+    .topbar, .grid, .toolbar, .aside { display: none !important; }
+    #printAll { display: block !important; }
+    #printAll h1 { font-size: 1.15rem; color: #000; }
+    #printAll h3 { margin: 1rem 0 .3rem; font-size: 1rem; }
+    #printAll ul { list-style: none; padding: 0; }
+    #printAll li { padding: .3rem 0; border-bottom: 1px solid #ddd; font-size: .9rem; }
+    #printAll li::before { content: "\2610  "; }
   }
 </style>
 </head>
@@ -217,283 +238,434 @@
 
   <div class="topbar">
     <div>
-      <h1>Checklist de atención en toma de muestra</h1>
-      <p>Amadita Laboratorio Clínico · PT-040-001 Rev.5 · guía interactiva para el extraccionista</p>
+      <h1>Asistente de atención en toma de muestra</h1>
+      <p class="sub">Amadita Laboratorio Clínico · PT-040-001 Rev.5 · los pasos se habilitan a medida que avanza la atención</p>
     </div>
-    <div class="global" title="Avance total de la atención">
-      <i class="bi bi-clipboard-check"></i>
-      <div class="bar"><span id="globalBar"></span></div>
-      <b id="globalPct">0%</b>
+    <div class="pills">
+      <div class="pill" title="Tiempo de la atención"><i class="bi bi-stopwatch"></i><span id="clock">00:00</span></div>
+      <div class="pill" title="Avance total"><i class="bi bi-list-check"></i><div class="bar"><span id="globalBar"></span></div><b id="globalPct">0%</b></div>
     </div>
   </div>
 
-  <nav class="stepper" id="stepper" aria-label="Etapas del proceso"></nav>
+  <div class="grid">
+    <aside class="rail">
+      <div class="rail-head">Etapas del proceso</div>
+      <div id="rail"></div>
+    </aside>
 
-  <section class="card">
-    <div id="stageView">
-      <div class="card-head">
-        <i class="ico bi" id="stageIcon"></i>
-        <div>
-          <h2 id="stageTitle"></h2>
-          <p id="stageDesc"></p>
-        </div>
-      </div>
-      <ul class="items" id="stageItems"></ul>
-      <div class="card-foot">
-        <button class="btn" id="prevBtn"><i class="bi bi-arrow-left"></i> Etapa anterior</button>
-        <span class="foot-note" id="stageCount"></span>
-        <button class="btn primary" id="nextBtn">Siguiente etapa <i class="bi bi-arrow-right"></i></button>
-      </div>
-    </div>
-
-    <div class="summary" id="summary">
-      <h2>Resumen de la atención</h2>
-      <p class="foot-note">Revise los pendientes antes de cerrar el turno del paciente.</p>
-      <div class="ring-row">
-        <div class="ring" id="ring">0%</div>
-        <div>
-          <div id="summaryLine" style="font-size:.95rem"></div>
-          <ul class="pending" id="pendingList"></ul>
-        </div>
-      </div>
-      <div class="card-foot" style="border-radius:10px;border:1px solid var(--line)">
-        <button class="btn" id="backBtn"><i class="bi bi-arrow-left"></i> Volver a las etapas</button>
-        <button class="btn primary" id="newBtn"><i class="bi bi-person-plus"></i> Nuevo paciente</button>
-      </div>
-    </div>
-  </section>
+    <section class="main" id="main"></section>
+  </div>
 
   <div class="aside">
-    <b>Recordatorios permanentes.</b> Nunca deje al paciente solo en la toma; si debe ausentarse, explique brevemente el motivo.
+    <b>Siempre presente.</b> Nunca deje al paciente solo en la toma; si debe ausentarse, explique brevemente el motivo.
     Si tiene dudas del proceso, pida al paciente esperar unos minutos y, discretamente, consulte la instrucción de trabajo o pida apoyo a una Bioanalista con más experiencia.
     Se realizan auditorías a todo el personal sin distinción de antigüedad; dentro de los primeros 3 meses no aplican las medidas disciplinarias del PT-040-005.
   </div>
 
   <div class="toolbar">
-    <button class="btn" id="printBtn"><i class="bi bi-printer"></i> Imprimir</button>
-    <button class="btn" id="resetBtn"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar checklist</button>
+    <button class="btn" id="printBtn"><i class="bi bi-printer"></i> Imprimir checklist completo</button>
+    <button class="btn" id="resetBtn"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar atención</button>
   </div>
 
   <footer class="src">
     Fuente: PT-040-001 Rev.5 — Protocolo para la atención a cliente/pacientes en toma de muestra. Toma de muestra según IT-002-001.<br>
     Si este documento se descarga o imprime es copia no controlada; verifique su vigencia en SGO SUITE antes de su uso.
   </footer>
+
+  <div id="printAll"></div>
 </div>
 
 <script>
 const STAGES = [
   {
-    id: "recepcion",
-    name: "Recepción",
-    icon: "bi-door-open",
-    desc: "Bienvenida, privacidad y validación de datos del paciente.",
+    name: "Recepción", icon: "bi-door-open",
+    goal: "Reciba al paciente, asegure la privacidad y valide sus datos.",
     items: [
-      { id: "r0", t: "<b>Presencia y conducta.</b> Imagen profesional y segura, sin celular ni auriculares, sin comer o beber frente al cliente y sin gestos inadecuados.", hint: "Trato respetuoso: sin tuteo, apodos ni calificativos, también con personas con discapacidad." },
-      { id: "r1", t: "<b>Bienvenida e identificación.</b> Salude según el horario, dé la bienvenida y diga su nombre.", say: "“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”" },
-      { id: "r2", t: "<b>Privacidad.</b> Ofrezca cerrar la puerta antes de empezar.", hint: "Evita distracciones y el paciente se siente más a gusto." },
-      { id: "r3", t: "<b>Asiento y documentos.</b> Invite a tomar asiento, solicite los documentos para validar la información e indague si existe una facturación anterior con toma de muestra pendiente." },
-      { id: "r4", t: "<b>Atención personalizada.</b> Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.) al menos dos veces durante todo el proceso." },
-      { id: "r5", t: "<b>Atención exclusiva.</b> No atienda otras llamadas o personas durante la interacción; si alguien se acerca, indíquele amablemente que le asistirá al terminar." }
+      { id: "r0", title: "Presencia y conducta", do: "Preséntese con imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.",
+        hint: "Trato respetuoso en todo momento: sin tuteo, apodos ni calificativos, tampoco al dirigirse a personas con discapacidad." },
+      { id: "r1", title: "Bienvenida e identificación", do: "Salude según el horario, dé la bienvenida a Amadita e identifíquese por su nombre.",
+        say: "“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”" },
+      { id: "r2", title: "Privacidad", do: "Ofrezca cerrar la puerta antes de empezar con la toma de muestra.",
+        hint: "Evita distracciones y el paciente se siente más a gusto durante el proceso." },
+      { id: "r3", title: "Asiento y documentos", do: "Invite al paciente a tomar asiento y solicite amablemente los documentos para validar la información.",
+        hint: "Indague si existe una facturación anterior con toma de muestra pendiente." },
+      { id: "r4", title: "Atención personalizada", do: "Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.). Debe hacerlo al menos dos veces durante toda la atención.",
+        flag: "Se repite en todo el proceso" },
+      { id: "r5", title: "Atención exclusiva", do: "No atienda otras llamadas ni personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar." }
     ]
   },
   {
-    id: "antes",
-    name: "Antes de extraer",
-    icon: "bi-clipboard2-pulse",
-    desc: "Preparación del área, empatía con el paciente y validación de las pruebas.",
+    name: "Antes de extraer", icon: "bi-clipboard2-pulse",
+    goal: "Prepare el área, conecte con el paciente y valide qué se le va a tomar.",
     items: [
-      { id: "a0", t: "<b>Área y bioseguridad.</b> Área limpia y organizada, algodones en los envases correctos, insumos en orden dentro de las canastas y desinfección realizada desde el paciente anterior.", tag: "Bioseguridad" },
-      { id: "a1", t: "<b>Protección personal.</b> Guantes, bata azul cuando la prueba lo requiera y gorro." },
-      { id: "a2", t: "<b>Cómo se siente.</b> Pregunte cómo se ha sentido y responda con empatía.", say: "“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”" },
-      { id: "a3", t: "<b>Spray anestésico.</b> Pregunte al paciente si quiere que lo usen." },
-      { id: "a4", t: "<b>Validar pruebas y observaciones médicas.</b> Si hay indicación médica, valide los requisitos específicos para la toma.", hint: "Si el médico indica el lugar de la punción y/o la hora de la prueba o cultivo, siga la indicación sin cuestionar al paciente y registre en el sistema que fue autorizado por su médico.", tag: "Registro" }
+      { id: "a0", title: "Área y bioseguridad", do: "Verifique el área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y la desinfección hecha desde el paciente anterior.",
+        flag: "Bioseguridad" },
+      { id: "a1", title: "Protección personal", do: "Colóquese guantes, gorro y bata azul cuando la prueba lo requiera.",
+        flag: "Bioseguridad" },
+      { id: "a2", title: "Cómo se siente el paciente", do: "Pregunte cómo se ha sentido y muestre empatía con su respuesta.",
+        say: "“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”" },
+      { id: "a3", title: "Spray anestésico", do: "Pregunte al paciente si quiere que usen el spray anestésico." },
+      { id: "a4", title: "Validar pruebas y observaciones médicas", do: "Valide las pruebas a realizar. Si el paciente tiene indicación médica, revise los requisitos específicos para la toma.",
+        hint: "Si el médico indica el lugar de la punción y/o la hora de la prueba o cultivo, siga la indicación sin cuestionar al paciente y registre en el sistema que fue autorizado por su médico.",
+        flag: "Registro en sistema", cond: "El paciente no trae indicación médica" }
     ]
   },
   {
-    id: "durante",
-    name: "Durante la extracción",
-    icon: "bi-droplet-half",
-    desc: "Ejecución de la toma según IT-002-001 y promesa de entrega de resultados.",
+    name: "Durante la extracción", icon: "bi-droplet-half",
+    goal: "Ejecute la toma según la instrucción de trabajo y deje la promesa de entrega registrada.",
     items: [
-      { id: "d0", t: "<b>Toma de muestra según IT-002-001.</b> Verifique condición de prueba y condiciones de riesgo antes de puncionar.", tag: "IT-002-001" },
-      { id: "d1", t: "<b>Acompañamiento.</b> No deje al paciente solo; si debe ausentarse, explique brevemente el motivo.", tag: "crit|Crítico" },
-      { id: "d2", t: "<b>Promesa de resultados.</b> Consulte el calendario y comunique con cortesía cuándo estarán listos.", say: "“Señor Carlos, sus resultados estarán listos en 72 horas.”" },
-      { id: "d3", t: "<b>Registro de la promesa.</b> Coloque la fecha y hora exactas de entrega tanto en el recibo como en el sistema automatizado.", tag: "Registro" },
-      { id: "d4", t: "<b>Urgencias.</b> Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad." }
+      { id: "d0", title: "Toma de muestra según IT-002-001", do: "Realice el proceso de toma de muestra siguiendo la instrucción de trabajo IT-002-001, verificando condición de prueba y condiciones de riesgo.",
+        flag: "IT-002-001" },
+      { id: "d1", title: "Nunca deje al paciente solo", do: "Permanezca con el paciente durante toda la toma. Si debe ausentarse, explíquele brevemente las razones.",
+        flagCrit: "Crítico" },
+      { id: "d2", title: "Promesa de resultados", do: "Consulte el calendario e informe con cortesía cuándo estarán listos los resultados. Asegúrese de que el paciente lo comprendió.",
+        say: "“Señor Carlos, sus resultados estarán listos en 72 horas.”" },
+      { id: "d3", title: "Registrar la promesa", do: "Coloque la fecha y hora exactas de entrega tanto en el recibo como en el sistema automatizado.",
+        flag: "Registro en sistema" },
+      { id: "d4", title: "Prioridad por urgencia", do: "Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.",
+        cond: "No hay urgencia" }
     ]
   },
   {
-    id: "despedida",
-    name: "Cierre y despedida",
-    icon: "bi-emoji-smile",
-    desc: "Información de resultados, validación de dudas, despedida y cierre del área.",
+    name: "Cierre y despedida", icon: "bi-emoji-smile",
+    goal: "Explique cómo verá sus resultados, resuelva dudas, despida con cortesía y deje el área lista.",
     items: [
-      { id: "c0", t: "<b>Portal de resultados.</b> Entregue usuario y contraseña (ubicados en la etiqueta) y explique el cambio de clave en cada facturación por seguridad.", hint: "Notifique los resultados que deben retirarse en físico (ej.: HIV, prueba de paternidad)." },
-      { id: "c1", t: "<b>Nuevo formato visual.</b> Informe el nuevo formato de los resultados y aclare que no afecta su interpretación clínica." },
-      { id: "c2", t: "<b>Validar comprensión y dudas.</b> Confirme que entendió la información y la promesa de entrega; dé espacio a sus inquietudes.", say: "“¿Tiene alguna inquietud hasta el momento, señor Carlos?”" },
-      { id: "c3", t: "<b>Canales alternos.</b> Invite a descargar la APP o usar los demás canales para ver resultados al instante y evitar volver a la sucursal.", hint: "Recuerde las pruebas que no se visualizan por canales alternos y deben recogerse en físico." },
-      { id: "c4", t: "<b>¿Algo más?</b> Antes de despedirse, asegúrese de cubrir todas las necesidades del paciente.", say: "“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”" },
-      { id: "c5", t: "<b>Despedida institucional.</b> Agradezca la preferencia y use la frase que nos identifica.", say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" },
-      { id: "c6", t: "<b>Cierre del área.</b> Deje el área limpia y organizada y realice la desinfección correspondiente antes del próximo paciente.", tag: "Bioseguridad" }
+      { id: "c0", title: "Portal de resultados", do: "Entregue usuario y contraseña (ubicados en la etiqueta) y explique que la clave cambia en cada facturación por motivos de seguridad.",
+        hint: "Notifique los resultados que deben retirarse en físico (ej.: HIV, prueba de paternidad)." },
+      { id: "c1", title: "Nuevo formato visual", do: "Informe al paciente sobre el nuevo formato visual de los resultados y aclare que no afecta su interpretación clínica." },
+      { id: "c2", title: "Validar comprensión y dudas", do: "Confirme que comprendió la información y la promesa de entrega, y dele la oportunidad de expresar sus inquietudes.",
+        say: "“¿Tiene alguna inquietud hasta el momento, señor Carlos?”" },
+      { id: "c3", title: "Canales alternos", do: "Invítelo a descargar la APP o usar los demás canales para ver sus resultados al instante y evitar volver a la sucursal.",
+        hint: "Tome en cuenta las pruebas que no se visualizan por los canales alternos y deben recogerse en físico.",
+        say: "“Puede visualizarlos desde nuestra APP, desde cualquier dispositivo móvil para mayor comodidad.”" },
+      { id: "c4", title: "¿Algo más en lo que servirle?", do: "Antes de despedirse, asegúrese de haber cubierto todas las necesidades del paciente.",
+        say: "“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”" },
+      { id: "c5", title: "Despedida institucional", do: "Agradezca al paciente por preferir nuestros servicios y use la frase que nos identifica.",
+        say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" },
+      { id: "c6", title: "Cierre del área", do: "Deje el área limpia y organizada, con los insumos en orden, y realice la desinfección correspondiente antes del próximo paciente.",
+        flag: "Bioseguridad" }
     ]
   }
 ];
 
-const STORE_KEY = "checklistTomaMuestra.v1";
-const ALL_IDS = STAGES.flatMap(s => s.items.map(i => i.id));
-let state = load();
-let current = 0;
+const STEPS = [];
+STAGES.forEach((s, si) => s.items.forEach((it, ii) => STEPS.push({ ...it, stage: si, nth: ii })));
+const TOTAL = STEPS.length;
+const KEY = "asistenteTomaMuestra.v2";
 
+let st = load();
+let view = "wizard";
+let interStage = 0;
+let trailOpen = false;
+let ticker = null;
+
+function blank() { return { status: {}, cursor: 0, startedAt: null }; }
 function load() {
   try {
-    const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
-    return ALL_IDS.reduce((acc, id) => (acc[id] = !!raw[id], acc), {});
-  } catch {
-    return ALL_IDS.reduce((acc, id) => (acc[id] = false, acc), {});
+    const raw = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (!raw || typeof raw !== "object") return blank();
+    const s = blank();
+    STEPS.forEach(x => { if (raw.status && (raw.status[x.id] === "done" || raw.status[x.id] === "skip")) s.status[x.id] = raw.status[x.id]; });
+    s.cursor = Math.min(TOTAL, Math.max(0, Number(raw.cursor) || 0));
+    s.startedAt = raw.startedAt || null;
+    return s;
+  } catch { return blank(); }
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} }
+
+const doneCount = () => STEPS.filter(x => st.status[x.id] === "done").length;
+const closedCount = () => STEPS.filter(x => st.status[x.id]).length;
+const stageClosed = si => STAGES[si].items.filter(i => st.status[i.id]).length;
+const stageIsClosed = si => stageClosed(si) === STAGES[si].items.length;
+const currentStage = () => st.cursor >= TOTAL ? STAGES.length - 1 : STEPS[st.cursor].stage;
+
+/* ---------------- actions ---------------- */
+function confirmStep(kind) {
+  if (st.cursor >= TOTAL) return;
+  if (!st.startedAt) { st.startedAt = Date.now(); startTicker(); }
+  const step = STEPS[st.cursor];
+  st.status[step.id] = kind;
+  st.cursor++;
+  save();
+
+  if (st.cursor >= TOTAL) {
+    view = "summary";
+    stopTicker();
+  } else if (STEPS[st.cursor].stage !== step.stage) {
+    view = "stageDone";
+    interStage = step.stage;
   }
+  render();
 }
-function save() {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch {}
+function backOne() {
+  if (st.cursor === 0) return;
+  st.cursor--;
+  delete st.status[STEPS[st.cursor].id];
+  view = "wizard";
+  save();
+  render();
 }
-
-const stageDone = s => s.items.filter(i => state[i.id]).length;
-const isComplete = s => stageDone(s) === s.items.length;
-const doneTotal = () => ALL_IDS.filter(id => state[id]).length;
-
-function renderStepper() {
-  const nav = document.getElementById("stepper");
-  nav.innerHTML = "";
-  STAGES.forEach((s, idx) => {
-    const done = stageDone(s), total = s.items.length;
-    const btn = document.createElement("button");
-    btn.className = "stage-btn" + (isComplete(s) ? " done" : "");
-    btn.type = "button";
-    if (idx === current) btn.setAttribute("aria-current", "true");
-    btn.innerHTML = `
-      <span class="row1">
-        <span class="dot">${isComplete(s) ? '<i class="bi bi-check-lg"></i>' : idx + 1}</span>
-        <span class="name">${s.name}</span>
-      </span>
-      <span class="mini"><span style="width:${(done / total) * 100}%"></span></span>
-      <span class="count">${done} de ${total} pasos</span>`;
-    btn.onclick = () => goTo(idx);
-    nav.appendChild(btn);
-  });
+function undoFrom(i) {
+  for (let k = i; k < TOTAL; k++) delete st.status[STEPS[k].id];
+  st.cursor = i;
+  view = "wizard";
+  save();
+  render();
+}
+function resetAll() {
+  st = blank();
+  view = "wizard";
+  trailOpen = false;
+  stopTicker();
+  save();
+  render();
 }
 
-function renderStage() {
-  const s = STAGES[current];
-  document.getElementById("summary").classList.remove("on");
-  document.getElementById("stageView").style.display = "";
-  document.getElementById("stageIcon").className = "ico bi " + s.icon;
-  document.getElementById("stageTitle").textContent = `Etapa ${current + 1} de ${STAGES.length}: ${s.name}`;
-  document.getElementById("stageDesc").textContent = s.desc;
+/* ---------------- clock ---------------- */
+function fmt(ms) {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+}
+function paintClock() {
+  document.getElementById("clock").textContent = st.startedAt ? fmt(Date.now() - st.startedAt) : "00:00";
+}
+function startTicker() { stopTicker(); ticker = setInterval(paintClock, 1000); paintClock(); }
+function stopTicker() { if (ticker) clearInterval(ticker); ticker = null; paintClock(); }
 
-  const ul = document.getElementById("stageItems");
-  ul.innerHTML = "";
-  s.items.forEach(item => {
-    const li = document.createElement("li");
-    li.className = "item";
-    let tag = "";
-    if (item.tag) {
-      const crit = item.tag.startsWith("crit|");
-      tag = `<span class="tag${crit ? " crit" : ""}">${crit ? item.tag.slice(5) : item.tag}</span>`;
-    }
-    li.innerHTML = `
-      <label>
-        <input type="checkbox" ${state[item.id] ? "checked" : ""} data-id="${item.id}">
-        <span class="tick"><i class="bi bi-check-lg"></i></span>
-        <span class="txt">
-          <span class="t">${item.t}${tag}</span>
-          ${item.hint ? `<span class="hint">${item.hint}</span>` : ""}
-          ${item.say ? `<span class="say"><i class="bi bi-chat-quote"></i> ${item.say}</span>` : ""}
-        </span>
-      </label>`;
-    li.querySelector("input").addEventListener("change", e => {
-      state[item.id] = e.target.checked;
-      save();
-      renderStepper();
-      renderProgress();
-    });
-    ul.appendChild(li);
-  });
-
-  document.getElementById("prevBtn").disabled = current === 0;
-  document.getElementById("nextBtn").innerHTML = current === STAGES.length - 1
-    ? 'Ver resumen <i class="bi bi-clipboard-check"></i>'
-    : 'Siguiente etapa <i class="bi bi-arrow-right"></i>';
-  renderProgress();
+/* ---------------- render ---------------- */
+function render() {
+  paintProgress();
+  renderRail();
+  renderMain();
+  renderPrint();
 }
 
-function renderProgress() {
-  const s = STAGES[current];
-  const done = doneTotal(), total = ALL_IDS.length;
-  const pct = Math.round((done / total) * 100);
+function paintProgress() {
+  const pct = Math.round((closedCount() / TOTAL) * 100);
   document.getElementById("globalBar").style.width = pct + "%";
   document.getElementById("globalPct").textContent = pct + "%";
-  document.getElementById("stageCount").textContent =
-    `${stageDone(s)} de ${s.items.length} pasos de esta etapa · ${done} de ${total} en total`;
 }
 
-function goTo(idx) {
-  current = Math.max(0, Math.min(STAGES.length - 1, idx));
-  renderStepper();
-  renderStage();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+function renderRail() {
+  const cs = currentStage();
+  const rail = document.getElementById("rail");
+  rail.innerHTML = "";
+  STAGES.forEach((s, si) => {
+    const box = document.createElement("div");
+    const isCurrent = si === cs && view !== "summary";
+    box.className = "stage" + (stageIsClosed(si) ? " done" : "") + (isCurrent ? " current" : "");
+    const mark = stageIsClosed(si) ? '<i class="bi bi-check-lg"></i>' : si + 1;
+    box.innerHTML = `
+      <button class="stage-btn" type="button">
+        <span class="mark">${mark}</span>
+        <span class="nm">${s.name}</span>
+        <span class="ct">${stageClosed(si)}/${s.items.length}</span>
+      </button>`;
+    const firstIdx = STEPS.findIndex(x => x.stage === si);
+    box.querySelector(".stage-btn").onclick = () => {
+      if (stageClosed(si) > 0 || st.cursor > firstIdx) undoFrom(firstIdx);
+    };
+
+    if (isCurrent) {
+      const ul = document.createElement("ul");
+      ul.className = "substeps";
+      s.items.forEach((it, ii) => {
+        const gi = firstIdx + ii;
+        const status = st.status[it.id];
+        const isNow = gi === st.cursor && view === "wizard";
+        const cls = status === "done" ? "done" : status === "skip" ? "skip" : isNow ? "now" : "lock";
+        const ico = status === "done" ? "bi-check-circle-fill"
+                  : status === "skip" ? "bi-slash-circle"
+                  : isNow ? "bi-record-circle" : "bi-lock";
+        const li = document.createElement("li");
+        li.className = cls;
+        li.innerHTML = `<i class="bi ${ico}"></i><span>${status ? `<button type="button" title="Volver a este paso">${it.title}</button>` : it.title}</span>`;
+        const b = li.querySelector("button");
+        if (b) b.onclick = () => undoFrom(gi);
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    }
+    rail.appendChild(box);
+  });
 }
 
-function showSummary() {
-  const done = doneTotal(), total = ALL_IDS.length;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById("stageView").style.display = "none";
-  document.getElementById("summary").classList.add("on");
+function renderMain() {
+  const main = document.getElementById("main");
+  if (view === "summary") return renderSummary(main);
+  if (view === "stageDone") return renderStageDone(main);
+  renderWizard(main);
+}
+
+function renderWizard(main) {
+  const step = STEPS[st.cursor];
+  const stage = STAGES[step.stage];
+  const inStage = stage.items.length;
+
+  main.innerHTML = `
+    <div class="crumb">
+      <span class="stage-now"><i class="bi ${stage.icon}"></i> Etapa ${step.stage + 1} de ${STAGES.length}: ${stage.name}</span>
+      <span>Paso ${step.nth + 1} de ${inStage} de esta etapa · ${closedCount()} de ${TOTAL} en total</span>
+    </div>
+    <div class="trail" id="trail"></div>
+    <div class="active">
+      <span class="step-no"><i class="bi bi-arrow-right-short"></i> Paso ${st.cursor + 1} de ${TOTAL}</span>
+      <h2>${step.title}</h2>
+      <p class="do">${step.do}</p>
+      ${step.say ? `<p class="say"><i class="bi bi-chat-quote-fill"></i>${step.say}</p>` : ""}
+      ${step.hint ? `<p class="hint">${step.hint}</p>` : ""}
+      <div class="flags">
+        ${step.flag ? `<span class="flag"><i class="bi bi-exclamation-triangle-fill"></i>${step.flag}</span>` : ""}
+        ${step.flagCrit ? `<span class="flag crit"><i class="bi bi-shield-exclamation"></i>${step.flagCrit}</span>` : ""}
+      </div>
+      <div class="confirm">
+        <button class="btn go" id="okBtn"><i class="bi bi-check2-circle"></i> Hecho, continuar</button>
+        ${step.cond ? `<button class="btn ghost" id="skipBtn"><i class="bi bi-slash-circle"></i> No aplica: ${step.cond}</button>` : ""}
+        ${st.cursor > 0 ? `<button class="btn" id="backBtn"><i class="bi bi-arrow-left"></i> Paso anterior</button>` : ""}
+        <span class="kbd">Enter para confirmar</span>
+      </div>
+    </div>
+    <div class="upcoming" id="upcoming"></div>`;
+
+  document.getElementById("okBtn").onclick = () => confirmStep("done");
+  const sk = document.getElementById("skipBtn");
+  if (sk) sk.onclick = () => confirmStep("skip");
+  const bk = document.getElementById("backBtn");
+  if (bk) bk.onclick = backOne;
+
+  renderTrail();
+  renderUpcoming();
+}
+
+function renderTrail() {
+  const host = document.getElementById("trail");
+  if (!host) return;
+  const done = STEPS.slice(0, st.cursor);
+  if (!done.length) { host.innerHTML = ""; return; }
+  host.innerHTML = `
+    <button class="trail-toggle" type="button" id="trailToggle">
+      <i class="bi bi-chevron-${trailOpen ? "down" : "right"}"></i>
+      ${done.length} paso(s) ya confirmados en esta atención
+    </button>
+    ${trailOpen ? '<ul id="trailList"></ul>' : ""}`;
+  document.getElementById("trailToggle").onclick = () => { trailOpen = !trailOpen; renderTrail(); };
+  if (!trailOpen) return;
+  const ul = document.getElementById("trailList");
+  done.forEach((x, i) => {
+    const skipped = st.status[x.id] === "skip";
+    const li = document.createElement("li");
+    if (skipped) li.className = "skipped";
+    li.innerHTML = `
+      <i class="bi st ${skipped ? "bi-slash-circle" : "bi-check-circle-fill"}"></i>
+      <span>${STAGES[x.stage].name} · ${x.title}${skipped ? " (no aplicó)" : ""}</span>
+      <button class="undo" type="button">Volver aquí</button>`;
+    li.querySelector(".undo").onclick = () => undoFrom(i);
+    ul.appendChild(li);
+  });
+}
+
+function renderUpcoming() {
+  const host = document.getElementById("upcoming");
+  if (!host) return;
+  const next = STEPS.slice(st.cursor + 1, st.cursor + 4);
+  if (!next.length) {
+    host.innerHTML = `<h3>Siguiente</h3><ul><li><i class="bi bi-flag"></i><b>Resumen de la atención</b></li></ul>`;
+    return;
+  }
+  host.innerHTML = `<h3>Se habilitan después de confirmar</h3><ul>${
+    next.map(x => `<li><i class="bi bi-lock"></i><span><b>${x.title}</b> <span class="stagetag">· ${STAGES[x.stage].name}</span></span></li>`).join("")
+  }</ul>`;
+}
+
+function renderStageDone(main) {
+  const s = STAGES[interStage];
+  const nxt = STAGES[interStage + 1];
+  const skipped = s.items.filter(i => st.status[i.id] === "skip").length;
+  main.innerHTML = `
+    <div class="crumb">
+      <span class="stage-now"><i class="bi bi-check2-all"></i> Etapa ${interStage + 1} completada</span>
+      <span>${closedCount()} de ${TOTAL} pasos en total</span>
+    </div>
+    <div class="panel">
+      <div class="big"><i class="bi bi-check-lg"></i></div>
+      <h2>${s.name}: etapa completada</h2>
+      <p>${skipped ? `${s.items.length - skipped} paso(s) confirmados y ${skipped} marcado(s) como no aplica. ` : `Los ${s.items.length} pasos de la etapa fueron confirmados. `}
+      Continúe con <b>${nxt.name}</b>: ${nxt.goal.charAt(0).toLowerCase() + nxt.goal.slice(1)}</p>
+      <div class="acts">
+        <button class="btn primary" id="contBtn"><i class="bi ${nxt.icon}"></i> Continuar con ${nxt.name}</button>
+        <button class="btn" id="revBtn"><i class="bi bi-arrow-left"></i> Revisar etapa anterior</button>
+      </div>
+    </div>`;
+  document.getElementById("contBtn").onclick = () => { view = "wizard"; render(); };
+  document.getElementById("revBtn").onclick = () => undoFrom(STEPS.findIndex(x => x.stage === interStage));
+}
+
+function renderSummary(main) {
+  const done = doneCount();
+  const skipped = STEPS.filter(x => st.status[x.id] === "skip");
+  const pct = Math.round((done / TOTAL) * 100);
+  const elapsed = st.startedAt ? fmt(Date.now() - st.startedAt) : "—";
+
+  main.innerHTML = `
+    <div class="crumb">
+      <span class="stage-now"><i class="bi bi-clipboard-check"></i> Atención finalizada</span>
+      <span>${done} de ${TOTAL} pasos confirmados</span>
+    </div>
+    <div class="panel">
+      <div class="ring" id="ring"><b>${pct}%</b></div>
+      <h2>${skipped.length ? "Atención completada con excepciones" : "Atención completada"}</h2>
+      <div class="stats">
+        <div class="stat"><b>${done}</b> confirmados</div>
+        <div class="stat"><b>${skipped.length}</b> no aplicaron</div>
+        <div class="stat"><b>${elapsed}</b> duración</div>
+      </div>
+      <p>${skipped.length
+        ? "Revise los pasos marcados como no aplica antes de cerrar el turno del paciente."
+        : "Recorrió las cuatro etapas del protocolo sin omitir pasos."}</p>
+      <ul class="pending" id="pendingList"></ul>
+      <div class="acts">
+        <button class="btn primary" id="newBtn"><i class="bi bi-person-plus"></i> Atender nuevo paciente</button>
+        <button class="btn" id="reviewBtn"><i class="bi bi-arrow-left"></i> Revisar último paso</button>
+      </div>
+    </div>`;
 
   const ring = document.getElementById("ring");
-  ring.innerHTML = `<b>${pct}%</b>`;
   ring.style.background = `conic-gradient(${pct === 100 ? "var(--ok)" : "var(--navy-2)"} ${pct * 3.6}deg, var(--line) 0deg)`;
-  if (pct === 100) ring.style.color = "var(--ok)";
-  else ring.style.color = "var(--navy)";
-
-  const pending = [];
-  STAGES.forEach(s => s.items.forEach(i => { if (!state[i.id]) pending.push({ stage: s.name, item: i }); }));
-
-  document.getElementById("summaryLine").innerHTML = pending.length === 0
-    ? `<span class="all-ok"><i class="bi bi-check-circle-fill"></i> Atención completa: los ${total} pasos del protocolo fueron cumplidos.</span>`
-    : `<b>${pending.length} paso(s) pendientes</b> de ${total}. Complételos antes de cerrar la atención:`;
+  ring.style.color = pct === 100 ? "var(--ok)" : "var(--navy)";
 
   const list = document.getElementById("pendingList");
-  list.innerHTML = "";
-  pending.forEach(p => {
+  skipped.forEach(x => {
     const li = document.createElement("li");
-    const plain = p.item.t.replace(/<[^>]+>/g, "");
-    li.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i><b>${p.stage}:</b> ${plain}`;
+    li.className = "s";
+    li.innerHTML = `<i class="bi bi-slash-circle"></i><b>${STAGES[x.stage].name}:</b> ${x.title} — no aplicó (${x.cond})`;
     list.appendChild(li);
   });
-  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  document.getElementById("newBtn").onclick = resetAll;
+  document.getElementById("reviewBtn").onclick = () => undoFrom(TOTAL - 1);
 }
 
-document.getElementById("nextBtn").onclick = () =>
-  current === STAGES.length - 1 ? showSummary() : goTo(current + 1);
-document.getElementById("prevBtn").onclick = () => goTo(current - 1);
-document.getElementById("backBtn").onclick = () => goTo(current);
-document.getElementById("newBtn").onclick = resetAll;
-document.getElementById("resetBtn").onclick = resetAll;
-document.getElementById("printBtn").onclick = () => window.print();
-
-function resetAll() {
-  ALL_IDS.forEach(id => state[id] = false);
-  save();
-  goTo(0);
+function renderPrint() {
+  const host = document.getElementById("printAll");
+  host.innerHTML = `<h1>Checklist de atención en toma de muestra — PT-040-001 Rev.5</h1>` +
+    STAGES.map((s, si) => `<h3>Etapa ${si + 1}: ${s.name}</h3><ul>${
+      s.items.map(i => `<li><b>${i.title}.</b> ${i.do}</li>`).join("")
+    }</ul>`).join("");
 }
 
 document.addEventListener("keydown", e => {
-  if (e.target.matches("input, textarea")) return;
-  if (e.key === "ArrowRight") document.getElementById("nextBtn").click();
-  if (e.key === "ArrowLeft" && current > 0) goTo(current - 1);
+  if (e.target.matches("input, textarea, button")) return;
+  if (view === "wizard" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); confirmStep("done"); }
+  if (view === "wizard" && e.key === "Backspace") { e.preventDefault(); backOne(); }
+  if (view === "stageDone" && e.key === "Enter") { view = "wizard"; render(); }
 });
 
-renderStepper();
-renderStage();
+document.getElementById("printBtn").onclick = () => window.print();
+document.getElementById("resetBtn").onclick = resetAll;
+
+if (st.cursor >= TOTAL) view = "summary";
+if (st.startedAt && view !== "summary") startTicker();
+render();
 </script>
 </body>
 </html>
