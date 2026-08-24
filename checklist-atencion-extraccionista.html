@@ -54,7 +54,8 @@
   .pill .bar span { display: block; height: 100%; width: 0; background: #fff; transition: width .4s ease; }
 
   /* ---------------- Layout ---------------- */
-  .grid { display: grid; grid-template-columns: 288px 1fr; gap: 1rem; margin-top: 1rem; align-items: start; }
+  .grid { display: grid; grid-template-columns: 288px minmax(0, 1fr); gap: 1rem; margin-top: 1rem; align-items: start; }
+  .grid > * { min-width: 0; }
 
   /* ---------------- Rail ---------------- */
   .rail { background: #fff; border-radius: var(--r); box-shadow: 0 3px 16px rgba(16,32,48,.07); overflow: hidden; position: sticky; top: 1rem; }
@@ -177,6 +178,7 @@
   .upcoming li {
     display: grid; grid-template-columns: 1rem 1fr; gap: .55rem;
     font-size: .85rem; color: var(--faint); padding: .25rem 0; align-items: center;
+    cursor: not-allowed; user-select: none;
   }
   .upcoming li b { font-weight: 600; color: var(--muted); }
   .upcoming .stagetag { font-size: .72rem; color: var(--faint); }
@@ -216,10 +218,14 @@
 
   #printAll { display: none; }
 
-  @media (max-width: 860px) {
-    .grid { grid-template-columns: 1fr; }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
     .rail { position: static; }
     .topbar { flex-direction: column; align-items: flex-start; }
+    .crumb { flex-direction: column; align-items: flex-start; gap: .2rem; }
+    .active h2 { font-size: 1.1rem; }
+    .btn, .btn.go { width: 100%; justify-content: center; }
+    .kbd { display: none; }
   }
   @media print {
     body { background: #fff; }
@@ -358,6 +364,10 @@ let view = "wizard";
 let interStage = 0;
 let trailOpen = false;
 let ticker = null;
+let viewChangedAt = 0;
+
+function setView(v) { if (v !== view) viewChangedAt = Date.now(); view = v; }
+function goWizard() { setView("wizard"); render(); }
 
 function blank() { return { status: {}, cursor: 0, startedAt: null }; }
 function load() {
@@ -389,10 +399,10 @@ function confirmStep(kind) {
   save();
 
   if (st.cursor >= TOTAL) {
-    view = "summary";
+    setView("summary");
     stopTicker();
   } else if (STEPS[st.cursor].stage !== step.stage) {
-    view = "stageDone";
+    setView("stageDone");
     interStage = step.stage;
   }
   render();
@@ -401,20 +411,20 @@ function backOne() {
   if (st.cursor === 0) return;
   st.cursor--;
   delete st.status[STEPS[st.cursor].id];
-  view = "wizard";
+  setView("wizard");
   save();
   render();
 }
 function undoFrom(i) {
   for (let k = i; k < TOTAL; k++) delete st.status[STEPS[k].id];
   st.cursor = i;
-  view = "wizard";
+  setView("wizard");
   save();
   render();
 }
 function resetAll() {
   st = blank();
-  view = "wizard";
+  setView("wizard");
   trailOpen = false;
   stopTicker();
   save();
@@ -573,7 +583,7 @@ function renderUpcoming() {
     return;
   }
   host.innerHTML = `<h3>Se habilitan después de confirmar</h3><ul>${
-    next.map(x => `<li><i class="bi bi-lock"></i><span><b>${x.title}</b> <span class="stagetag">· ${STAGES[x.stage].name}</span></span></li>`).join("")
+    next.map(x => `<li title="Se habilita al confirmar el paso actual"><i class="bi bi-lock"></i><span><b>${x.title}</b> <span class="stagetag">· ${STAGES[x.stage].name}</span></span></li>`).join("")
   }</ul>`;
 }
 
@@ -596,7 +606,7 @@ function renderStageDone(main) {
         <button class="btn" id="revBtn"><i class="bi bi-arrow-left"></i> Revisar etapa anterior</button>
       </div>
     </div>`;
-  document.getElementById("contBtn").onclick = () => { view = "wizard"; render(); };
+  document.getElementById("contBtn").onclick = goWizard;
   document.getElementById("revBtn").onclick = () => undoFrom(STEPS.findIndex(x => x.stage === interStage));
 }
 
@@ -655,15 +665,18 @@ function renderPrint() {
 
 document.addEventListener("keydown", e => {
   if (e.target.matches("input, textarea, button")) return;
+  // Sin auto-repetición ni atajos inmediatos: al cambiar de vista, una tecla
+  // sostenida no debe confirmar pasos en cadena ni saltar el cierre de etapa.
+  if (e.repeat || Date.now() - viewChangedAt < 400) return;
   if (view === "wizard" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); confirmStep("done"); }
   if (view === "wizard" && e.key === "Backspace") { e.preventDefault(); backOne(); }
-  if (view === "stageDone" && e.key === "Enter") { view = "wizard"; render(); }
+  if (view === "stageDone" && e.key === "Enter") { goWizard(); }
 });
 
 document.getElementById("printBtn").onclick = () => window.print();
 document.getElementById("resetBtn").onclick = resetAll;
 
-if (st.cursor >= TOTAL) view = "summary";
+if (st.cursor >= TOTAL) setView("summary");
 if (st.startedAt && view !== "summary") startTicker();
 render();
 </script>
