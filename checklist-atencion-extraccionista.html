@@ -220,7 +220,8 @@
 
   @media (max-width: 900px) {
     .grid { grid-template-columns: minmax(0, 1fr); }
-    .rail { position: static; }
+    .main { order: 1; }
+    .rail { order: 2; position: static; }
     .topbar { flex-direction: column; align-items: flex-start; }
     .crumb { flex-direction: column; align-items: flex-start; gap: .2rem; }
     .active h2 { font-size: 1.1rem; }
@@ -529,7 +530,7 @@ function renderWizard(main) {
         ${step.flagCrit ? `<span class="flag crit"><i class="bi bi-shield-exclamation"></i>${step.flagCrit}</span>` : ""}
       </div>
       <div class="confirm">
-        <button class="btn go" id="okBtn"><i class="bi bi-check2-circle"></i> Hecho, continuar</button>
+        <button class="btn go" id="okBtn" type="button"><i class="bi bi-check2-circle"></i> Hecho, continuar</button>
         ${step.cond ? `<button class="btn ghost" id="skipBtn"><i class="bi bi-slash-circle"></i> No aplica: ${step.cond}</button>` : ""}
         ${st.cursor > 0 ? `<button class="btn" id="backBtn"><i class="bi bi-arrow-left"></i> Paso anterior</button>` : ""}
         <span class="kbd">Enter para confirmar</span>
@@ -663,14 +664,14 @@ function renderPrint() {
     }</ul>`).join("");
 }
 
+// El cierre de etapa y el resumen solo avanzan con clic: son puntos de control
+// y una tecla sostenida no debe saltarlos ni confirmar pasos en cadena.
 document.addEventListener("keydown", e => {
+  if (view !== "wizard") return;
   if (e.target.matches("input, textarea, button")) return;
-  // Sin auto-repetición ni atajos inmediatos: al cambiar de vista, una tecla
-  // sostenida no debe confirmar pasos en cadena ni saltar el cierre de etapa.
-  if (e.repeat || Date.now() - viewChangedAt < 400) return;
-  if (view === "wizard" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); confirmStep("done"); }
-  if (view === "wizard" && e.key === "Backspace") { e.preventDefault(); backOne(); }
-  if (view === "stageDone" && e.key === "Enter") { goWizard(); }
+  if (e.repeat || Date.now() - viewChangedAt < 700) return;
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); confirmStep("done"); }
+  if (e.key === "Backspace") { e.preventDefault(); backOne(); }
 });
 
 document.getElementById("printBtn").onclick = () => window.print();
