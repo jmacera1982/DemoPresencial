@@ -6,13 +6,16 @@
 
 Los pasos están agrupados en cuatro etapas del proceso: **Recepción → Antes de extraer → Durante la extracción → Cierre y despedida.**
 
-Este documento contiene los 21 pasos operativos; sirve para consulta, impresión o para pegarlo en el sistema de gestión.
+Este documento contiene los **17 pasos operativos**; sirve para consulta, impresión o para pegarlo en el sistema de gestión.
 
 **Buenas prácticas durante toda la atención (no se marcan como pasos):**
 
 - Imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.
 - Trato respetuoso: sin tuteo, apodos ni calificativos, incluyendo al dirigirse a personas con discapacidad.
 - No atender otras llamadas o personas durante la interacción. Si alguien se acerca, indicarle amablemente que será asistido al terminar.
+- Área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y desinfección hecha desde el paciente anterior. Al terminar, deje el área lista y desinfecte antes del próximo paciente.
+- Use las protecciones correspondientes: guantes, gorro y bata azul cuando la prueba lo requiera.
+- Nunca deje al paciente solo en la toma; si debe ausentarse, explíquele brevemente el motivo.
 - Si hay dudas, pedir al paciente esperar unos minutos y consultar discretamente la instrucción de trabajo o a una Bioanalista con más experiencia.
 
 ---
@@ -27,8 +30,6 @@ Este documento contiene los 21 pasos operativos; sirve para consulta, impresión
 
 ## Etapa 2 · Antes de extraer
 
-- [ ] **Área y bioseguridad.** Área limpia y organizada, algodones en los envases correctos, insumos en orden dentro de las canastas y desinfección realizada desde el paciente anterior.
-- [ ] **Protección personal.** Guantes, bata azul cuando la prueba lo requiera y gorro.
 - [ ] **Cómo se siente.** Pregunte cómo se ha sentido y responda con empatía.  
   *“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”*
 - [ ] **Spray anestésico.** Pregunte al paciente si quiere que lo usen.
@@ -37,7 +38,6 @@ Este documento contiene los 21 pasos operativos; sirve para consulta, impresión
 ## Etapa 3 · Durante la extracción
 
 - [ ] **Toma de muestra según IT-002-001.** Verifique condición de prueba y condiciones de riesgo antes de puncionar.
-- [ ] **Acompañamiento.** No deje al paciente solo; si debe ausentarse, explique brevemente el motivo.
 - [ ] **Promesa de resultados.** Consulte el calendario y comunique con cortesía cuándo estarán listos.  
   *“Señor Carlos, sus resultados estarán listos en 72 horas.”*
 - [ ] **Registro de la promesa.** Coloque fecha y hora exactas de entrega tanto en el recibo como en el sistema automatizado.
@@ -54,7 +54,6 @@ Este documento contiene los 21 pasos operativos; sirve para consulta, impresión
   *“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”*
 - [ ] **Despedida institucional.** Agradezca la preferencia y use la frase que nos identifica.  
   *“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”*
-- [ ] **Cierre del área.** Deje el área limpia y organizada y realice la desinfección correspondiente antes del próximo paciente.
 
 ---
 

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <title>Checklist de atención en toma de muestra | PT-040-001 Rev.5</title>
 <link rel="icon" href="images/logo-amadita.webp" type="image/webp">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -210,6 +211,9 @@
       <li>Imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.</li>
       <li>Trato respetuoso: sin tuteo, apodos ni calificativos, incluyendo al dirigirse a personas con discapacidad.</li>
       <li>No atienda otras llamadas o personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar.</li>
+      <li>Área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y desinfección hecha desde el paciente anterior. Al terminar, deje el área lista y desinfecte antes del próximo paciente.</li>
+      <li>Use las protecciones correspondientes: guantes, gorro y bata azul cuando la prueba lo requiera.</li>
+      <li>Nunca deje al paciente solo en la toma; si debe ausentarse, explíquele brevemente el motivo.</li>
       <li>Si tiene dudas, pida al paciente esperar unos minutos y consulte discretamente la instrucción de trabajo o a una Bioanalista con más experiencia.</li>
     </ul>
   </div>
@@ -241,10 +245,8 @@ const STAGES = [
   },
   {
     name: "Antes de extraer", icon: "bi-clipboard2-pulse",
-    goal: "Prepare el área, conecte con el paciente y valide qué se le va a tomar.",
+    goal: "Conecte con el paciente y valide qué se le va a tomar.",
     items: [
-      { id: "a0", title: "Área y bioseguridad", det: "Área limpia y organizada: algodones en los envases correctos, insumos en orden dentro de las canastas y desinfección hecha desde el paciente anterior.", flag: "Bioseguridad" },
-      { id: "a1", title: "Protección personal", det: "Guantes, gorro y bata azul cuando la prueba lo requiera.", flag: "Bioseguridad" },
       { id: "a2", title: "Cómo se siente el paciente", det: "Pregunte cómo se ha sentido y muestre empatía con su respuesta.", say: "“¿Cómo se ha sentido en el día de hoy?” · “¡Nos alegra!” / “Lo sentimos, deseamos que se mejore.”" },
       { id: "a3", title: "Spray anestésico", det: "Pregunte al paciente si quiere que usen el spray anestésico." },
       { id: "a4", title: "Validar pruebas y observaciones médicas", det: "Valide las pruebas a realizar y, si hay indicación médica, sus requisitos. Si el médico indica el lugar de la punción y/o la hora, siga la indicación sin cuestionar y registre en el sistema que fue autorizado por su médico.", flag: "Registro en sistema", cond: "sin indicación médica" }
@@ -255,7 +257,6 @@ const STAGES = [
     goal: "Ejecute la toma según la instrucción de trabajo y deje la promesa de entrega registrada.",
     items: [
       { id: "d0", title: "Toma de muestra según IT-002-001", det: "Siga la instrucción de trabajo IT-002-001, verificando condición de prueba y condiciones de riesgo.", flag: "IT-002-001" },
-      { id: "d1", title: "Nunca deje al paciente solo", det: "Permanezca con el paciente durante toda la toma. Si debe ausentarse, explíquele brevemente las razones.", flagCrit: "Crítico" },
       { id: "d2", title: "Promesa de resultados", det: "Consulte el calendario e informe con cortesía cuándo estarán listos los resultados, asegurando su comprensión.", say: "“Señor Carlos, sus resultados estarán listos en 72 horas.”" },
       { id: "d3", title: "Registrar la promesa", det: "Coloque la fecha y hora exactas de entrega en el recibo y en el sistema automatizado.", flag: "Registro en sistema" },
       { id: "d4", title: "Prioridad por urgencia", det: "Si el paciente necesita los resultados con urgencia, señalice la(s) muestra(s) y el sistema para que el área técnica le dé prioridad.", cond: "sin urgencia" }
@@ -263,22 +264,21 @@ const STAGES = [
   },
   {
     name: "Cierre y despedida", icon: "bi-emoji-smile",
-    goal: "Explique cómo verá sus resultados, resuelva dudas, despida con cortesía y deje el área lista.",
+    goal: "Explique cómo verá sus resultados, resuelva dudas y despida con cortesía.",
     items: [
       { id: "c0", title: "Portal de resultados", det: "Entregue usuario y contraseña (en la etiqueta) y explique el cambio de clave en cada facturación por seguridad. Notifique los resultados que se retiran en físico (ej.: HIV, prueba de paternidad)." },
       { id: "c1", title: "Nuevo formato visual", det: "Informe el nuevo formato visual de los resultados y aclare que no afecta su interpretación clínica." },
       { id: "c2", title: "Validar comprensión y dudas", det: "Confirme que comprendió la información y la promesa de entrega, y dele espacio para sus inquietudes.", say: "“¿Tiene alguna inquietud hasta el momento, señor Carlos?”" },
       { id: "c3", title: "Canales alternos", det: "Invítelo a descargar la APP o usar los demás canales para ver sus resultados al instante. Tome en cuenta las pruebas que solo se entregan en físico.", say: "“Puede visualizarlos desde nuestra APP, desde cualquier dispositivo móvil para mayor comodidad.”" },
       { id: "c4", title: "¿Algo más en lo que servirle?", det: "Antes de despedirse, asegúrese de haber cubierto todas las necesidades del paciente.", say: "“¿Desea tomar agua?” · “¿Algo más en lo que le pueda servir?”" },
-      { id: "c5", title: "Despedida institucional", det: "Agradezca al paciente por preferir nuestros servicios y use la frase que nos identifica.", say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" },
-      { id: "c6", title: "Cierre del área", det: "Deje el área limpia y organizada, con los insumos en orden, y realice la desinfección antes del próximo paciente.", flag: "Bioseguridad" }
+      { id: "c5", title: "Despedida institucional", det: "Agradezca al paciente por preferir nuestros servicios y use la frase que nos identifica.", say: "“Gracias por elegir Amadita, ¡Nos complace servirle!, pase feliz resto del día.”" }
     ]
   }
 ];
 
 const ALL = STAGES.flatMap((s, si) => s.items.map(i => ({ ...i, stage: si })));
 const TOTAL = ALL.length;
-const KEY = "checklistTomaMuestra.v3";
+const KEY = "checklistTomaMuestra.v4";
 
 let st = load();
 let stage = 0;
