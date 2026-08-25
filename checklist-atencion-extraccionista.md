@@ -6,21 +6,24 @@
 
 Los pasos están agrupados en cuatro etapas del proceso: **Recepción → Antes de extraer → Durante la extracción → Cierre y despedida.**
 
-Este documento es la referencia completa de los 23 puntos; sirve para consulta, impresión o para pegarlo en el sistema de gestión.
+Este documento contiene los 21 pasos operativos; sirve para consulta, impresión o para pegarlo en el sistema de gestión.
 
-**Recordatorios permanentes:** nunca deje al paciente solo en la toma (si debe ausentarse, explique el motivo). Si tiene dudas del proceso, pida al paciente esperar unos minutos y, discretamente, consulte la instrucción de trabajo o pida apoyo a una Bioanalista con más experiencia.
+**Buenas prácticas durante toda la atención (no se marcan como pasos):**
+
+- Imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.
+- Trato respetuoso: sin tuteo, apodos ni calificativos, incluyendo al dirigirse a personas con discapacidad.
+- No atender otras llamadas o personas durante la interacción. Si alguien se acerca, indicarle amablemente que será asistido al terminar.
+- Si hay dudas, pedir al paciente esperar unos minutos y consultar discretamente la instrucción de trabajo o a una Bioanalista con más experiencia.
 
 ---
 
 ## Etapa 1 · Recepción
 
-- [ ] **Presencia y conducta.** Imagen profesional y segura, sin celular ni auriculares, sin comer o beber frente al cliente, sin gestos inadecuados. Trato respetuoso: sin tuteo, apodos ni calificativos, también con personas con discapacidad.
 - [ ] **Bienvenida e identificación.** Salude según el horario, dé la bienvenida y diga su nombre.  
   *“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”*
 - [ ] **Privacidad.** Ofrezca cerrar la puerta antes de empezar.
 - [ ] **Asiento y documentos.** Invite a tomar asiento, solicite los documentos para validar la información e indague si existe una facturación anterior con toma de muestra pendiente.
 - [ ] **Atención personalizada.** Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.) al menos dos veces durante el proceso.
-- [ ] **Atención exclusiva.** No atienda otras llamadas o personas durante la interacción; si alguien se acerca, indíquele amablemente que le asistirá al terminar.
 
 ## Etapa 2 · Antes de extraer
 

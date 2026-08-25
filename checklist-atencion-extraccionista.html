@@ -156,6 +156,9 @@
 
   .aside { margin-top: .9rem; background: #fff; border-radius: var(--r); border-left: 4px solid var(--navy); padding: .8rem 1.05rem; font-size: .82rem; color: var(--muted); }
   .aside b { color: var(--ink); }
+  .aside-title { display: flex; align-items: center; gap: .4rem; margin-bottom: .35rem; color: var(--navy); font-weight: 700; }
+  .aside ul { margin: 0; padding-left: 1.15rem; }
+  .aside li { padding: .12rem 0; }
   .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .85rem; }
   footer.src { font-size: .74rem; color: var(--faint); margin-top: 1rem; text-align: center; }
   #printAll { display: none; }
@@ -203,9 +206,13 @@
   <section class="card" id="card"></section>
 
   <div class="aside">
-    <b>Siempre presente.</b> Nunca deje al paciente solo en la toma; si debe ausentarse, explique brevemente el motivo.
-    Si tiene dudas del proceso, pida al paciente esperar unos minutos y, discretamente, consulte la instrucción de trabajo o pida apoyo a una Bioanalista con más experiencia.
-    Se realizan auditorías a todo el personal sin distinción de antigüedad; dentro de los primeros 3 meses no aplican las medidas disciplinarias del PT-040-005.
+    <div class="aside-title"><i class="bi bi-info-circle-fill"></i> Buenas prácticas durante toda la atención</div>
+    <ul>
+      <li>Imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados.</li>
+      <li>Trato respetuoso: sin tuteo, apodos ni calificativos, incluyendo al dirigirse a personas con discapacidad.</li>
+      <li>No atienda otras llamadas o personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar.</li>
+      <li>Si tiene dudas, pida al paciente esperar unos minutos y consulte discretamente la instrucción de trabajo o a una Bioanalista con más experiencia.</li>
+    </ul>
   </div>
 
   <div class="toolbar">
@@ -227,12 +234,10 @@ const STAGES = [
     name: "Recepción", icon: "bi-door-open",
     goal: "Reciba al paciente, asegure la privacidad y valide sus datos.",
     items: [
-      { id: "r0", title: "Presencia y conducta", det: "Imagen profesional y segura: sin celular ni auriculares, sin comer, beber ni masticar chicle frente al cliente y sin gestos inadecuados. Trato respetuoso, sin tuteo, apodos ni calificativos." },
       { id: "r1", title: "Bienvenida e identificación", det: "Salude según el horario, dé la bienvenida a Amadita e identifíquese por su nombre.", say: "“Buenos días, bienvenido a Amadita Laboratorio Clínico. Mi nombre es Laura García, ¿cómo puedo servirle?”" },
       { id: "r2", title: "Privacidad", det: "Ofrezca cerrar la puerta antes de empezar con la toma de muestra." },
       { id: "r3", title: "Asiento y documentos", det: "Invite a tomar asiento y solicite los documentos para validar la información. Indague si existe una facturación anterior con toma de muestra pendiente." },
-      { id: "r4", title: "Atención personalizada", det: "Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.) al menos dos veces durante toda la atención." },
-      { id: "r5", title: "Atención exclusiva", det: "No atienda otras llamadas ni personas durante la interacción. Si alguien se acerca, indíquele amablemente que le asistirá al terminar." }
+      { id: "r4", title: "Atención personalizada", det: "Diríjase al paciente por su nombre (Sr., Sra., Srta., Dr.) al menos dos veces durante toda la atención." }
     ]
   },
   {
