@@ -196,7 +196,6 @@
       </div>
     </div>
     <div class="pills">
-      <div class="pill" title="Tiempo de la atención"><i class="bi bi-stopwatch"></i><span id="clock">00:00</span></div>
       <div class="pill" title="Avance total"><i class="bi bi-list-check"></i><div class="bar"><span id="globalBar"></span></div><b id="globalPct">0%</b></div>
     </div>
   </div>
@@ -284,16 +283,14 @@ const KEY = "checklistTomaMuestra.v3";
 let st = load();
 let stage = 0;
 let view = "stages";
-let ticker = null;
 
-function blank() { return { status: {}, startedAt: null }; }
+function blank() { return { status: {} }; }
 function load() {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) || "null");
     if (!raw) return blank();
     const s = blank();
     ALL.forEach(x => { const v = raw.status && raw.status[x.id]; if (v === "done" || v === "skip") s.status[x.id] = v; });
-    s.startedAt = raw.startedAt || null;
     return s;
   } catch { return blank(); }
 }
@@ -309,7 +306,6 @@ function firstOpenStage() {
 }
 
 function mark(id, value) {
-  if (!st.startedAt) { st.startedAt = Date.now(); startTicker(); }
   if (value) st.status[id] = value; else delete st.status[id];
   save();
   paintProgress();
@@ -320,18 +316,9 @@ function resetAll() {
   st = blank();
   stage = 0;
   view = "stages";
-  stopTicker();
   save();
   render();
 }
-
-function fmt(ms) {
-  const t = Math.max(0, Math.floor(ms / 1000));
-  return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
-}
-function paintClock() { document.getElementById("clock").textContent = st.startedAt ? fmt(Date.now() - st.startedAt) : "00:00"; }
-function startTicker() { stopTicker(); ticker = setInterval(paintClock, 1000); paintClock(); }
-function stopTicker() { if (ticker) clearInterval(ticker); ticker = null; paintClock(); }
 
 function render() { paintProgress(); renderTabs(); renderCard(); renderPrint(); }
 function renderCard() { view === "summary" ? renderSummary() : renderStage(); }
@@ -429,8 +416,6 @@ function renderSummary() {
   const skipped = ALL.filter(x => st.status[x.id] === "skip");
   const missing = ALL.filter(x => !st.status[x.id]);
   const pct = Math.round((closedAll() / TOTAL) * 100);
-  const elapsed = st.startedAt ? fmt(Date.now() - st.startedAt) : "—";
-  stopTicker();
 
   card.innerHTML = `
     <div class="panel">
@@ -440,7 +425,6 @@ function renderSummary() {
         <div class="stat"><b>${done}</b> confirmados</div>
         <div class="stat"><b>${skipped.length}</b> no aplicaron</div>
         <div class="stat"><b>${missing.length}</b> sin marcar</div>
-        <div class="stat"><b>${elapsed}</b> duración</div>
       </div>
       <p>${missing.length
         ? "Complete los pasos pendientes antes de cerrar el turno del paciente."
@@ -490,7 +474,6 @@ document.getElementById("printBtn").onclick = () => window.print();
 document.getElementById("resetBtn").onclick = resetAll;
 
 stage = firstOpenStage();
-if (st.startedAt) startTicker();
 render();
 </script>
 </body>
