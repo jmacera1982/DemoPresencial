@@ -128,26 +128,29 @@
     }
     
     .mobile-app-header {
-      background: linear-gradient(135deg, var(--numia-azul) 0%, var(--coomeva-verde-lima) 100%);
-      padding: 0.85rem 1rem;
-      color: white;
+      background: #ffffff;
+      padding: 0.7rem 1rem;
+      color: var(--numia-text);
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: 0.5rem;
       flex-shrink: 0;
+      border-bottom: 1px solid var(--numia-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }
 
     .mobile-app-header #btnHeaderBack {
       background: none;
       border: none;
-      color: #fff;
+      color: var(--coomeva-verde-oscuro);
       font-size: 1.2rem;
       cursor: pointer;
       padding: 0.35rem;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 8px;
     }
 
     .mobile-app-header #numiaHeaderBrand {
@@ -161,14 +164,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #fff;
-      padding: 6px 14px;
-      border-radius: 999px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     }
 
     .coom-header-logo img {
-      height: 22px;
+      height: 34px;
       width: auto;
       display: block;
     }
@@ -358,14 +357,13 @@
     }
     
     .mobile-app-header button:hover {
-      background-color: rgba(255, 255, 255, 0.3) !important;
-      border-color: rgba(255, 255, 255, 0.5) !important;
+      background-color: var(--coomeva-verde-claro) !important;
       transform: translateY(-1px);
     }
     
     .mobile-app-header button:active {
       transform: translateY(0);
-      background-color: rgba(255, 255, 255, 0.25) !important;
+      background-color: #d9efe1 !important;
     }
     
     .mobile-app-content {
@@ -1799,8 +1797,8 @@
         <span id="numiaHeaderTitle" style="font-weight: 600; font-size: 1.1rem; display:none;">Coomeva</span>
       </div>
       <div class="mobile-app-header-actions">
-        <i class="bi bi-bell" style="font-size: 1.2rem; opacity: 0.9;"></i>
-        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+        <i class="bi bi-bell" style="font-size: 1.2rem; color: var(--coomeva-verde-oscuro); opacity: 0.9;"></i>
+        <i class="bi bi-person-circle" style="font-size: 1.5rem; color: var(--coomeva-verde-oscuro);"></i>
       </div>
     </div>
 
