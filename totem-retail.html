@@ -1060,7 +1060,6 @@
       <div class="staff-section">
         <h4><i class="bi bi-robot"></i> Agente de Sucursales</h4>
         <p class="desc">Evalúa el estado de la sucursal con los datos configurados (fuera del flujo del tótem).</p>
-        <div id="agenteResumenInput" class="hint" style="margin-bottom:0.6rem;"></div>
         <button class="btn-admin-action" id="btnLlamarAgente">
           <i class="bi bi-play-circle"></i> Llamar al Agente de Sucursales
         </button>
@@ -1622,7 +1621,6 @@
         guardarConfigEnSesion();
         actualizarHeaderCompania();
         actualizarLogoPreview();
-        actualizarResumenAgente();
 
         configSavedMsg.style.display = 'inline';
         setTimeout(function () { configSavedMsg.style.display = 'none'; }, 2000);
@@ -1752,7 +1750,6 @@
       }
 
       // --- Agente de Sucursales (panel lateral) ---
-      const agenteResumenInput = document.getElementById('agenteResumenInput');
       const btnLlamarAgente = document.getElementById('btnLlamarAgente');
       const agenteResultBox = document.getElementById('agenteResultBox');
 
@@ -1764,11 +1761,6 @@
           ', Tramite 2: ' + (CONFIG.tramite2 || '') +
           ', Tipo de agente: ' + (CONFIG.tipoAgente || '');
       }
-
-      function actualizarResumenAgente() {
-        agenteResumenInput.textContent = 'Se enviará: "' + construirInputValueAgente() + '"';
-      }
-      actualizarResumenAgente();
 
       btnLlamarAgente.addEventListener('click', async function () {
         const original = btnLlamarAgente.innerHTML;
