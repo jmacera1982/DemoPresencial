@@ -1146,6 +1146,11 @@
             <input type="text" class="form-control" id="inputTramite2" placeholder="Ej: Particular">
             <div class="hint">Se usará en el botón "Trámite 2" del tótem (cola 21143).</div>
           </div>
+          <div class="admin-form-row" style="grid-column: 1 / -1;">
+            <label>URL del Agente de Análisis de Cliente (opcional)</label>
+            <input type="url" class="form-control" id="inputClienteAgenteUrl" placeholder="https://api.journeybuilder.numia.co/api/v1/run/...">
+            <div class="hint">Si se deja vacío, se usa un análisis simulado orientado a retail (compras abandonadas, puntos de fidelidad y recomendaciones de productos). Completar solo si existe un agente de Retail dedicado.</div>
+          </div>
         </div>
 
         <div class="d-flex align-items-center gap-2 mt-2">
@@ -1282,7 +1287,8 @@
         tramite2: '',
         tipoAgente: 'Notificación',
         logoUrl: '',
-        logoDataUrl: ''
+        logoDataUrl: '',
+        clienteAgenteUrl: ''
       };
 
       function cargarConfig() {
@@ -1579,6 +1585,7 @@
       const inputTramite2 = document.getElementById('inputTramite2');
       const inputLogoFile = document.getElementById('inputLogoFile');
       const inputLogoUrl = document.getElementById('inputLogoUrl');
+      const inputClienteAgenteUrl = document.getElementById('inputClienteAgenteUrl');
       const logoPreview = document.getElementById('logoPreview');
       const btnGuardarConfig = document.getElementById('btnGuardarConfig');
       const configSavedMsg = document.getElementById('configSavedMsg');
@@ -1590,6 +1597,7 @@
         inputTipoAgente.value = CONFIG.tipoAgente || 'Notificación';
         inputTramite1.value = CONFIG.tramite1 || '';
         inputTramite2.value = CONFIG.tramite2 || '';
+        inputClienteAgenteUrl.value = CONFIG.clienteAgenteUrl || '';
         inputLogoUrl.value = CONFIG.logoUrl || '';
         actualizarLogoPreview();
       }
@@ -1628,6 +1636,7 @@
         CONFIG.tipoAgente = inputTipoAgente.value;
         CONFIG.tramite1 = inputTramite1.value.trim();
         CONFIG.tramite2 = inputTramite2.value.trim();
+        CONFIG.clienteAgenteUrl = inputClienteAgenteUrl.value.trim();
         CONFIG.logoUrl = inputLogoUrl.value.trim();
 
         guardarConfigEnSesion();
@@ -1667,12 +1676,14 @@
        *  productos relacionados (cuidado personal). Se muestra en el
        *  panel lateral y su resultado se adjunta al turno generado.
        * ========================================================= */
-      // Reutiliza el agente de análisis general del tótem (mismo Run ID que
-      // totem.html). Ese agente está orientado a banca (Scoring, Préstamos,
-      // Tarjetas), por lo que su respuesta real puede no reflejar aún los
-      // temas de retail solicitados en el mensaje. Reemplazar este Run ID
-      // por el de un agente de Retail dedicado en cuanto esté disponible.
-      const CLIENT_ANALYSIS_URL = 'https://api.journeybuilder.numia.co/api/v1/run/d83a2fbd-f8d0-468f-9ecd-375709fd149f?stream=false';
+      // Por defecto (si en Configuración no se cargó una URL de agente propia)
+      // se genera un análisis SIMULADO localmente, determinístico según el DNI,
+      // siempre orientado a retail. Esto evita depender del agente bancario
+      // compartido de totem.html (Scoring, Préstamos, Tarjetas), que no se puede
+      // "reorientar" a retail solo cambiando el texto que se le envía, porque su
+      // formato de respuesta está fijo del lado del flujo de Journey Builder.
+      // Si se configura "URL del Agente de Análisis de Cliente" en el panel de
+      // Configuración, se usa esa API real en su lugar.
       const CLIENT_ANALYSIS_STEPS = [
         { titulo: 'Compras online abandonadas', detalle: 'Revisando compras iniciadas y no finalizadas en el canal online.' },
         { titulo: 'Puntos de fidelidad', detalle: 'Consultando los puntos acumulados en el programa de beneficios.' },
@@ -1687,6 +1698,68 @@
       const clienteAnalisisEmpty = document.getElementById('clienteAnalisisEmpty');
       const clienteStepsContainer = document.getElementById('clienteStepsContainer');
       const clienteResumenBox = document.getElementById('clienteResumenBox');
+
+      // Hash simple y determinístico: el mismo DNI siempre da el mismo "análisis"
+      // dentro de una sesión, para que la demo sea consistente si se repite.
+      function hashDni(dni) {
+        const str = String(dni || '');
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+        }
+        return hash;
+      }
+
+      function generarAnalisisClienteRetailSimulado(dni) {
+        const seed = hashDni(dni);
+
+        const productosAbandonados = [
+          'Shampoo reparador 400ml',
+          'Crema hidratante facial con FPS30',
+          'Protector solar corporal FPS50',
+          'Set de afeitado premium',
+          'Perfume unisex 100ml',
+          'Kit de skincare nocturno'
+        ];
+        const productosRecomendados = [
+          'Crema hidratante corporal',
+          'Desodorante roll-on sin aluminio',
+          'Shampoo anticaspa',
+          'Protector solar facial FPS50',
+          'Kit de afeitado premium',
+          'Jabón líquido para manos',
+          'Acondicionador reparador',
+          'Bálsamo labial con protección'
+        ];
+
+        const tieneCompraAbandonada = seed % 2 === 0;
+        const productoAbandonado = productosAbandonados[seed % productosAbandonados.length];
+
+        const puntos = 120 + (seed % 18) * 55;
+        let nivel = 'Plata';
+        if (puntos >= 800) nivel = 'Platino';
+        else if (puntos >= 400) nivel = 'Oro';
+
+        const rec1 = productosRecomendados[seed % productosRecomendados.length];
+        const rec2Index = (seed + 3) % productosRecomendados.length;
+        const rec2 = productosRecomendados[rec2Index === seed % productosRecomendados.length ? (rec2Index + 1) % productosRecomendados.length : rec2Index];
+
+        const lineas = [];
+        lineas.push('Análisis del cliente (DNI ' + dni + ')');
+        lineas.push('');
+        lineas.push('Compras online abandonadas:');
+        lineas.push(tieneCompraAbandonada
+          ? '  Sí, quedó un producto en el carrito sin finalizar la compra: "' + productoAbandonado + '".'
+          : '  No se registran compras abandonadas recientes.');
+        lineas.push('');
+        lineas.push('Programa de beneficios:');
+        lineas.push('  ' + puntos + ' puntos acumulados (nivel ' + nivel + ').');
+        lineas.push('');
+        lineas.push('Recomendación de productos (cuidado personal):');
+        lineas.push('  ' + rec1 + ' y ' + rec2 + '.');
+
+        return lineas.join('\n');
+      }
 
       function extraerMensajeJourneyBuilder(data) {
         if (data && data.outputs && data.outputs[0] && data.outputs[0].outputs && data.outputs[0].outputs[0]) {
@@ -1726,31 +1799,39 @@
         const pasosInicio = Date.now();
         const pasosAnimacionMs = CLIENT_ANALYSIS_STEPS.length * delayPaso + 400;
 
-        const mensaje = 'Analiza al cliente retail con DNI: ' + dni + '. Verificar compras online abandonadas, puntos acumulados en el programa de beneficios de fidelidad, y recomendar productos relacionados de cuidado personal. ' +
-          'Compañía: ' + (CONFIG.compania || '') + ', Sucursal: ' + (CONFIG.sucursal || '') + ', Teléfono: ' + (CONFIG.phone || '') + '.';
+        const urlAgentePersonalizado = (CONFIG.clienteAgenteUrl || '').trim();
 
         let resultado = null;
         let errorMsg = null;
-        try {
-          const response = await fetch(CLIENT_ANALYSIS_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': JB_API_KEY
-            },
-            body: JSON.stringify({ input_value: mensaje, input_type: 'chat' })
-          });
 
-          const data = await response.json().catch(function () { return {}; });
+        if (urlAgentePersonalizado) {
+          // Se configuró un agente de Retail propio: se lo llama con los datos reales.
+          const mensaje = 'Analiza al cliente retail con DNI: ' + dni + '. Verificar compras online abandonadas, puntos acumulados en el programa de beneficios de fidelidad, y recomendar productos relacionados de cuidado personal. ' +
+            'Compañía: ' + (CONFIG.compania || '') + ', Sucursal: ' + (CONFIG.sucursal || '') + ', Teléfono: ' + (CONFIG.phone || '') + '.';
+          try {
+            const response = await fetch(urlAgentePersonalizado, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': JB_API_KEY
+              },
+              body: JSON.stringify({ input_value: mensaje, input_type: 'chat' })
+            });
 
-          if (!response.ok) {
-            throw new Error((data && data.message) || ('Error en servidor (' + response.status + ')'));
+            const data = await response.json().catch(function () { return {}; });
+
+            if (!response.ok) {
+              throw new Error((data && data.message) || ('Error en servidor (' + response.status + ')'));
+            }
+
+            resultado = extraerMensajeJourneyBuilder(data) || JSON.stringify(data, null, 2);
+          } catch (err) {
+            console.error('Error al analizar al cliente:', err);
+            errorMsg = err.message;
           }
-
-          resultado = extraerMensajeJourneyBuilder(data) || JSON.stringify(data, null, 2);
-        } catch (err) {
-          console.error('Error al analizar al cliente:', err);
-          errorMsg = err.message;
+        } else {
+          // Sin agente propio configurado: análisis simulado, siempre orientado a retail.
+          resultado = generarAnalisisClienteRetailSimulado(dni);
         }
 
         const transcurrido = Date.now() - pasosInicio;
