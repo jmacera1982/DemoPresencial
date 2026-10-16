@@ -484,7 +484,7 @@
       justify-content: center;
       font-size: 1rem;
       cursor: pointer;
-      opacity: 0.18;
+      opacity: 0.35;
       transition: all 0.25s;
       z-index: 500;
     }
@@ -494,6 +494,39 @@
       background: var(--numia-azul-oscuro);
       color: white;
       transform: rotate(45deg);
+    }
+
+    /* Botón visible (fuera del tótem) para las herramientas de sucursal:
+       Agente de Sucursales, ver turnos en espera y restaurar la sucursal. */
+    .btn-sucursal-toggle {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      background: var(--numia-azul-oscuro);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.65rem 1.15rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 16px rgba(6, 10, 39, 0.35);
+      transition: all 0.25s;
+      z-index: 500;
+    }
+
+    .btn-sucursal-toggle:hover {
+      background: var(--numia-azul);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(134, 61, 255, 0.4);
+    }
+
+    @media (max-width: 1024px) {
+      .btn-sucursal-toggle span { display: none; }
+      .btn-sucursal-toggle { padding: 0.65rem; border-radius: 50%; }
     }
 
     /* Panel / Modal de administración */
@@ -903,9 +936,16 @@
     </div>
   </div>
 
-  <!-- Botón oculto/discreto para abrir el panel de administración -->
-  <button class="btn-admin-gear" id="btnAdminGear" title="Panel de administración">
+  <!-- Botón oculto/discreto para abrir la configuración del tótem (phone, compañía, sucursal, trámites, etc.) -->
+  <button class="btn-admin-gear" id="btnAdminGear" title="Configuración del tótem">
     <i class="bi bi-gear-fill"></i>
+  </button>
+
+  <!-- Botón visible, fuera del tótem, para las herramientas de sucursal (staff):
+       Agente de Sucursales, ver turnos en espera y restaurar la sucursal. -->
+  <button class="btn-sucursal-toggle" id="btnSucursalToggle" title="Herramientas de sucursal">
+    <i class="bi bi-building-gear"></i>
+    <span>Sucursal</span>
   </button>
 
   <!-- Panel de administración (oculto por defecto) -->
@@ -1399,7 +1439,33 @@
         adminOverlay.classList.remove('active');
       }
 
-      btnAdminGear.addEventListener('click', abrirAdmin);
+      function activarTabAdmin(nombreTab) {
+        document.querySelectorAll('.admin-tab-btn').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-tab') === nombreTab);
+        });
+        document.querySelectorAll('.admin-tab-content').forEach(function (c) {
+          c.classList.remove('active');
+        });
+        const contenido = document.getElementById('tab' + capitalize(nombreTab));
+        if (contenido) contenido.classList.add('active');
+        if (nombreTab === 'agente') {
+          actualizarResumenAgente();
+        }
+      }
+
+      btnAdminGear.addEventListener('click', function () {
+        abrirAdmin();
+        activarTabAdmin('config');
+      });
+
+      // Botón visible "Sucursal" (fuera del tótem): abre directamente las
+      // herramientas de Agente de Sucursales / Monitor / Restaurar.
+      const btnSucursalToggle = document.getElementById('btnSucursalToggle');
+      btnSucursalToggle.addEventListener('click', function () {
+        abrirAdmin();
+        activarTabAdmin('agente');
+      });
+
       btnCloseAdmin.addEventListener('click', cerrarAdmin);
       adminOverlay.addEventListener('click', function (e) {
         if (e.target === adminOverlay) cerrarAdmin();
@@ -1411,13 +1477,7 @@
       // Tabs del panel
       document.querySelectorAll('.admin-tab-btn').forEach(function (tabBtn) {
         tabBtn.addEventListener('click', function () {
-          document.querySelectorAll('.admin-tab-btn').forEach(function (b) { b.classList.remove('active'); });
-          document.querySelectorAll('.admin-tab-content').forEach(function (c) { c.classList.remove('active'); });
-          tabBtn.classList.add('active');
-          document.getElementById('tab' + capitalize(tabBtn.getAttribute('data-tab'))).classList.add('active');
-          if (tabBtn.getAttribute('data-tab') === 'agente') {
-            actualizarResumenAgente();
-          }
+          activarTabAdmin(tabBtn.getAttribute('data-tab'));
         });
       });
 
