@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tótem Retail - Atención al Cliente</title>
+  <link rel="icon" type="image/png" href="images/N.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --numia-azul: #863DFF;
+      --numia-azul-oscuro: #060A27;
+      --numia-success: #10b981;
+      --numia-text: #1f2937;
+      --numia-text-light: #6b7280;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f5f5f5;
+      color: var(--numia-text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    /* Contenedor del tótem */
+    .totem-container {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      position: relative;
+      height: calc(100vh - 4rem);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    /* Header del tótem - siempre muestra el nombre de la compañía */
+    .totem-header {
+      background: var(--numia-azul-oscuro);
+      padding: 1.25rem 2rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .company-logo {
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--numia-azul-oscuro);
+      font-size: 1.4rem;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .company-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .company-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .company-sucursal {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.75);
+      margin-top: 0.1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .totem-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 0;
+    }
+
+    /* Pantalla 1: Ingreso de DNI */
+    .screen-dni {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .screen-dni h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .screen-dni .instruction {
+      font-size: 1rem;
+      color: var(--numia-azul);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .dni-display {
+      background: white;
+      color: var(--numia-text);
+      font-size: 1.5rem;
+      font-weight: 600;
+      padding: 1rem;
+      border: 3px solid #ff8c42;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.2rem;
+    }
+
+    .dni-display.empty {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    .dni-display.empty:before {
+      content: 'Ingrese su DNI';
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .keypad-row-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0.75rem;
+    }
+
+    .keypad-btn {
+      background: white;
+      color: var(--numia-text);
+      border: 1px solid #000;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .keypad-btn:hover {
+      background: #f5f5f5;
+      transform: scale(1.02);
+    }
+
+    .keypad-btn:active {
+      transform: scale(0.98);
+      background: #e5e5e5;
+    }
+
+    .keypad-btn.delete {
+      background: white;
+      color: var(--numia-text);
+      border: 1px solid #000;
+      font-size: 1.5rem;
+    }
+
+    .keypad-btn.delete:hover {
+      background: #f5f5f5;
+    }
+
+    .keypad-btn.empty {
+      background: transparent;
+      border: none;
+      cursor: default;
+    }
+
+    .keypad-btn.empty:hover {
+      transform: none;
+      background: transparent;
+    }
+
+    .btn-continuar {
+      width: 100%;
+      max-width: 350px;
+      background: #ff8c42;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 0.5rem;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .btn-continuar:hover {
+      background: #ff7a2e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 140, 66, 0.4);
+    }
+
+    .btn-continuar:active {
+      transform: translateY(0);
+    }
+
+    .btn-continuar:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-continuar:disabled:hover {
+      background: #d1d5db;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Pantalla 2: Opciones de trámite */
+    .screen-opciones {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      display: none;
+    }
+
+    .screen-opciones.active {
+      display: block;
+    }
+
+    .screen-opciones h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .screen-opciones .subtitle {
+      font-size: 0.95rem;
+      color: var(--numia-text-light);
+      margin-bottom: 1rem;
+    }
+
+    .dni-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #f5f3ff;
+      color: var(--numia-azul);
+      border-radius: 20px;
+      padding: 0.35rem 0.9rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .opciones-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: stretch;
+    }
+
+    .opcion-card {
+      background: white;
+      border: 3px solid var(--numia-azul);
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      border-radius: 12px;
+      padding: 1.5rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .opcion-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(134, 61, 255, 0.3);
+    }
+
+    .opcion-card .opcion-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--numia-azul);
+    }
+
+    .opcion-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .opcion-desc {
+      font-size: 0.78rem;
+      color: var(--numia-text-light);
+      margin-top: 0.25rem;
+    }
+
+    .btn-volver-opciones {
+      background: transparent;
+      border: none;
+      color: var(--numia-text-light);
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      text-decoration: underline;
+    }
+
+    /* Pantalla 3: Confirmación */
+    .screen-confirmacion {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      display: none;
+    }
+
+    .screen-confirmacion.active {
+      display: block;
+    }
+
+    .screen-confirmacion .success-icon {
+      font-size: 3.5rem;
+      color: var(--numia-success);
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .screen-confirmacion h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--numia-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .screen-confirmacion .message {
+      font-size: 1rem;
+      color: var(--numia-text-light);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .tiempo-espera {
+      background: #f0fdf4;
+      border: 2px solid var(--numia-success);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tiempo-espera-label {
+      font-size: 0.8rem;
+      color: var(--numia-text-light);
+      margin-bottom: 0.25rem;
+    }
+
+    .tiempo-espera-valor {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--numia-success);
+    }
+
+    .confirmacion-acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 350px;
+      margin: 0 auto;
+    }
+
+    .btn-otro-turno {
+      background: var(--numia-azul);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-otro-turno:hover {
+      background: #7430e0;
+      transform: translateY(-2px);
+    }
+
+    .btn-finalizar {
+      background: transparent;
+      color: var(--numia-text-light);
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-finalizar:hover {
+      background: #f5f5f5;
+      border-color: #d1d5db;
+    }
+
+    .error-box {
+      background: #fef2f2;
+      border: 2px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Botón flotante para abrir panel de administración (oculto / discreto) */
+    .btn-admin-gear {
+      position: fixed;
+      bottom: 14px;
+      left: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(6, 10, 39, 0.35);
+      color: rgba(255, 255, 255, 0.55);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      opacity: 0.18;
+      transition: all 0.25s;
+      z-index: 500;
+    }
+
+    .btn-admin-gear:hover {
+      opacity: 1;
+      background: var(--numia-azul-oscuro);
+      color: white;
+      transform: rotate(45deg);
+    }
+
+    /* Panel / Modal de administración */
+    .admin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 10, 39, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 1.5rem;
+    }
+
+    .admin-overlay.active {
+      display: flex;
+    }
+
+    .admin-panel {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    .admin-panel-header {
+      background: var(--numia-azul-oscuro);
+      color: white;
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .admin-panel-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-close-admin {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .admin-tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e7eb;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+
+    .admin-tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--numia-text-light);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .admin-tab-btn.active {
+      color: var(--numia-azul);
+      border-bottom-color: var(--numia-azul);
+    }
+
+    .admin-tab-content {
+      display: none;
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .admin-tab-content.active {
+      display: block;
+    }
+
+    .admin-form-row {
+      margin-bottom: 1rem;
+    }
+
+    .admin-form-row label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--numia-text);
+      margin-bottom: 0.3rem;
+    }
+
+    .admin-form-row .hint {
+      font-size: 0.75rem;
+      color: var(--numia-text-light);
+      margin-top: 0.25rem;
+    }
+
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 560px) {
+      .admin-form-grid { grid-template-columns: 1fr; }
+    }
+
+    .logo-preview {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      border: 2px dashed #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      color: var(--numia-text-light);
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: #fafafa;
+    }
+
+    .btn-admin-save {
+      background: var(--numia-azul);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-save:hover {
+      background: #7430e0;
+    }
+
+    .btn-admin-action {
+      background: var(--numia-azul-oscuro);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.65rem 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-action:hover {
+      opacity: 0.9;
+    }
+
+    .btn-admin-action.outline {
+      background: transparent;
+      border: 2px solid var(--numia-azul-oscuro);
+      color: var(--numia-azul-oscuro);
+    }
+
+    .btn-admin-action:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .staff-section {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .staff-section h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .staff-section p.desc {
+      font-size: 0.8rem;
+      color: var(--numia-text-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .result-box {
+      background: #1a1a1a;
+      color: #e5e5e5;
+      border-radius: 10px;
+      padding: 0.9rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      margin-top: 0.75rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 260px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .result-box.visible {
+      display: block;
+    }
+
+    .result-box.success-text {
+      border-left: 3px solid var(--numia-success);
+    }
+
+    .result-box.error-text {
+      border-left: 3px solid #ef4444;
+      color: #ffb4b4;
+    }
+
+    .worker-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .worker-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .worker-card-header .worker-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .worker-online-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 10px;
+      background: #f3f4f6;
+      color: var(--numia-text-light);
+    }
+
+    .worker-online-badge.online {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .worker-branch {
+      font-size: 0.78rem;
+      color: var(--numia-text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .worker-queue-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      background: #f9fafb;
+      border-radius: 6px;
+      padding: 0.4rem 0.65rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .worker-queue-row .waiting-count {
+      font-weight: 700;
+      color: var(--numia-azul);
+    }
+
+    .worker-queue-row .waiting-count.zero {
+      color: var(--numia-text-light);
+      font-weight: 600;
+    }
+
+    .spinner-inline {
+      display: inline-block;
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      body {
+        padding: 1rem;
+      }
+
+      .totem-container {
+        max-width: 100%;
+        height: calc(100vh - 2rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <script src="auth-portal.js"></script>
+  <script>AuthPortal.require();</script>
+
+  <!-- Contenedor del tótem -->
+  <div class="totem-container">
+    <!-- Header: siempre visible el nombre (y logo) de la compañía -->
+    <div class="totem-header">
+      <div class="company-logo" id="companyLogo">C</div>
+      <div class="company-info">
+        <div class="company-name" id="companyName">Mi Compañía</div>
+        <div class="company-sucursal" id="companySucursal" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Contenido del tótem -->
+    <div class="totem-content">
+      <!-- Pantalla 1: Ingreso de DNI (primera pantalla del tótem retail) -->
+      <div class="screen-dni" id="screenDni">
+        <div class="instruction">Bienvenido! Por favor ingrese su DNI</div>
+
+        <div class="dni-display empty" id="dniDisplay"></div>
+
+        <div class="keypad">
+          <button class="keypad-btn" data-number="1">1</button>
+          <button class="keypad-btn" data-number="2">2</button>
+          <button class="keypad-btn" data-number="3">3</button>
+          <button class="keypad-btn" data-number="4">4</button>
+          <button class="keypad-btn" data-number="5">5</button>
+          <button class="keypad-btn" data-number="6">6</button>
+          <button class="keypad-btn" data-number="7">7</button>
+          <button class="keypad-btn" data-number="8">8</button>
+          <button class="keypad-btn" data-number="9">9</button>
+        </div>
+
+        <div class="keypad-row-bottom">
+          <button class="keypad-btn empty"></button>
+          <button class="keypad-btn" data-number="0">0</button>
+          <button class="keypad-btn delete" id="btnDelete">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </div>
+
+        <button class="btn-continuar" id="btnContinuar" disabled>Continuar</button>
+      </div>
+
+      <!-- Pantalla 2: Opciones de trámite (Trámite 1 / Trámite 2) -->
+      <div class="screen-opciones" id="screenOpciones">
+        <h2>¿En qué podemos ayudarlo?</h2>
+        <div class="subtitle">Seleccione el trámite que desea realizar</div>
+        <div class="dni-chip"><i class="bi bi-person-badge"></i> <span id="dniChipValue"></span></div>
+
+        <div id="opcionesError"></div>
+
+        <div class="opciones-grid" id="opcionesGrid">
+          <!-- Se llenará dinámicamente con Trámite 1 y Trámite 2 -->
+        </div>
+
+        <button class="btn-volver-opciones" id="btnVolverDni">
+          <i class="bi bi-arrow-left me-1"></i>Ingresar otro DNI
+        </button>
+      </div>
+
+      <!-- Pantalla 3: Confirmación -->
+      <div class="screen-confirmacion" id="screenConfirmacion">
+        <div class="success-icon">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h2 id="confirmacionTitulo">¡Turno asignado!</h2>
+        <div class="message" id="confirmacionMensaje">
+          En breve uno de nuestros asesores lo atenderá.
+        </div>
+
+        <div class="tiempo-espera" id="tiempoEspera" style="display: none;">
+          <div class="tiempo-espera-label">Tiempo de espera estimado</div>
+          <div class="tiempo-espera-valor" id="tiempoEsperaValor">--</div>
+        </div>
+
+        <div class="confirmacion-acciones">
+          <button class="btn-otro-turno" id="btnOtroTurno">
+            <i class="bi bi-plus-circle me-2"></i>Cargar otro turno
+          </button>
+          <button class="btn-finalizar" id="btnFinalizar">
+            <i class="bi bi-house me-2"></i>Finalizar / Nuevo DNI
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón oculto/discreto para abrir el panel de administración -->
+  <button class="btn-admin-gear" id="btnAdminGear" title="Panel de administración">
+    <i class="bi bi-gear-fill"></i>
+  </button>
+
+  <!-- Panel de administración (oculto por defecto) -->
+  <div class="admin-overlay" id="adminOverlay">
+    <div class="admin-panel">
+      <div class="admin-panel-header">
+        <h3><i class="bi bi-shield-lock"></i> Panel de administración</h3>
+        <button class="btn-close-admin" id="btnCloseAdmin">&times;</button>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" data-tab="config">Configuración</button>
+        <button class="admin-tab-btn" data-tab="agente">Agente de Sucursales</button>
+        <button class="admin-tab-btn" data-tab="monitor">Monitor Sucursal</button>
+      </div>
+
+      <!-- Tab: Configuración -->
+      <div class="admin-tab-content active" id="tabConfig">
+        <div class="admin-form-row">
+          <label>Logo de la compañía</label>
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <div class="logo-preview" id="logoPreview">C</div>
+            <div style="flex:1;">
+              <input type="file" class="form-control form-control-sm mb-1" id="inputLogoFile" accept="image/*">
+              <input type="url" class="form-control form-control-sm" id="inputLogoUrl" placeholder="o pegue una URL de imagen">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-row">
+            <label>Teléfono</label>
+            <input type="tel" class="form-control" id="inputPhone" placeholder="Ej: 5491121598038">
+          </div>
+          <div class="admin-form-row">
+            <label>Compañía</label>
+            <input type="text" class="form-control" id="inputCompania" placeholder="Ej: Central Oeste">
+          </div>
+          <div class="admin-form-row">
+            <label>Sucursal</label>
+            <input type="text" class="form-control" id="inputSucursal" placeholder="Ej: Central">
+          </div>
+          <div class="admin-form-row">
+            <label>Tipo de agente</label>
+            <select class="form-select" id="inputTipoAgente">
+              <option value="Notificación">Notificación</option>
+              <option value="Orquestación">Orquestación</option>
+            </select>
+          </div>
+          <div class="admin-form-row">
+            <label>Trámite 1</label>
+            <input type="text" class="form-control" id="inputTramite1" placeholder="Ej: Obra social">
+            <div class="hint">Se usará en el botón "Trámite 1" del tótem (cola 21142).</div>
+          </div>
+          <div class="admin-form-row">
+            <label>Trámite 2</label>
+            <input type="text" class="form-control" id="inputTramite2" placeholder="Ej: Particular">
+            <div class="hint">Se usará en el botón "Trámite 2" del tótem (cola 21143).</div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 mt-2">
+          <button class="btn-admin-save" id="btnGuardarConfig">
+            <i class="bi bi-check2 me-1"></i>Guardar
+          </button>
+          <span id="configSavedMsg" style="color: var(--numia-success); font-size: 0.85rem; font-weight: 600; display:none;">
+            <i class="bi bi-check-circle-fill me-1"></i>Guardado
+          </span>
+        </div>
+        <div class="hint mt-2">Estos datos se guardan solo durante la sesión del navegador (no se envían a ningún servidor).</div>
+      </div>
+
+      <!-- Tab: Agente de Sucursales -->
+      <div class="admin-tab-content" id="tabAgente">
+        <div class="staff-section">
+          <h4><i class="bi bi-robot"></i> Agente de Sucursales</h4>
+          <p class="desc">Evalúa el estado de la sucursal con los datos configurados (fuera del flujo del tótem).</p>
+          <div id="agenteResumenInput" class="hint" style="margin-bottom:0.6rem;"></div>
+          <button class="btn-admin-action" id="btnLlamarAgente">
+            <i class="bi bi-play-circle"></i> Llamar al Agente de Sucursales
+          </button>
+          <div class="result-box" id="agenteResultBox"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Monitor Sucursal -->
+      <div class="admin-tab-content" id="tabMonitor">
+        <div class="staff-section">
+          <h4><i class="bi bi-bar-chart-line"></i> Turnos en espera</h4>
+          <p class="desc">Muestra los puestos vinculados a los trámites configurados y sus turnos en espera.</p>
+          <button class="btn-admin-action" id="btnVerDatosSucursal">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar datos
+          </button>
+          <div id="monitorContainer" style="margin-top:1rem;"></div>
+        </div>
+
+        <div class="staff-section">
+          <h4><i class="bi bi-tools"></i> Restaurar sucursal</h4>
+          <p class="desc">Restaura la configuración por defecto de los puestos Retail 01 y Retail 02. Requiere una sesión activa del backoffice DebMedia en este mismo navegador.</p>
+          <button class="btn-admin-action outline" id="btnRestaurarSucursal">
+            <i class="bi bi-arrow-counterclockwise"></i> Restaurar sucursal
+          </button>
+          <div class="result-box" id="restaurarResultBox"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      /* =========================================================
+       *  CONFIGURACIÓN / CONSTANTES DE APIS
+       * ========================================================= */
+      const FV_BASE = 'https://filavirtual2.debmedia.com/api/v1';
+      const FV_TOKEN = 'XlOIHNe0yDnF6htBZWhdv3uFHxQKanqdVNQZC17w';
+      const BRANCH_ID = '10750';
+      const QUEUE_TRAMITE_1 = '21142';
+      const QUEUE_TRAMITE_2 = '21143';
+
+      const JB_AGENTE_SUCURSAL_URL = 'https://api.journeybuilder.numia.co/api/v1/run/04b33c8e-8745-40f5-88cb-6c5a70726ad2?stream=false';
+      const JB_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
+
+      const MONITOR_API_KEY = '8beec5ba79d2462db4a64832c9118c00';
+      const MONITOR_URL = 'https://debq2.debmedia.com/api/monitor/workerprofiles?x=' + MONITOR_API_KEY;
+      // IDs de las colas asociadas a Trámite 1 y Trámite 2: solo se muestran los puestos relacionados a estas colas.
+      const MONITOR_QUEUE_IDS = [21142, 21143];
+
+      const WORKER_RESTORE_URL = 'https://debq2.debmedia.com/api/worker/10206';
+      const WORKER_RESTORE_PAYLOADS = [
+        {
+          "id": 14933,
+          "name": "Retail 01",
+          "tvName": "Retail 01",
+          "waitingRoom": { "id": 2408, "name": "Sala de espera 1" },
+          "workerProfile": { "id": 6323, "name": "Puesto retail 01" },
+          "derivableQueueGroups": [],
+          "orderedCallableQueueGroups": [{ "id": 22217 }],
+          "configs": {
+            "id": 9279, "typifyServiceEnabled": true, "directCallEnabled": false, "derivateBtnEnabled": true,
+            "callBtnEnabled": true, "nextBtnEnabled": true, "silentBtnEnabled": false, "finishBtnEnabled": true,
+            "revokeBtnEnabled": true, "absentBtnEnabled": false, "reCallBtnEnabled": true, "cancelCallBtnEnabled": true,
+            "cancelDerivateBtnEnabled": true, "reQueueBtnEnabled": true, "automaticCallEnabled": false,
+            "pauseAutoCallStateId": null, "pauseAutoCallTimeoutSeconds": null, "automaticCallType": "STATIC_SIZE",
+            "automaticCallDelay": 60, "maxInactivityTime": 25, "useQueuePriority": true, "msgDerivation": false,
+            "turnNotification": true, "callTurnNotification": false, "algorithmName": "SEQUENTIAL", "enableEscape": false,
+            "derivatePriorityBtnEnabled": false, "searchMissingBtnEnabled": false, "changeQueueBtnEnabled": false,
+            "printTicketFromWorkStation": false, "showMsgTurnFinished": false, "derivateToSpecificUser": false,
+            "notTakeOverflow": false, "queuedDetails": false, "unfoldBtnEnabled": false, "modeSizeBufferQueue": "STATIC_SIZE",
+            "searchTurnBtnEnabled": true, "searchFinishedTurnBtnEnabled": false, "chooseTurnBtnEnabled": true,
+            "timeForFinalizeAttention": 0, "fixedNotificationTime": true, "silentCalls": false, "notTakePriority": false,
+            "notCallPriority": false, "derivateToAnotherBranch": false, "notTakeOrphanCustomers": false,
+            "activatedNotifications": true, "showQueueVirtualBranch": false, "showChat": false, "maxChat": 3,
+            "showAttentionMultiplePresential": false, "maxAttentionMultiplePresential": 5, "derivateToOneself": false,
+            "typifyMessageEnabled": false, "changeQueueMessageEnabled": false, "recordVideo": null, "recordScreen": null,
+            "recordAudio": null, "holdCallBtnEnabled": false, "addTurnToQueue": false, "searchGroupBtnEnabled": false,
+            "callInPersonBtnEnabled": false, "callOnlyVideocallBtnEnabled": false, "attendProcess": false,
+            "algorithmConfigs": { "name": "SEQUENTIAL", "prettyName": "API.Q_WORKER_CONFIG.SEQUENTIAL", "isGroupPriority": false, "isEnableEscape": false }
+          },
+          "callableWaitingRooms": [{ "id": 2408, "name": "Sala de espera 1" }],
+          "customerTypesEscape": [],
+          "isOnline": false,
+          "hasBufferQueue": false,
+          "customerTypes": [{ "id": 1167 }, { "id": 1168 }, { "id": 1169 }, { "id": 1170 }, { "id": 1191 }, { "id": 1288 }],
+          "messageOnScreen": "Box 18",
+          "waitingRooms": [{ "id": 2408, "name": "Sala de espera 1" }]
+        },
+        {
+          "id": 14934,
+          "name": "Retail 02",
+          "tvName": "Box 19",
+          "waitingRoom": { "id": 2408, "name": "Sala de espera 1" },
+          "workerProfile": { "id": 6322, "name": "Puesto retail 02" },
+          "derivableQueueGroups": [],
+          "orderedCallableQueueGroups": [{ "id": 22216 }],
+          "configs": {
+            "id": 9280, "typifyServiceEnabled": true, "directCallEnabled": true, "derivateBtnEnabled": true,
+            "callBtnEnabled": true, "nextBtnEnabled": true, "silentBtnEnabled": false, "finishBtnEnabled": true,
+            "revokeBtnEnabled": true, "absentBtnEnabled": false, "reCallBtnEnabled": true, "cancelCallBtnEnabled": true,
+            "cancelDerivateBtnEnabled": true, "reQueueBtnEnabled": true, "automaticCallEnabled": false,
+            "pauseAutoCallStateId": null, "pauseAutoCallTimeoutSeconds": null, "automaticCallType": "STATIC_SIZE",
+            "automaticCallDelay": 60, "maxInactivityTime": 25, "useQueuePriority": true, "msgDerivation": false,
+            "turnNotification": true, "callTurnNotification": false, "algorithmName": "SEQUENTIAL", "enableEscape": false,
+            "derivatePriorityBtnEnabled": false, "searchMissingBtnEnabled": false, "changeQueueBtnEnabled": false,
+            "printTicketFromWorkStation": false, "showMsgTurnFinished": false, "derivateToSpecificUser": false,
+            "notTakeOverflow": false, "queuedDetails": false, "unfoldBtnEnabled": false, "modeSizeBufferQueue": "STATIC_SIZE",
+            "searchTurnBtnEnabled": true, "searchFinishedTurnBtnEnabled": false, "chooseTurnBtnEnabled": true,
+            "timeForFinalizeAttention": 0, "fixedNotificationTime": true, "silentCalls": false, "notTakePriority": false,
+            "notCallPriority": false, "derivateToAnotherBranch": false, "notTakeOrphanCustomers": false,
+            "activatedNotifications": true, "showQueueVirtualBranch": false, "showChat": false, "maxChat": 3,
+            "showAttentionMultiplePresential": false, "maxAttentionMultiplePresential": 5, "derivateToOneself": false,
+            "typifyMessageEnabled": false, "changeQueueMessageEnabled": false, "recordVideo": null, "recordScreen": null,
+            "recordAudio": null, "holdCallBtnEnabled": false, "addTurnToQueue": false, "searchGroupBtnEnabled": false,
+            "callInPersonBtnEnabled": false, "callOnlyVideocallBtnEnabled": false, "attendProcess": false,
+            "algorithmConfigs": { "name": "SEQUENTIAL", "prettyName": "API.Q_WORKER_CONFIG.SEQUENTIAL", "isGroupPriority": false, "isEnableEscape": false }
+          },
+          "callableWaitingRooms": [{ "id": 2408, "name": "Sala de espera 1" }],
+          "customerTypesEscape": [],
+          "isOnline": false,
+          "hasBufferQueue": false,
+          "customerTypes": [{ "id": 1167 }, { "id": 1168 }, { "id": 1169 }, { "id": 1170 }, { "id": 1191 }, { "id": 1288 }],
+          "messageOnScreen": "Box 19",
+          "waitingRooms": [{ "id": 2408, "name": "Sala de espera 1" }]
+        }
+      ];
+
+      /* =========================================================
+       *  ESTADO / CONFIGURACIÓN DE SESIÓN (solo en memoria/sessionStorage)
+       * ========================================================= */
+      const CONFIG_KEY = 'retailTotemConfig';
+      const DEFAULT_CONFIG = {
+        phone: '',
+        compania: '',
+        sucursal: '',
+        tramite1: '',
+        tramite2: '',
+        tipoAgente: 'Notificación',
+        logoUrl: '',
+        logoDataUrl: ''
+      };
+
+      function cargarConfig() {
+        try {
+          const raw = sessionStorage.getItem(CONFIG_KEY);
+          if (raw) {
+            return Object.assign({}, DEFAULT_CONFIG, JSON.parse(raw));
+          }
+        } catch (e) {
+          console.warn('No se pudo leer la configuración de sesión:', e);
+        }
+        return Object.assign({}, DEFAULT_CONFIG);
+      }
+
+      function guardarConfigEnSesion() {
+        try {
+          sessionStorage.setItem(CONFIG_KEY, JSON.stringify(CONFIG));
+        } catch (e) {
+          console.warn('No se pudo guardar la configuración de sesión:', e);
+        }
+      }
+
+      let CONFIG = cargarConfig();
+
+      function labelTramite(numero) {
+        const raw = numero === 1 ? CONFIG.tramite1 : CONFIG.tramite2;
+        const trimmed = (raw || '').trim();
+        return trimmed || ('Trámite ' + numero);
+      }
+
+      /* =========================================================
+       *  HEADER: nombre y logo de la compañía (siempre visible)
+       * ========================================================= */
+      const companyLogoEl = document.getElementById('companyLogo');
+      const companyNameEl = document.getElementById('companyName');
+      const companySucursalEl = document.getElementById('companySucursal');
+
+      function actualizarHeaderCompania() {
+        const nombre = (CONFIG.compania || '').trim();
+        companyNameEl.textContent = nombre || 'Mi Compañía';
+
+        const sucursal = (CONFIG.sucursal || '').trim();
+        if (sucursal) {
+          companySucursalEl.textContent = sucursal;
+          companySucursalEl.style.display = 'block';
+        } else {
+          companySucursalEl.style.display = 'none';
+        }
+
+        const logoSrc = CONFIG.logoDataUrl || CONFIG.logoUrl;
+        if (logoSrc) {
+          companyLogoEl.innerHTML = '<img src="' + logoSrc + '" alt="logo" style="width:100%;height:100%;object-fit:contain;">';
+        } else {
+          const inicial = (nombre || 'C').trim().charAt(0).toUpperCase() || 'C';
+          companyLogoEl.textContent = inicial;
+        }
+      }
+
+      actualizarHeaderCompania();
+
+      /* =========================================================
+       *  PANTALLA 1: INGRESO DE DNI
+       * ========================================================= */
+      let dniIngresado = '';
+
+      const screenDni = document.getElementById('screenDni');
+      const screenOpciones = document.getElementById('screenOpciones');
+      const screenConfirmacion = document.getElementById('screenConfirmacion');
+      const dniDisplay = document.getElementById('dniDisplay');
+      const btnContinuar = document.getElementById('btnContinuar');
+      const btnDelete = document.getElementById('btnDelete');
+      const opcionesGrid = document.getElementById('opcionesGrid');
+      const opcionesError = document.getElementById('opcionesError');
+      const dniChipValue = document.getElementById('dniChipValue');
+
+      function mostrarPantalla(pantalla) {
+        screenDni.style.display = pantalla === 'dni' ? 'block' : 'none';
+        screenOpciones.classList.toggle('active', pantalla === 'opciones');
+        screenConfirmacion.classList.toggle('active', pantalla === 'confirmacion');
+      }
+
+      function actualizarDisplayDni() {
+        if (dniIngresado.length === 0) {
+          dniDisplay.textContent = '';
+          dniDisplay.classList.add('empty');
+          btnContinuar.disabled = true;
+        } else {
+          dniDisplay.textContent = dniIngresado;
+          dniDisplay.classList.remove('empty');
+          btnContinuar.disabled = false;
+        }
+      }
+
+      function agregarNumero(numero) {
+        if (dniIngresado.length < 15) {
+          dniIngresado += numero;
+          actualizarDisplayDni();
+        }
+      }
+
+      function eliminarUltimo() {
+        dniIngresado = dniIngresado.slice(0, -1);
+        actualizarDisplayDni();
+      }
+
+      function resetearDni() {
+        dniIngresado = '';
+        actualizarDisplayDni();
+        mostrarPantalla('dni');
+      }
+
+      document.querySelectorAll('.keypad-btn[data-number]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          agregarNumero(btn.getAttribute('data-number'));
+        });
+      });
+
+      btnDelete.addEventListener('click', function () {
+        eliminarUltimo();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        // No interferir si se está escribiendo en algún campo del panel de administración
+        // u otro input/textarea/select de la página.
+        const targetTag = e.target && e.target.tagName;
+        if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT') return;
+        if (adminOverlay.classList.contains('active')) return;
+
+        const enPantallaDni = screenDni.style.display !== 'none';
+        if (!enPantallaDni) return;
+
+        if (e.key >= '0' && e.key <= '9') {
+          e.preventDefault();
+          agregarNumero(e.key);
+        } else if (e.key === 'Backspace' || e.key === 'Delete') {
+          e.preventDefault();
+          eliminarUltimo();
+        } else if (e.key === 'Enter' && dniIngresado.length > 0 && !btnContinuar.disabled) {
+          e.preventDefault();
+          btnContinuar.click();
+        }
+      });
+
+      btnContinuar.addEventListener('click', function () {
+        if (dniIngresado.length === 0) return;
+        mostrarPantallaOpciones();
+      });
+
+      document.getElementById('btnVolverDni').addEventListener('click', function () {
+        resetearDni();
+      });
+
+      /* =========================================================
+       *  PANTALLA 2: OPCIONES (TRÁMITE 1 / TRÁMITE 2)
+       * ========================================================= */
+      function mostrarPantallaOpciones() {
+        opcionesError.innerHTML = '';
+        dniChipValue.textContent = 'DNI ' + dniIngresado;
+
+        opcionesGrid.innerHTML = '';
+
+        const iconos = ['bi-file-earmark-text', 'bi-file-earmark-check'];
+        [1, 2].forEach(function (numero) {
+          const card = document.createElement('div');
+          card.className = 'opcion-card';
+          card.innerHTML =
+            '<div class="opcion-icon"><i class="bi ' + iconos[numero - 1] + '"></i></div>' +
+            '<div class="opcion-title">' + escapeHtml(labelTramite(numero)) + '</div>' +
+            '<div class="opcion-desc">Solicitar turno</div>';
+          card.addEventListener('click', function () {
+            enqueueTramite(numero, card);
+          });
+          opcionesGrid.appendChild(card);
+        });
+
+        mostrarPantalla('opciones');
+      }
+
+      async function enqueueTramite(numero, cardEl) {
+        const queueId = numero === 1 ? QUEUE_TRAMITE_1 : QUEUE_TRAMITE_2;
+        const label = labelTramite(numero);
+
+        opcionesError.innerHTML = '';
+        document.querySelectorAll('#opcionesGrid .opcion-card').forEach(function (c) {
+          c.style.pointerEvents = 'none';
+          c.style.opacity = '0.6';
+        });
+        if (cardEl) {
+          cardEl.innerHTML = '<div class="opcion-icon"><span class="spinner-border spinner-border-sm text-primary"></span></div><div class="opcion-title">Procesando...</div>';
+        }
+
+        try {
+          const apiUrl = FV_BASE + '/queue/' + queueId + '/branch/' + BRANCH_ID + '/enqueue';
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-token': FV_TOKEN
+            },
+            body: JSON.stringify({ dni: dniIngresado })
+          });
+
+          const data = await response.json().catch(function () { return {}; });
+
+          if (!response.ok) {
+            throw new Error((data && data.message) || ('Error en servidor (' + response.status + ')'));
+          }
+
+          mostrarConfirmacion(numero, label, data);
+        } catch (err) {
+          console.error('Error al solicitar turno:', err);
+          opcionesError.innerHTML = '<div class="error-box"><i class="bi bi-exclamation-triangle me-2"></i>No se pudo solicitar el turno: ' + escapeHtml(err.message) + '</div>';
+          document.querySelectorAll('#opcionesGrid .opcion-card').forEach(function (c) {
+            c.style.pointerEvents = '';
+            c.style.opacity = '';
+          });
+          mostrarPantallaOpciones();
+          opcionesError.innerHTML = '<div class="error-box"><i class="bi bi-exclamation-triangle me-2"></i>No se pudo solicitar el turno: ' + escapeHtml(err.message) + '</div>';
+        }
+      }
+
+      /* =========================================================
+       *  PANTALLA 3: CONFIRMACIÓN
+       * ========================================================= */
+      const confirmacionTitulo = document.getElementById('confirmacionTitulo');
+      const confirmacionMensaje = document.getElementById('confirmacionMensaje');
+      const tiempoEspera = document.getElementById('tiempoEspera');
+      const tiempoEsperaValor = document.getElementById('tiempoEsperaValor');
+
+      function mostrarConfirmacion(numero, label, data) {
+        confirmacionTitulo.textContent = '¡Turno asignado!';
+        confirmacionMensaje.innerHTML =
+          'Su turno para <strong>' + escapeHtml(label) + '</strong> fue generado correctamente.<br>' +
+          'Lo llamaremos por su DNI: <strong>' + escapeHtml(dniIngresado) + '</strong>';
+
+        if (data && typeof data.averageWaitingTime === 'number') {
+          const minutos = Math.floor(data.averageWaitingTime / 60);
+          const segundos = data.averageWaitingTime % 60;
+          tiempoEspera.style.display = 'block';
+          tiempoEsperaValor.textContent = minutos + ' min ' + segundos + ' seg';
+        } else {
+          tiempoEspera.style.display = 'none';
+        }
+
+        mostrarPantalla('confirmacion');
+      }
+
+      document.getElementById('btnOtroTurno').addEventListener('click', function () {
+        // Permite cargar varios turnos (de cualquiera de los dos trámites) para el mismo DNI.
+        mostrarPantallaOpciones();
+      });
+
+      document.getElementById('btnFinalizar').addEventListener('click', function () {
+        resetearDni();
+      });
+
+      /* =========================================================
+       *  PANEL DE ADMINISTRACIÓN (oculto)
+       * ========================================================= */
+      const adminOverlay = document.getElementById('adminOverlay');
+      const btnAdminGear = document.getElementById('btnAdminGear');
+      const btnCloseAdmin = document.getElementById('btnCloseAdmin');
+
+      function abrirAdmin() {
+        cargarFormularioDesdeConfig();
+        adminOverlay.classList.add('active');
+      }
+
+      function cerrarAdmin() {
+        adminOverlay.classList.remove('active');
+      }
+
+      btnAdminGear.addEventListener('click', abrirAdmin);
+      btnCloseAdmin.addEventListener('click', cerrarAdmin);
+      adminOverlay.addEventListener('click', function (e) {
+        if (e.target === adminOverlay) cerrarAdmin();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && adminOverlay.classList.contains('active')) cerrarAdmin();
+      });
+
+      // Tabs del panel
+      document.querySelectorAll('.admin-tab-btn').forEach(function (tabBtn) {
+        tabBtn.addEventListener('click', function () {
+          document.querySelectorAll('.admin-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+          document.querySelectorAll('.admin-tab-content').forEach(function (c) { c.classList.remove('active'); });
+          tabBtn.classList.add('active');
+          document.getElementById('tab' + capitalize(tabBtn.getAttribute('data-tab'))).classList.add('active');
+          if (tabBtn.getAttribute('data-tab') === 'agente') {
+            actualizarResumenAgente();
+          }
+        });
+      });
+
+      function capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+
+      // --- Tab Configuración ---
+      const inputPhone = document.getElementById('inputPhone');
+      const inputCompania = document.getElementById('inputCompania');
+      const inputSucursal = document.getElementById('inputSucursal');
+      const inputTipoAgente = document.getElementById('inputTipoAgente');
+      const inputTramite1 = document.getElementById('inputTramite1');
+      const inputTramite2 = document.getElementById('inputTramite2');
+      const inputLogoFile = document.getElementById('inputLogoFile');
+      const inputLogoUrl = document.getElementById('inputLogoUrl');
+      const logoPreview = document.getElementById('logoPreview');
+      const btnGuardarConfig = document.getElementById('btnGuardarConfig');
+      const configSavedMsg = document.getElementById('configSavedMsg');
+
+      function cargarFormularioDesdeConfig() {
+        inputPhone.value = CONFIG.phone || '';
+        inputCompania.value = CONFIG.compania || '';
+        inputSucursal.value = CONFIG.sucursal || '';
+        inputTipoAgente.value = CONFIG.tipoAgente || 'Notificación';
+        inputTramite1.value = CONFIG.tramite1 || '';
+        inputTramite2.value = CONFIG.tramite2 || '';
+        inputLogoUrl.value = CONFIG.logoUrl || '';
+        actualizarLogoPreview();
+      }
+
+      function actualizarLogoPreview() {
+        const src = CONFIG.logoDataUrl || CONFIG.logoUrl;
+        if (src) {
+          logoPreview.innerHTML = '<img src="' + src + '" alt="logo" style="width:100%;height:100%;object-fit:contain;">';
+        } else {
+          const inicial = (CONFIG.compania || 'C').trim().charAt(0).toUpperCase() || 'C';
+          logoPreview.textContent = inicial;
+        }
+      }
+
+      inputLogoFile.addEventListener('change', function () {
+        const file = inputLogoFile.files && inputLogoFile.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          CONFIG.logoDataUrl = ev.target.result;
+          actualizarLogoPreview();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      inputLogoUrl.addEventListener('input', function () {
+        CONFIG.logoDataUrl = '';
+        CONFIG.logoUrl = inputLogoUrl.value.trim();
+        actualizarLogoPreview();
+      });
+
+      btnGuardarConfig.addEventListener('click', function () {
+        CONFIG.phone = inputPhone.value.trim();
+        CONFIG.compania = inputCompania.value.trim();
+        CONFIG.sucursal = inputSucursal.value.trim();
+        CONFIG.tipoAgente = inputTipoAgente.value;
+        CONFIG.tramite1 = inputTramite1.value.trim();
+        CONFIG.tramite2 = inputTramite2.value.trim();
+        CONFIG.logoUrl = inputLogoUrl.value.trim();
+
+        guardarConfigEnSesion();
+        actualizarHeaderCompania();
+        actualizarLogoPreview();
+        actualizarResumenAgente();
+
+        configSavedMsg.style.display = 'inline';
+        setTimeout(function () { configSavedMsg.style.display = 'none'; }, 2000);
+      });
+
+      // --- Tab Agente de Sucursales ---
+      const agenteResumenInput = document.getElementById('agenteResumenInput');
+      const btnLlamarAgente = document.getElementById('btnLlamarAgente');
+      const agenteResultBox = document.getElementById('agenteResultBox');
+
+      function construirInputValueAgente() {
+        return 'Evalua la sucursal, phone: ' + (CONFIG.phone || '') +
+          ', Compañia: ' + (CONFIG.compania || '') +
+          ', Sucursal: ' + (CONFIG.sucursal || '') +
+          ',Tramite 1: ' + (CONFIG.tramite1 || '') +
+          ', Tramite 2: ' + (CONFIG.tramite2 || '') +
+          ', Tipo de agente: ' + (CONFIG.tipoAgente || '');
+      }
+
+      function actualizarResumenAgente() {
+        agenteResumenInput.textContent = 'Se enviará: "' + construirInputValueAgente() + '"';
+      }
+      actualizarResumenAgente();
+
+      btnLlamarAgente.addEventListener('click', async function () {
+        const original = btnLlamarAgente.innerHTML;
+        btnLlamarAgente.disabled = true;
+        btnLlamarAgente.innerHTML = '<span class="spinner-inline"></span> Consultando...';
+        agenteResultBox.className = 'result-box visible';
+        agenteResultBox.textContent = 'Consultando al Agente de Sucursales...';
+
+        try {
+          const response = await fetch(JB_AGENTE_SUCURSAL_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': JB_API_KEY
+            },
+            body: JSON.stringify({
+              input_value: construirInputValueAgente(),
+              output_type: 'chat'
+            })
+          });
+
+          const data = await response.json().catch(function () { return {}; });
+
+          if (!response.ok) {
+            throw new Error((data && data.message) || ('Error en servidor (' + response.status + ')'));
+          }
+
+          let mensaje = null;
+          if (data.outputs && data.outputs[0] && data.outputs[0].outputs && data.outputs[0].outputs[0]) {
+            const inner = data.outputs[0].outputs[0];
+            if (inner.artifacts && inner.artifacts.message) {
+              mensaje = typeof inner.artifacts.message === 'string'
+                ? inner.artifacts.message
+                : (inner.artifacts.message.message || JSON.stringify(inner.artifacts.message));
+            } else if (inner.outputs && inner.outputs.message && inner.outputs.message.message) {
+              mensaje = inner.outputs.message.message;
+            } else if (inner.results && inner.results.message && inner.results.message.text) {
+              mensaje = inner.results.message.text;
+            }
+          }
+
+          agenteResultBox.className = 'result-box visible success-text';
+          agenteResultBox.textContent = mensaje || JSON.stringify(data, null, 2);
+        } catch (err) {
+          console.error('Error al llamar al Agente de Sucursales:', err);
+          agenteResultBox.className = 'result-box visible error-text';
+          agenteResultBox.textContent = 'Error: ' + err.message;
+        } finally {
+          btnLlamarAgente.disabled = false;
+          btnLlamarAgente.innerHTML = original;
+        }
+      });
+
+      // --- Tab Monitor Sucursal ---
+      const btnVerDatosSucursal = document.getElementById('btnVerDatosSucursal');
+      const monitorContainer = document.getElementById('monitorContainer');
+
+      btnVerDatosSucursal.addEventListener('click', cargarMonitorSucursal);
+
+      async function cargarMonitorSucursal() {
+        const original = btnVerDatosSucursal.innerHTML;
+        btnVerDatosSucursal.disabled = true;
+        btnVerDatosSucursal.innerHTML = '<span class="spinner-inline"></span> Actualizando...';
+        monitorContainer.innerHTML = '<div class="hint">Cargando...</div>';
+
+        try {
+          const response = await fetch(MONITOR_URL, {
+            method: 'GET',
+            headers: { 'x-api-key': MONITOR_API_KEY },
+            credentials: 'include'
+          });
+
+          const data = await response.json().catch(function () { return []; });
+
+          if (!response.ok) {
+            throw new Error((data && data.message) || ('Error en servidor (' + response.status + ')'));
+          }
+
+          const perfiles = Array.isArray(data) ? data : (data.workerProfiles || []);
+
+          // Solo se muestran los puestos vinculados a las colas de Trámite 1 / Trámite 2
+          const relevantes = perfiles.filter(function (perfil) {
+            if (!perfil.callableQueueGroups) return false;
+            return perfil.callableQueueGroups.some(function (grupo) {
+              return (grupo.queues || []).some(function (q) {
+                return MONITOR_QUEUE_IDS.indexOf(q.id) !== -1;
+              });
+            });
+          });
+
+          renderMonitor(relevantes.length ? relevantes : perfiles);
+        } catch (err) {
+          console.error('Error al obtener datos de la sucursal:', err);
+          monitorContainer.innerHTML = '<div class="error-box"><i class="bi bi-exclamation-triangle me-2"></i>No se pudieron obtener los datos: ' + escapeHtml(err.message) + '</div>';
+        } finally {
+          btnVerDatosSucursal.disabled = false;
+          btnVerDatosSucursal.innerHTML = original;
+        }
+      }
+
+      function renderMonitor(perfiles) {
+        if (!perfiles || !perfiles.length) {
+          monitorContainer.innerHTML = '<div class="hint">No se encontraron puestos para mostrar.</div>';
+          return;
+        }
+
+        let html = '';
+        perfiles.forEach(function (perfil) {
+          const queueRows = [];
+          (perfil.callableQueueGroups || []).forEach(function (grupo) {
+            (grupo.queues || []).forEach(function (q) {
+              const esRelevante = MONITOR_QUEUE_IDS.indexOf(q.id) !== -1;
+              let etiqueta = 'Cola ' + q.id;
+              if (esRelevante) {
+                etiqueta = q.id === parseInt(QUEUE_TRAMITE_1, 10) ? labelTramite(1) : labelTramite(2);
+              }
+              const cero = q.amountWaitingTurns === 0;
+              queueRows.push(
+                '<div class="worker-queue-row"><span>' + escapeHtml(etiqueta) + '</span>' +
+                '<span class="waiting-count' + (cero ? ' zero' : '') + '">' + q.amountWaitingTurns + ' en espera</span></div>'
+              );
+            });
+          });
+
+          const online = !!perfil.workersOnline;
+          html +=
+            '<div class="worker-card">' +
+              '<div class="worker-card-header">' +
+                '<span class="worker-name">' + escapeHtml(perfil.name || ('Puesto ' + perfil.id)) + '</span>' +
+                '<span class="worker-online-badge' + (online ? ' online' : '') + '">' + (perfil.workersOnline || 0) + ' en línea</span>' +
+              '</div>' +
+              '<div class="worker-branch"><i class="bi bi-geo-alt me-1"></i>' +
+                escapeHtml((perfil.branch && perfil.branch.label) || '-') +
+                (perfil.branch && perfil.branch.state ? ' (' + escapeHtml(perfil.branch.state) + ')' : '') +
+              '</div>' +
+              (queueRows.length ? queueRows.join('') : '<div class="hint">Sin colas asociadas.</div>') +
+            '</div>';
+        });
+
+        monitorContainer.innerHTML = html;
+      }
+
+      // --- Restaurar sucursal ---
+      const btnRestaurarSucursal = document.getElementById('btnRestaurarSucursal');
+      const restaurarResultBox = document.getElementById('restaurarResultBox');
+
+      btnRestaurarSucursal.addEventListener('click', async function () {
+        const original = btnRestaurarSucursal.innerHTML;
+        btnRestaurarSucursal.disabled = true;
+        btnRestaurarSucursal.innerHTML = '<span class="spinner-inline"></span> Restaurando...';
+        restaurarResultBox.className = 'result-box visible';
+        restaurarResultBox.textContent = 'Restaurando Retail 01 y Retail 02...\n';
+
+        const resultados = [];
+        for (const payload of WORKER_RESTORE_PAYLOADS) {
+          try {
+            const response = await fetch(WORKER_RESTORE_URL, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': MONITOR_API_KEY
+              },
+              credentials: 'include',
+              body: JSON.stringify(payload)
+            });
+
+            const data = await response.json().catch(function () { return {}; });
+
+            if (!response.ok) {
+              throw new Error((data && data.message) || ('Error ' + response.status));
+            }
+
+            resultados.push('✔ ' + payload.name + ': restaurado correctamente.');
+          } catch (err) {
+            resultados.push('✘ ' + payload.name + ': ' + err.message + ' (verifique que haya una sesión activa en el backoffice de DebMedia en este navegador)');
+          }
+        }
+
+        const huboError = resultados.some(function (r) { return r.indexOf('✘') === 0; });
+        restaurarResultBox.className = 'result-box visible ' + (huboError ? 'error-text' : 'success-text');
+        restaurarResultBox.textContent = resultados.join('\n');
+
+        btnRestaurarSucursal.disabled = false;
+        btnRestaurarSucursal.innerHTML = original;
+      });
+
+      /* =========================================================
+       *  UTILIDADES
+       * ========================================================= */
+      function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        const div = document.createElement('div');
+        div.textContent = String(text);
+        return div.innerHTML;
+      }
+
+      /* Inicialización */
+      actualizarDisplayDni();
+      mostrarPantalla('dni');
+    });
+  </script>
+</body>
+</html>
