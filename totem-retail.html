@@ -1051,7 +1051,7 @@
     <div class="side-panel-body">
       <div class="staff-section">
         <h4><i class="bi bi-person-lines-fill"></i> Análisis del Cliente</h4>
-        <p class="desc">Se ejecuta automáticamente al ingresar el DNI: revisa encuestas anteriores, si pertenece al programa de fidelidad y genera recomendaciones de pedido.</p>
+        <p class="desc">Se ejecuta automáticamente al ingresar el DNI: revisa compras online abandonadas, los puntos acumulados en el programa de beneficios y recomienda productos relacionados (cuidado personal).</p>
         <div id="clienteAnalisisEmpty" class="hint">Ingrese un DNI en el tótem para ver aquí el análisis del cliente.</div>
         <div class="cliente-steps" id="clienteStepsContainer"></div>
         <div class="result-box" id="clienteResumenBox"></div>
@@ -1174,6 +1174,15 @@
       const BRANCH_ID = '10750';
       const QUEUE_TRAMITE_1 = '21142';
       const QUEUE_TRAMITE_2 = '21143';
+
+      // Adjunta el Análisis del Cliente (compras abandonadas, puntos de fidelidad,
+      // recomendaciones de productos) al turno, para que lo vea quien lo atienda.
+      function buildExtraFieldsCliente(detalle) {
+        return [{
+          showable: [{ in: 'workstation', format: 'both' }],
+          Detalle: detalle
+        }];
+      }
 
       const JB_AGENTE_SUCURSAL_URL = 'https://api.journeybuilder.numia.co/api/v1/run/04b33c8e-8745-40f5-88cb-6c5a70726ad2?stream=false';
       const JB_API_KEY = 'sk-WfTsCY302RrciqoVRYAZWruD9mpyPKatAo8GU8tyzIM';
@@ -1476,7 +1485,10 @@
               'Content-Type': 'application/json',
               'x-api-token': FV_TOKEN
             },
-            body: JSON.stringify({ dni: dniIngresado })
+            // Se adjunta el resultado del Análisis del Cliente (compras abandonadas,
+            // puntos de fidelidad, recomendaciones de productos) para que lo vea
+            // quien atienda el turno.
+            body: JSON.stringify({ dni: dniIngresado, extraFields: buildExtraFieldsCliente(ultimoAnalisisCliente) })
           });
 
           const data = await response.json().catch(function () { return {}; });
@@ -1650,18 +1662,27 @@
 
       /* =========================================================
        *  ANÁLISIS DEL CLIENTE (automático al ingresar el DNI)
-       *  Verifica encuestas anteriores, programa de fidelidad y
-       *  genera recomendaciones de pedido. Se muestra en el panel lateral.
+       *  Orientado a retail: compras online abandonadas, puntos
+       *  acumulados en el programa de beneficios y recomendaciones de
+       *  productos relacionados (cuidado personal). Se muestra en el
+       *  panel lateral y su resultado se adjunta al turno generado.
        * ========================================================= */
       // Reutiliza el agente de análisis general del tótem (mismo Run ID que
-      // totem.html). Si existe un agente de Retail dedicado para "Análisis
-      // de Cliente", reemplazar este Run ID por el correspondiente.
+      // totem.html). Ese agente está orientado a banca (Scoring, Préstamos,
+      // Tarjetas), por lo que su respuesta real puede no reflejar aún los
+      // temas de retail solicitados en el mensaje. Reemplazar este Run ID
+      // por el de un agente de Retail dedicado en cuanto esté disponible.
       const CLIENT_ANALYSIS_URL = 'https://api.journeybuilder.numia.co/api/v1/run/d83a2fbd-f8d0-468f-9ecd-375709fd149f?stream=false';
       const CLIENT_ANALYSIS_STEPS = [
-        { titulo: 'Encuestas anteriores', detalle: 'Revisando encuestas de satisfacción previas del cliente.' },
-        { titulo: 'Programa de fidelidad', detalle: 'Verificando si el cliente pertenece al programa de fidelidad.' },
-        { titulo: 'Recomendaciones de pedido', detalle: 'Generando recomendaciones de pedido personalizadas.' }
+        { titulo: 'Compras online abandonadas', detalle: 'Revisando compras iniciadas y no finalizadas en el canal online.' },
+        { titulo: 'Puntos de fidelidad', detalle: 'Consultando los puntos acumulados en el programa de beneficios.' },
+        { titulo: 'Recomendaciones de productos', detalle: 'Generando recomendaciones de productos relacionados (cuidado personal).' }
       ];
+
+      // Texto por defecto que se adjunta al turno si todavía no terminó el
+      // análisis del cliente (se actualiza cada vez que analizarCliente() resuelve).
+      const DETALLE_ANALISIS_DEFAULT = 'Análisis del cliente no disponible en este momento.';
+      let ultimoAnalisisCliente = DETALLE_ANALISIS_DEFAULT;
 
       const clienteAnalisisEmpty = document.getElementById('clienteAnalisisEmpty');
       const clienteStepsContainer = document.getElementById('clienteStepsContainer');
@@ -1705,7 +1726,7 @@
         const pasosInicio = Date.now();
         const pasosAnimacionMs = CLIENT_ANALYSIS_STEPS.length * delayPaso + 400;
 
-        const mensaje = 'Analiza al cliente con DNI: ' + dni + '. Verificar encuestas anteriores, si pertenece al programa de fidelidad, y obtener recomendaciones de pedido. ' +
+        const mensaje = 'Analiza al cliente retail con DNI: ' + dni + '. Verificar compras online abandonadas, puntos acumulados en el programa de beneficios de fidelidad, y recomendar productos relacionados de cuidado personal. ' +
           'Compañía: ' + (CONFIG.compania || '') + ', Sucursal: ' + (CONFIG.sucursal || '') + ', Teléfono: ' + (CONFIG.phone || '') + '.';
 
         let resultado = null;
@@ -1741,6 +1762,10 @@
         } else {
           clienteResumenBox.className = 'result-box visible success-text';
           clienteResumenBox.textContent = resultado;
+          // Se guarda para adjuntarlo al turno cuando el cliente elija un trámite.
+          if (resultado) {
+            ultimoAnalisisCliente = resultado;
+          }
         }
 
         // Si el panel está oculto, mostramos un indicador de novedad en la pestaña.
